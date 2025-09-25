@@ -15,6 +15,7 @@ const defaultResult: PingResult = {
 };
 
 const FormWithSlidingCard: React.FC = () => {
+  const [tempURL, setTempURL] = useState("");
   const [url, setURL] = useState("");
   const [result, setResult] = useState<PingResult | null>(null);
   const [loading, setLoading] = useState(false);
@@ -29,11 +30,10 @@ const FormWithSlidingCard: React.FC = () => {
         body: JSON.stringify({ url }),
       });
       const data = await response.json();
-      setResult({ status: "Up", fastestResponseTime: data[0], averageResponseTime: data[2], lastChecked: "Just now"});
+      setResult({ status: "Up", fastestResponseTime: data.fastest, averageResponseTime: data.average, lastChecked: "Just now"});
     } catch (err) {
       setResult({ status: "Down", fastestResponseTime: "-", averageResponseTime: "-", lastChecked: "Just now"});
     } finally {
-      console.log('uh')
       setLoading(false);
     }
 
@@ -46,6 +46,7 @@ const FormWithSlidingCard: React.FC = () => {
         className="mx-auto w-full rounded-xl border border-border bg-card p-3 shadow-sm relative z-10"
         onSubmit={(e) => {
           e.preventDefault();
+          setURL(tempURL)
           sendURL();
         }}
         aria-describedby="result-card"
@@ -60,9 +61,9 @@ const FormWithSlidingCard: React.FC = () => {
             type="url"
             required
             inputMode="url"
-            value={url}
+            value={tempURL}
             onChange={(e) => {
-              setURL(e.target.value);
+              setTempURL(e.target.value);
             }}
             placeholder="https://example.com"
             className="flex-1 rounded-lg border border-input bg-background px-3 py-2 outline-none ring-0 focus:border-ring focus:outline-ring/50"
@@ -95,7 +96,7 @@ const FormWithSlidingCard: React.FC = () => {
       >
         {/* The wrapper that controls the slide/fade */}
         <div
-          className={`mx-auto max-w-3xl transform origin-top transition-all duration-300 ${
+          className={`mx-auto max-w-3xl transform origin-top transition-all duration-300 rounded-xl ${
             result ? "opacity-100 translate-y-0 max-h-[400px]" : "opacity-0 -translate-y-2 max-h-0"
           } overflow-hidden`}
           aria-hidden={!result}
@@ -128,7 +129,7 @@ const FormWithSlidingCard: React.FC = () => {
               </div>
 
               {/* Main row: metrics (2 columns: response time + last checked) */}
-              <div className="mt-4 grid grid-cols-1 md:grid-cols-4 gap-4 mb-1">
+              <div className="mt-6 grid grid-cols-1 md:grid-cols-4 gap-4 mb-1">
                 <div className="">
                   <div className="text-xs text-muted-foreground">Fastest ping</div>
                   <div className="text-lg font-medium">{result?.fastestResponseTime}</div>

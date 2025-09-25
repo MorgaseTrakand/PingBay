@@ -30,10 +30,16 @@ app.post("/ping", async (req, res) => {
 
   for (let i = 0; i < 5; i++) {
     result.push(await singlePing(url))
-    await setTimeout(() => {}, 200)
+    await setTimeout(() => {}, 250)
   }
-  console.log(result)
-  res.json(result);
+  let response = { "average": 0, "fastest": 0};
+  response.fastest = Math.min(...result);
+  let sum: number = 0;
+  for (let i = 0; i < result.length; i++) {
+    sum+=result[i]
+  }
+  response.average = Math.round(sum/result.length);
+  res.json(response);
 })
 
 app.listen(PORT, () => {
