@@ -6,10 +6,10 @@ const Header: React.FC<Props> = () => {
   
   return (
     <>
-      <header className="fixed inset-x-0 top-0 h-16 border-b border-border bg-background/80 backdrop-blur">
+      <header className="w-[80%] absolute left-1/2 -translate-x-1/2 h-16 border border-border bg-background/80 backdrop-blur rounded-xl m-2">
         <div className="mx-auto flex h-full max-w-6xl items-center justify-between px-4">
           {/* Brand (left) */}
-          <a href="/" className="inline-flex items-center gap-2">
+          <a href="/" className="inline-flex items-center">
             <span className="text-xl font-bold">Ping</span>
             <span className="text-xl font-bold">Bay</span>
           </a>
