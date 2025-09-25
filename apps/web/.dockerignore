@@ -1,0 +1,21 @@
+node_modules 
+*.log
+
+# build output
+dist
+build
+
+# environment & config
+.env
+.env.local
+.env.*.local
+
+# misc
+.DS_Store
+*.swp
+.vscode
+.idea
+
+# git
+.git
+.gitignore
