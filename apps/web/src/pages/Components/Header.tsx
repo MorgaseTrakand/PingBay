@@ -6,7 +6,7 @@ const Header: React.FC<Props> = () => {
   
   return (
     <>
-      <header className="w-[80%] absolute left-1/2 -translate-x-1/2 h-16 border border-border bg-background/80 backdrop-blur rounded-xl m-2">
+      <header className="w-[80%] absolute top-0 left-1/2 -translate-x-1/2 h-16 border border-border bg-background/80 backdrop-blur rounded-xl m-2">
         <div className="mx-auto flex h-full max-w-6xl items-center justify-between px-4">
           {/* Brand (left) */}
           <a href="/" className="inline-flex items-center">
@@ -17,13 +17,13 @@ const Header: React.FC<Props> = () => {
           {/* Auth (right) */}
           <nav className="flex items-center gap-3">
             <a
-              href="#login"
+              href="/login"
               className="rounded-md px-3 py-2 text-sm font-medium hover:bg-muted"
             >
               Log in
             </a>
             <a
-              href="#signup"
+              href="/signup"
               className="rounded-md bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90"
             >
               Sign up
