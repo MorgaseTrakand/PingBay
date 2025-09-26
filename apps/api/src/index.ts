@@ -1,17 +1,26 @@
 import express from "express";
 import cors from "cors";
 
+import { getUsers } from "./queries.js";
+
 const PORT = process.env.PORT || 3000;
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-
 app.get("/health", (req, res) => {
   res.json({ status: "ok" });
 });
 
+app.get("/users", async (req, res) => {
+  try {
+    let users = await getUsers();
+    res.json(users);
+  } catch (error) {
+    console.error(error)
+  }
+})
 async function singlePing(url: string) {
   const t0 = performance.now();
   await fetch(url, {
