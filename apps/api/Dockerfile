@@ -1,6 +1,6 @@
 FROM node:24-alpine3.21
 
-WORKDIR /frontend
+WORKDIR /backend
 
 RUN npm install -g pnpm
 
@@ -10,6 +10,6 @@ RUN pnpm install --frozen-lockfile
 
 COPY . .
 
-EXPOSE 5173
+EXPOSE 3000
 
 CMD ["pnpm", "run", "dev"]

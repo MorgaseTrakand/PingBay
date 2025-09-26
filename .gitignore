@@ -42,3 +42,7 @@ docker-compose.override.yml
 .tmp/
 .cache/
 .parcel-cache/
+
+# Docker
+compose.dev.yaml
+compose.cmds
