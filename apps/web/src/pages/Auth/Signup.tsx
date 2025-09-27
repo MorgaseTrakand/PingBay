@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,49 +14,72 @@ import {
 import Header from "../Components/Header";
 
 const SignupPage: React.FC = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [emailError, setEmailError] = useState('inv');
+  const [passwordError, setPasswordError] = useState('inv');
 
+  async function handleSignup() {
+    // let result = await fetch('http://localhost:3000/auth/signup', {
+    //   method: "POST",
+    //   body: JSON.stringify({ email: email, password: password })
+    // })
+    setPasswordError("Password invalid");
+    setEmailError("Email already in use");
+  }
 
   return (
     <>
       <div className="h-screen w-full overflow-hidden">
         <Header />
         <div className="h-[90vh] mt-[10vh] w-full flex justify-center items-center">
-          <Card className="w-full max-w-sm">
-            <CardHeader className="mb-12">
-              <CardTitle className="text-xl font-bold">Sign in to your account</CardTitle>
+          <Card className="w-full max-w-sm gap-2">
+            <CardHeader className="mb-16">
+              <CardTitle className="text-xl font-bold">Create an account</CardTitle>
               <CardDescription>
-                Enter your email below to access your account
+                Enter your email below to create an account
               </CardDescription>
             </CardHeader>
             <CardContent>
               <form>
-                <div className="flex flex-col gap-6">
+                <div className="flex flex-col gap-0">
                   <div className="grid gap-2">
                     <Label htmlFor="email">Email</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="m@example.com"
-                      required
-                    />
+                    <div className="grid gap-1">
+                      <Input
+                        className={`h-12 ${emailError !== 'inv' ? 'border-red-500 bg-red-50' : '' }`}
+                        id="email"
+                        type="email"
+                        onChange={(e) => {
+                          setEmail(e.target.value)
+                        }}
+                        placeholder="email@example.com"
+                        required
+                      />
+                      <CardDescription className={`mb-4 leading-none ${emailError !== 'inv' ? 'text-red-500' : 'text-white'}`}>{emailError}</CardDescription>
+                    </div>
                   </div>
                   <div className="grid gap-2">
-                    <div className="flex items-center">
-                      <Label htmlFor="password">Password</Label>
-                      {/* <a
-                        href="#"
-                        className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                      >
-                        Forgot your password?
-                      </a> */}
+                    <Label htmlFor="password">Password</Label>
+                    <div className="grid gap-1">
+                      <Input 
+                        className={`h-12 ${passwordError !== 'inv' ? 'border-red-500 bg-red-50' : '' }`}
+                        onChange={(e) => {
+                          setPassword(e.target.value)
+                        }}
+                        placeholder="password"
+                        id="password"
+                        type="password" 
+                        required 
+                      />
+                      <CardDescription className={`mb-2 leading-none ${emailError !== 'inv' ? 'text-red-500' : 'text-white'}`}>{passwordError}</CardDescription>
                     </div>
-                    <Input id="password" type="password" required />
                   </div>
                 </div>
               </form>
             </CardContent>
             <CardFooter className="flex-col gap-2">
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full" onClick={handleSignup}>
                 Signup
               </Button>
               <CardAction className="w-full">
