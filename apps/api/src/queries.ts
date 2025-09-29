@@ -12,11 +12,12 @@ export async function findUser(email: string) {
 export async function createUser(email: string, password: string) {
   const hashedPassword = await bcrypt.hash(password, 10);
   console.log(hashedPassword)
-  await pool.query(
-    `INSERT INTO users (email, password, created_at) 
+  let result = await pool.query(
+    `INSERT INTO users (email, password_hash, created_at) 
      VALUES ($1, $2, $3)`,
     [email, hashedPassword, new Date()]
   );
+  return result
 }
 
 export async function getUsers() {

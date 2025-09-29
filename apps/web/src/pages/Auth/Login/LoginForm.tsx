@@ -9,7 +9,12 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 
-const LoginForm: React.FC = () => {
+interface LoginProps {
+  generalError: string | null;
+  setGeneralError: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const LoginForm: React.FC<LoginProps> = ({ generalError, setGeneralError }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('inv');
@@ -18,7 +23,7 @@ const LoginForm: React.FC = () => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const passwordRegex = /^(?=.*\d).{8,}$/; 
 
-  function handleLogin(e: React.FormEvent) {
+  async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
 
     let valid = true;
@@ -39,7 +44,17 @@ const LoginForm: React.FC = () => {
 
     if (valid) {
       console.log("Submitting:", { email, password });
-      // TODO: call API
+      let response = await fetch("http://localhost:3000/auth/login", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: email, password: password })
+      })
+      let data = await response.json()
+      if (data.error) { 
+        setGeneralError(data.error);
+      }
     }
   }
 
@@ -47,6 +62,7 @@ const LoginForm: React.FC = () => {
     <>
       <CardContent>
         <form>
+          <Label className={`mb-4 font-normal ${generalError ? 'text-red-500' : '' }`}>{generalError}</Label>
           <div className="flex flex-col gap-0">
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
