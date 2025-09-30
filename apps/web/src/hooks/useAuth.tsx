@@ -24,8 +24,14 @@ export default function useAuth() {
     return data
   }
 
-  function logout() {
-
+  async function logout() {
+    await fetch(import.meta.env.VITE_LOGOUT_URL, {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    })
   } 
 
   return {

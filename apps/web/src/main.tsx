@@ -2,6 +2,7 @@
 import { createRoot } from 'react-dom/client';
 import './index.css';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { CookiesProvider } from 'react-cookie';
 
 //pages
 import HomePage from './pages/HomePage/HomePage';
@@ -25,6 +26,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
   //<StrictMode>
+  <CookiesProvider>
       <RouterProvider router={router} />
+  </CookiesProvider>
   //</StrictMode>,
 )

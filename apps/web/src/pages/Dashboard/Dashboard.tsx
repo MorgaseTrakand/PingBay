@@ -1,5 +1,5 @@
 import React from "react";
-import Header from "../Components/Header";
+import SiteSidebar from "../Components/Sidebar";
 
 type Props = {
   // define props here if needed, e.g. title?: string;
@@ -8,7 +8,8 @@ type Props = {
 const Dashboard: React.FC<Props> = () => {
   return (
     <>
-      <Header></Header>
+      <SiteSidebar></SiteSidebar>
+      
     </>
   );
 };

@@ -1,8 +1,11 @@
 import React from "react";
+import { useCookies } from "react-cookie";
+import useAuth from "@/hooks/useAuth";
 
 type Props = {};
 
 const Header: React.FC<Props> = () => {
+  const [cookies] = useCookies(['isLoggedIn']);
 
   return (
     <>
@@ -15,7 +18,7 @@ const Header: React.FC<Props> = () => {
           </a>
 
           {/* Auth (right) */}
-          <nav className="flex items-center gap-3">
+          {!cookies.isLoggedIn && <nav className="flex items-center gap-3">
             <a
               href="/login"
               className="rounded-md px-3 py-2 text-sm font-medium hover:bg-muted"
@@ -28,7 +31,21 @@ const Header: React.FC<Props> = () => {
             >
               Sign up
             </a>
-          </nav>
+          </nav>}
+          {cookies.isLoggedIn && <nav className="flex items-center gap-3">
+            <a
+              href="/dashboard"
+              className="rounded-md px-3 py-2 text-sm font-medium hover:bg-muted"
+            >
+              Dashboard
+            </a>
+            <a
+              onClick={() => {useAuth().logout()}}
+              className="cursor-pointer rounded-md bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90"
+            >
+              Logout
+            </a>
+          </nav>}
         </div>
       </header>
     </>
