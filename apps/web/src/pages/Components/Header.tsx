@@ -3,7 +3,7 @@ import React from "react";
 type Props = {};
 
 const Header: React.FC<Props> = () => {
-  
+
   return (
     <>
       <header className="w-[80%] absolute top-0 left-1/2 -translate-x-1/2 h-16 border border-border bg-background/80 backdrop-blur rounded-xl m-2">

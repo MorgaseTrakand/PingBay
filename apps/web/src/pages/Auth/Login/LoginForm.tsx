@@ -8,6 +8,8 @@ import {
   CardDescription,
   CardFooter,
 } from "@/components/ui/card";
+import { useNavigate } from 'react-router-dom';
+import useAuth from "@/hooks/useAuth";
 
 interface LoginProps {
   generalError: string | null;
@@ -19,9 +21,11 @@ const LoginForm: React.FC<LoginProps> = ({ generalError, setGeneralError }) => {
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('inv');
   const [passwordError, setPasswordError] = useState('inv');
+  const navigate = useNavigate();
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const passwordRegex = /^(?=.*\d).{8,}$/; 
+  let auth = useAuth();
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
@@ -43,17 +47,12 @@ const LoginForm: React.FC<LoginProps> = ({ generalError, setGeneralError }) => {
     }
 
     if (valid) {
-      console.log("Submitting:", { email, password });
-      let response = await fetch("http://localhost:3000/auth/login", {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email: email, password: password })
-      })
-      let data = await response.json()
+      let data = await auth.login(email, password);
       if (data.error) { 
         setGeneralError(data.error);
+      } else {
+        setGeneralError('');
+        navigate('/dashboard');
       }
     }
   }

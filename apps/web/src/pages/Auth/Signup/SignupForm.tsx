@@ -8,6 +8,7 @@ import {
   CardAction,
   CardContent
 } from "@/components/ui/card";
+import useAuth from "@/hooks/useAuth";
 
 interface SignupProps {
   generalError: string | null;
@@ -22,8 +23,9 @@ const SignupForm: React.FC<SignupProps> = ({setGeneralError, generalError}) => {
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const passwordRegex = /^(?=.*\d).{8,}$/; 
+  let auth = useAuth();
 
-   async function handleSignup(e: React.FormEvent) {
+  async function handleSignup(e: React.FormEvent) {
     e.preventDefault();
 
     let valid = true;
@@ -43,15 +45,7 @@ const SignupForm: React.FC<SignupProps> = ({setGeneralError, generalError}) => {
     }
 
     if (valid) {
-      let response = await fetch("http://localhost:3000/auth/signup", {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email: email, password: password })
-      })
-      let data = await response.json()
-      console.log(data)
+      let data = await auth.signup(email, password);
       if (data.error) {
         setGeneralError(data.error)
       }
