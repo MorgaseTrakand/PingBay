@@ -7,7 +7,6 @@ const router = Router();
 
 router.get('/verify', async (req, res) => {
   try {
-    console.log('is this running?')
     let token = req.cookies?.accessToken;
     if (!token) {
       return res.status(401).send();
@@ -43,8 +42,11 @@ router.post('/signup', async (req, res) => {
         maxAge: 1000 * 60 * 60,
         httpOnly: true,
         //secure: false,
-        //sameSite: 'strict'
+        sameSite: 'strict'
+      }).cookie('isLoggedIn', 'true', {
+        maxAge: 1000 * 60 * 60
       })
+
       return res.status(200).json({ message: "success" })
     } else {
       return res.status(500).json({ error: "Failed to create user" });
@@ -79,9 +81,19 @@ router.post("/login", async (req, res) => {
     maxAge: 1000 * 60 * 60,
     httpOnly: true,
     //secure: false,
-    //sameSite: 'strict'
+    sameSite: 'strict'
+  }).cookie('isLoggedIn', 'true', {
+    maxAge: 1000 * 60 * 60
   })
   return res.status(200).json({ message: "success" })
 });
+
+router.get('/logout', (req, res) => {
+  try {
+    return res.clearCookie('isLoggedIn').clearCookie('accessToken').status(200).send();
+  } catch (e) {
+    return res.status(500).send();
+  }
+})
 
 export default router
