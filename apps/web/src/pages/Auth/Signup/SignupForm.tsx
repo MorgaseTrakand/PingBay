@@ -9,6 +9,8 @@ import {
   CardContent
 } from "@/components/ui/card";
 import useAuth from "@/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+import useFormValidation from "@/hooks/useFormValidation";
 
 interface SignupProps {
   generalError: string | null;
@@ -18,37 +20,29 @@ interface SignupProps {
 const SignupForm: React.FC<SignupProps> = ({setGeneralError, generalError}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [emailError, setEmailError] = useState('inv');
-  const [passwordError, setPasswordError] = useState('inv');
-
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const passwordRegex = /^(?=.*\d).{8,}$/; 
-  let auth = useAuth();
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+ 
+  let navigate = useNavigate();
 
   async function handleSignup(e: React.FormEvent) {
     e.preventDefault();
+    setPasswordError('');
+    setEmailError('');
 
-    let valid = true;
-
-    if (!emailRegex.test(email)) {
-      setEmailError("Invalid email format");
-      valid = false;
-    } else {
-      setEmailError("inv");
-    }
-
-    if (!passwordRegex.test(password)) {
-      setPasswordError("Password must be at least 8 characters and include a number");
-      valid = false;
-    } else {
-      setPasswordError("inv");
-    }
+    const {valid, errors} = useFormValidation().checkForm(email, password)
 
     if (valid) {
-      let data = await auth.signup(email, password);
-      if (data.error) {
-        setGeneralError(data.error)
+      let data = await useAuth().signup(email, password);
+      if (data.error) { 
+        setGeneralError(data.error);
+      } else {
+        setGeneralError('');
+        navigate('/dashboard');
       }
+    } else {
+      setEmailError(errors.email ?? '')
+      setPasswordError(errors.password ?? '')
     }
   }
 
@@ -62,7 +56,7 @@ const SignupForm: React.FC<SignupProps> = ({setGeneralError, generalError}) => {
               <Label htmlFor="email">Email</Label>
               <div className="grid gap-1">
                 <Input
-                  className={`h-12 ${emailError !== 'inv' ? 'border-red-500 bg-red-50' : '' }`}
+                  className={`h-12 ${emailError ? 'border-red-500 bg-red-50' : '' }`}
                   id="email"
                   type="email"
                   onChange={(e) => {
@@ -71,14 +65,14 @@ const SignupForm: React.FC<SignupProps> = ({setGeneralError, generalError}) => {
                   placeholder="email@example.com"
                   required
                 />
-                <CardDescription className={`mb-4 leading-none ${emailError !== 'inv' ? 'text-red-500' : 'text-white'}`}>{emailError}</CardDescription>
+                <CardDescription className={`mb-4 leading-none ${emailError ? 'text-red-500' : 'text-white'}`}>{emailError}</CardDescription>
               </div>
             </div>
             <div className="grid gap-2">
               <Label htmlFor="password">Password</Label>
               <div className="grid gap-1">
                 <Input 
-                  className={`h-12 ${passwordError !== 'inv' ? 'border-red-500 bg-red-50' : '' }`}
+                  className={`h-12 ${passwordError ? 'border-red-500 bg-red-50' : '' }`}
                   onChange={(e) => {
                     setPassword(e.target.value)
                   }}
@@ -87,7 +81,7 @@ const SignupForm: React.FC<SignupProps> = ({setGeneralError, generalError}) => {
                   type="password" 
                   required 
                 />
-                <CardDescription className={`mb-2 leading-none ${emailError !== 'inv' ? 'text-red-500' : 'text-white'}`}>{passwordError}</CardDescription>
+                <CardDescription className={`mb-2 leading-none ${emailError ? 'text-red-500' : 'text-white'}`}>{passwordError}</CardDescription>
               </div>
             </div>
           </div>

@@ -1,8 +1,25 @@
 import { Router } from "express"; 
 import { findUser, createUser } from "./queries.js";
 import bcrypt from "bcryptjs";
+import { generateToken, verifyToken } from "./utils/jwt.js";
 
 const router = Router();
+
+router.get('/verify', async (req, res) => {
+  try {
+    console.log('is this running?')
+    let token = req.cookies?.accessToken;
+    if (!token) {
+      return res.status(401).send();
+    }
+    if (verifyToken(token)?.userId) {
+      return res.status(200).send();
+    }
+    return res.status(401).send();
+  } catch (e) {
+    return res.status(401).send();
+  }
+});
 
 router.post('/signup', async (req, res) => {
   try {
@@ -17,9 +34,18 @@ router.post('/signup', async (req, res) => {
     }
     
     let result: any = await createUser(email, password);
-    console.log(result)
+
     if (result.rowCount > 0) {
-      return res.status(201).json({ message: "User created successfully" });
+      const token = generateToken({
+        userId: user.id,
+      });
+      res.cookie('accessToken', token, {
+        maxAge: 1000 * 60 * 60,
+        httpOnly: true,
+        //secure: false,
+        //sameSite: 'strict'
+      })
+      return res.status(200).json({ message: "success" })
     } else {
       return res.status(500).json({ error: "Failed to create user" });
     }
@@ -45,6 +71,16 @@ router.post("/login", async (req, res) => {
   if (!valid) {
     return res.status(401).json({ error: "Invalid email or password" });
   }
+
+  const token = generateToken({
+    userId: user.id,
+  });
+  res.cookie('accessToken', token, {
+    maxAge: 1000 * 60 * 60,
+    httpOnly: true,
+    //secure: false,
+    //sameSite: 'strict'
+  })
   return res.status(200).json({ message: "success" })
 });
 

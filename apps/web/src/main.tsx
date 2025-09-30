@@ -10,13 +10,12 @@ import SignupPage from './pages/Auth/Signup/Signup';
 import Dashboard from './pages/Dashboard/Dashboard';
 
 import { authLoader } from './utils/authLoader';
-import { Suspense } from 'react';
 
 const router = createBrowserRouter([
   { path: "/", element: <HomePage /> },
   { 
     path: "/dashboard", 
-    element: <Suspense fallback={<div></div>}><Dashboard /></Suspense>,
+    element: <Dashboard />,
     loader: authLoader,
   },
   { path: "/login", element: <LoginPage /> },
