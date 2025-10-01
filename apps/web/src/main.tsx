@@ -8,7 +8,10 @@ import { CookiesProvider } from 'react-cookie';
 import HomePage from './pages/HomePage/HomePage';
 import LoginPage from './pages/Auth/Login/Login';
 import SignupPage from './pages/Auth/Signup/Signup';
-import Dashboard from './pages/Dashboard/Dashboard';
+
+import DashboardSwitchBoard from './pages/Dashboard/DashboardSwitchBoard';
+import Dashboard from './pages/Dashboard/Dashboard/Dashboard';
+import Settings from './pages/Dashboard/Settings/Settings';
 
 import { authLoader } from './utils/authLoader';
 
@@ -16,8 +19,12 @@ const router = createBrowserRouter([
   { path: "/", element: <HomePage /> },
   { 
     path: "/dashboard", 
-    element: <Dashboard />,
+    element: <DashboardSwitchBoard />,
     loader: authLoader,
+    children: [
+      { index: true, element: <Dashboard /> },
+      { path: 'settings', element: <Settings />}
+    ]
   },
   { path: "/login", element: <LoginPage /> },
   { path: "/signup", element: <SignupPage /> },
