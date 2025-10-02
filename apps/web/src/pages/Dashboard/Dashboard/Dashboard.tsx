@@ -1,7 +1,7 @@
 import React from "react";
 import AddSiteBento from "./AddSiteBento";
 import DashboardHeader from "../DashboardHeader";
-import SiteTable from "./SiteTable";
+import DataTable from "./Table/TableComponent";
 
 type Props = {};
 
@@ -17,8 +17,8 @@ const Dashboard: React.FC<Props> = () => {
           <div className="bg-white h-28 rounded-xl border-1" />
           <div className="bg-white h-28 rounded-xl border-1" />
         </div>
-        <div className="bg-white min-h-[100vh] flex-1 rounded-xl md:min-h-min border-1">
-          <SiteTable/>
+        <div className="bg-white min-h-[100vh] flex-1 rounded-xl md:min-h-min border-1 p-4">
+          <DataTable/>
         </div>
       </div>
     </>
