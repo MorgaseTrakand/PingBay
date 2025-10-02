@@ -1,7 +1,7 @@
 import { Router } from "express"; 
-import { findUser, createUser } from "./queries.js";
+import { findUser, createUser } from "../queries.js";
 import bcrypt from "bcryptjs";
-import { generateToken, verifyToken } from "./utils/jwt.js";
+import { generateToken, verifyToken } from "../utils/jwt.js";
 
 const router = Router();
 

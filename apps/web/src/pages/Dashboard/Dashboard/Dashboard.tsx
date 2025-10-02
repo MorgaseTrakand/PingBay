@@ -17,7 +17,7 @@ const Dashboard: React.FC<Props> = () => {
           <div className="bg-white h-28 rounded-xl border-1" />
           <div className="bg-white h-28 rounded-xl border-1" />
         </div>
-        <div className="bg-white min-h-[100vh] flex-1 rounded-xl md:min-h-min border-1 p-4">
+        <div className="bg-white min-h-[100vh] flex-1 rounded-xl md:min-h-min border-1 py-20 px-8">
           <DataTable/>
         </div>
       </div>
