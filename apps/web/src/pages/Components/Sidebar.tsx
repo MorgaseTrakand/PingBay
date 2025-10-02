@@ -1,22 +1,23 @@
 import React from "react";
-import { Settings, LogOut, LayoutDashboard } from "lucide-react";
+import { Settings, LogOut, LayoutDashboard, ChartColumn } from "lucide-react";
 import { Sidebar, SidebarHeader, SidebarContent, SidebarFooter, SidebarMenuItem, SidebarMenu, SidebarMenuButton } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import useAuth from "@/hooks/useAuth";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 type Props = {};
+
 const footerItems = [
-  { title: "Settings", url: "/dashboard/settings", icon: Settings },
-  { title: "Logout", url: "#", icon: LogOut },
+  { title: "Settings", url: "/dashboard/settings", icon: Settings, type: "link" },
+  { title: "Logout", url: "#", icon: LogOut, type: "action" },
 ];
 
 const contentItems = [
-  { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
+  { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard, type: "link" },
+  { title: "Analytics", url: "/dashboard/analytics", icon: ChartColumn, type: "link" },
 ]
 
 const SiteSidebar: React.FC<Props> =  () => {
-  // Hooks must be called at top-level of component
   const navigate = useNavigate();
   const auth = useAuth();
 
@@ -48,7 +49,7 @@ const SiteSidebar: React.FC<Props> =  () => {
             {contentItems.map((item) => (
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton asChild className="h-12 border-1 bg-white" onClick={() => handleClick(item.title)}>
-                  <a href={item.url}> <item.icon /> <span>{item.title}</span> </a>
+                  <NavLink to={item.url}> <item.icon /> <span>{item.title}</span> </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             ))}
@@ -61,7 +62,7 @@ const SiteSidebar: React.FC<Props> =  () => {
             {footerItems.map((item) => (
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton asChild className="h-12 border-1" onClick={() => handleClick(item.title)}>
-                  <a href={item.url}> <item.icon /> <span>{item.title}</span> </a>
+                  <NavLink to={item.url}> <item.icon /> <span>{item.title}</span> </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             ))}

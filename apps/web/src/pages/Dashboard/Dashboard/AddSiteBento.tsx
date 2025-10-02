@@ -1,31 +1,37 @@
-// AddSiteBentoUI.tsx
 import { useId, useState } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetFooter, SheetDescription } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
+import { toast } from "sonner";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
-type Props = {
-  onCreate?: (payload: { name: string; url: string; interval: number }) => void;
-};
-
-export default function AddSiteBentoUI({ onCreate }: Props) {
+export default function AddSiteBentoUI() {
   const id = useId();
   const [open, setOpen] = useState(false);
   const [url, setUrl] = useState("");
   const [name, setName] = useState("");
-  const [interval, setInterval] = useState<number>(5);
+  //const [interval, setInterval] = useState<number>(6);
 
   function resetForm() {
     setUrl("");
     setName("");
-    setInterval(5);
+    //setInterval(6);
   }
 
-  function handleCreateUI() {
-    // UI-only: call optional callback and close sheet
-    if (onCreate) onCreate({ name, url, interval });
+  function handleCreate() {
+    
     setOpen(false);
     resetForm();
+    toast.success("Site has been successfully added")
   }
 
   return (
@@ -38,7 +44,7 @@ export default function AddSiteBentoUI({ onCreate }: Props) {
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") setOpen(true);
           }}
-          className="bg-white aspect-video rounded-xl border p-4 cursor-pointer flex flex-col justify-center gap-2 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-ring"
+          className="bg-white h-28 rounded-xl border p-5 cursor-pointer flex flex-col justify-between gap-2 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-ring"
         >
           <div>
             <h3 className="font-semibold text-lg leading-none">Add Site to Monitor</h3>
@@ -48,15 +54,16 @@ export default function AddSiteBentoUI({ onCreate }: Props) {
         </div>
       </SheetTrigger>
 
-      <SheetContent side="right" className="flex flex-col">
+      <SheetContent side="right" className="flex flex-col rounded-tl-xl rounded-bl-xl">
         <SheetHeader>
-          <SheetTitle>Add a Site</SheetTitle>
+          <SheetTitle className="text-medium leading-none mb-2">Add a Site</SheetTitle>
           <SheetDescription>
             Add a site and set ping interval and notification settings
           </SheetDescription>
+          <Separator className="mt-2"/>
         </SheetHeader>
 
-        <div className="mt-4 space-y-4 p-2">
+        <div className="space-y-4 p-4 pt-0">
           <label className="block">
             <div className="text-sm font-medium mb-1">URL</div>
             <Input
@@ -81,37 +88,44 @@ export default function AddSiteBentoUI({ onCreate }: Props) {
           </label>
 
           <label className="block">
-            <div className="text-sm font-medium mb-1">Check Interval</div>
-            <select
-              className="w-full rounded-md border px-3 py-2"
-              value={String(interval)}
-              onChange={(e) => setInterval(Number(e.target.value))}
-            >
-              <option value="1">1 hour</option>
-              <option value="5">6 hours (recommended)</option>
-              <option value="10">Daily</option>
-            </select>
+            <div className="text-sm font-medium mb-1">Additional Options</div>
+            <div className="flex gap-2">
+              <Select>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select an Interval" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Interval</SelectLabel>
+                    <SelectItem value="1">1 hour</SelectItem>
+                    <SelectItem value="6">6 hours</SelectItem>
+                    <SelectItem value="24">Daily</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              <Select>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Notifications" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Type</SelectLabel>
+                    <SelectItem value="downtime">On Downtime</SelectItem>
+                    <SelectItem value="hybrid">Weekly Reports + Downtime</SelectItem>
+                    <SelectItem value="none">None</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
           </label>
         </div>
         <SheetFooter>
+          <Separator />
           <div className="flex items-center justify-between pt-2">
-            <Button variant="ghost" onClick={() => { setOpen(false); resetForm(); }}>
+            <Button variant="ghost" onClick={() => { setOpen(false); resetForm(); }} className="cursor-pointer border-1">
               Cancel
             </Button>
-
-            <div className="flex gap-2">
-              <Button
-                variant="link"
-                onClick={() => {
-                  // route to advanced page (UI-only)
-                  window.location.href = `/monitors/new?url=${encodeURIComponent(url)}`;
-                }}
-              >
-                Advanced settings
-              </Button>
-
-              <Button onClick={handleCreateUI}>Create monitor</Button>
-            </div>
+            <Button onClick={handleCreate} className="cursor-pointer">Create monitor</Button>
           </div>
         </SheetFooter>
       </SheetContent>

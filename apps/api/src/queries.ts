@@ -24,3 +24,7 @@ export async function getUsers() {
   const result = await pool.query("SELECT * FROM users;");
   return result.rows;
 }
+
+export async function addSite(url: string, title: string, interval: string) {
+  
+}

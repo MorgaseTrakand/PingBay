@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import './index.css';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { CookiesProvider } from 'react-cookie';
+import { Toaster } from "sonner";
 
 //pages
 import HomePage from './pages/HomePage/HomePage';
@@ -12,6 +13,7 @@ import SignupPage from './pages/Auth/Signup/Signup';
 import DashboardSwitchBoard from './pages/Dashboard/DashboardSwitchBoard';
 import Dashboard from './pages/Dashboard/Dashboard/Dashboard';
 import Settings from './pages/Dashboard/Settings/Settings';
+import Analytics from './pages/Dashboard/Analytics/Analytics';
 
 import { authLoader } from './utils/authLoader';
 
@@ -23,7 +25,8 @@ const router = createBrowserRouter([
     loader: authLoader,
     children: [
       { index: true, element: <Dashboard /> },
-      { path: 'settings', element: <Settings />}
+      { path: 'settings', element: <Settings /> },
+      { path: 'analytics', element: <Analytics /> },
     ]
   },
   { path: "/login", element: <LoginPage /> },
@@ -35,6 +38,7 @@ createRoot(document.getElementById('root')!).render(
   //<StrictMode>
   <CookiesProvider>
       <RouterProvider router={router} />
+      <Toaster richColors position='top-center'/>
   </CookiesProvider>
   //</StrictMode>,
 )
