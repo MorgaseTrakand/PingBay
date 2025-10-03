@@ -1,13 +1,25 @@
 import { Router } from "express"; 
+import { verifyToken } from "../utils/jwt.js";
+import { addSite } from "../Queries/siteQueries.js";
 
 const router = Router();
 
-router.post('/add-site', (req, res) => {
-  let data = req.body;  
-  const { url, title, interval, notifications} = data;
+router.post('/add-site', async (req, res) => {
+  try {
+    let data = req.body;  
+    const { url, title, interval, notifications} = data;
+    let userID = req.cookies?.userID;
 
-  console.log(url, title, interval, notifications)
-  return res.status(500).send();
+    let token = req.cookies?.accessToken;
+    if (!token || !userID || !verifyToken(token)?.userId) {
+      return res.status(401).send();
+    }
+
+    let result = await addSite(userID, url, title, interval, notifications);
+    return res.status(200).send();
+  } catch (e) {
+    return res.status(500).send();
+  }
 })
 
 export default router

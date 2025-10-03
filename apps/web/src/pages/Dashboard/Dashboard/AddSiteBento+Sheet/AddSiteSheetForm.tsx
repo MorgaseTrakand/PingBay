@@ -24,7 +24,7 @@ export default function AddSiteSheetForm({ setOpen }: Props) {
   const id = useId();
   const [url, setUrl] = useState("");
   const [title, setTitle] = useState("");
-  const [interval, setInterval] = useState("6");
+  const [interval, setInterval] = useState("300");
   const [notifications, setNotifications] = useState(false);
 
   const [errors, setErrors] = useState({ url: "", title: "" })
@@ -114,16 +114,16 @@ export default function AddSiteSheetForm({ setOpen }: Props) {
           <div className="flex gap-2">
             <div className="w-full">
               <h3 className="text-sm font-medium mb-1">Interval</h3>
-              <Select defaultValue="6" onValueChange={(e) => {setInterval(e)}}>
+              <Select defaultValue="300" onValueChange={(e) => {setInterval(e)}}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select an Interval"/>
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
                     <SelectLabel>Interval</SelectLabel>
-                    <SelectItem value="1">1 hour</SelectItem>
-                    <SelectItem value="6">6 hours</SelectItem>
-                    <SelectItem value="24">Daily</SelectItem>
+                    <SelectItem value="60">1 Minute</SelectItem>
+                    <SelectItem value="300">5 Minutes</SelectItem>
+                    <SelectItem value="3600">Hourly</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>

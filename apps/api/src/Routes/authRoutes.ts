@@ -1,5 +1,5 @@
 import { Router } from "express"; 
-import { findUser, createUser } from "../queries.js";
+import { findUser, createUser } from "../Queries/authQueries.js";
 import bcrypt from "bcryptjs";
 import { generateToken, verifyToken } from "../utils/jwt.js";
 
@@ -36,15 +36,19 @@ router.post('/signup', async (req, res) => {
 
     if (result.rowCount > 0) {
       const token = generateToken({
-        userId: user.id,
+        userId: result.rows[0],
       });
       res.cookie('accessToken', token, {
         maxAge: 1000 * 60 * 60,
         httpOnly: true,
         //secure: false,
         sameSite: 'strict'
+      }).cookie('userID', result.rows[0], {
+        maxAge: 1000 * 60 * 60,
+        httpOnly: true,
+        sameSite: 'strict'
       }).cookie('isLoggedIn', 'true', {
-        maxAge: 1000 * 60 * 60
+        maxAge: 1000 * 60 * 60,
       })
 
       return res.status(200).json({ message: "success" })
@@ -82,15 +86,19 @@ router.post("/login", async (req, res) => {
     httpOnly: true,
     //secure: false,
     sameSite: 'strict'
-  }).cookie('isLoggedIn', 'true', {
-    maxAge: 1000 * 60 * 60
+  }).cookie('userID', user.id, {
+    maxAge: 1000 * 60 * 60,
+    httpOnly: true,
+    sameSite: 'strict'
+  }).cookie('isLoggedIn', "true", {
+    maxAge: 1000 * 60 * 60,
   })
   return res.status(200).json({ message: "success" })
 });
 
 router.get('/logout', (req, res) => {
   try {
-    return res.clearCookie('isLoggedIn').clearCookie('accessToken').status(200).send();
+    return res.clearCookie('isLoggedIn').clearCookie('userID').clearCookie('accessToken').status(200).send();
   } catch (e) {
     return res.status(500).send();
   }
