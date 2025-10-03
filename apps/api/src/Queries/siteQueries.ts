@@ -17,3 +17,11 @@ export async function getSites(userID: number) {
   )
   return result
 }
+
+export async function deleteSite(siteID: number) {
+  await pool.query(
+    "DELETE FROM user_sites WHERE id = ($1)",
+    [siteID]
+  )
+  return 5
+}

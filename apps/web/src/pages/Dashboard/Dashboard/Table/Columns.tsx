@@ -1,4 +1,5 @@
-import type { ColumnDef } from "@tanstack/react-table"
+import type { ColumnDef } from "@tanstack/react-table";
+import { ActionDropdown } from "./ActionDropdown";
 
 export type Sites = {
   id: string
@@ -35,6 +36,6 @@ export const columns: ColumnDef<Sites>[] = [
   {
     accessorKey: "actions",
     header: "Actions",
-    cell: ({ row }) => row.original.actions,
+    cell: () => { return (<ActionDropdown />) },
   },
 ]

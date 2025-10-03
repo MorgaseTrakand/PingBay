@@ -1,6 +1,6 @@
 import { Router } from "express"; 
 import { verifyToken } from "../utils/jwt.js";
-import { addSite, getSites } from "../Queries/siteQueries.js";
+import { addSite, getSites, deleteSite } from "../Queries/siteQueries.js";
 
 const router = Router();
 
@@ -44,7 +44,17 @@ router.post('/get-sites', async (req, res) => {
 })
 
 router.post('/delete-site', async (req, res) => {
+  try {
+    let siteID = req.body.siteID;  
 
+    let result = await deleteSite(siteID)
+    if (result == 5) {
+      return res.status(200).send();
+    }
+    return res.status(500).send();
+  } catch (e) {
+    return res.status(500).send();
+  }
 })
 
 export default router

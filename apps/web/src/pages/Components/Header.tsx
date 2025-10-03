@@ -1,6 +1,7 @@
 import React from "react";
 import { useCookies } from "react-cookie";
 import useAuth from "@/hooks/useAuth";
+import { SidebarMenuButton } from "@/components/ui/sidebar";
 
 type Props = {};
 
@@ -12,10 +13,13 @@ const Header: React.FC<Props> = () => {
       <header className="w-[80%] absolute top-0 left-1/2 -translate-x-1/2 h-16 border border-border bg-background/80 backdrop-blur rounded-xl m-2">
         <div className="mx-auto flex h-full max-w-6xl items-center justify-between px-4">
           {/* Brand (left) */}
-          <a href="/" className="inline-flex items-center">
-            <span className="text-xl font-bold">Ping</span>
-            <span className="text-xl font-bold">Bay</span>
-          </a>
+            <a href="/" className="flex items-center gap-2 h-12 px-2">
+              <div className="h-6 w-6 rounded-full bg-blue-500" />
+              <h1 className="leading-none font-medium text-lg">
+                <span>Ping</span>
+                <span>Bay</span>
+              </h1>
+            </a>
 
           {/* Auth (right) */}
           {!cookies.isLoggedIn && <nav className="flex items-center gap-3">
