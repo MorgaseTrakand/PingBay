@@ -9,3 +9,11 @@ export async function addSite(userID: number, url: string, title: string, interv
   )
   return result
 }
+
+export async function getSites(userID: number) {
+  const result = await pool.query(
+    "SELECT * FROM user_sites WHERE user_id = ($1)",
+    [userID]
+  )
+  return result
+}

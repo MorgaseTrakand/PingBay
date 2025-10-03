@@ -8,53 +8,14 @@ function TableComponent() {
 
   useEffect(() => {
     async function fetchData() {
-      const sites: Sites[] = [
-        {
-          id: "site-1",
-          title: "Pingbay Main",
-          status: "Up",
-          url: "https://pingbay.com",
-          notifications: "Enabled",
-          lastCheck: Date.now() - 1000 * 60 * 5,
-          actions: <button className="text-blue-500">Edit</button>,
+      let response = await fetch(import.meta.env.VITE_GET_SITES_URL, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
         },
-        {
-          id: "site-2",
-          title: "API Server",
-          status: "Down",
-          url: "https://api.pingbay.com",
-          notifications: "Enabled",
-          lastCheck: Date.now() - 1000 * 60 * 20,
-          actions: <button className="text-blue-500">Edit</button>,
-        },
-        {
-          id: "site-3",
-          title: "Docs Portal",
-          status: "Up",
-          url: "https://docs.pingbay.com",
-          notifications: "Disabled",
-          lastCheck: Date.now() - 1000 * 60 * 60,
-          actions: <button className="text-blue-500">Edit</button>,
-        },
-        {
-          id: "site-4",
-          title: "Blog",
-          status: "Up",
-          url: "https://blog.pingbay.com",
-          notifications: "Enabled",
-          lastCheck: Date.now() - 1000 * 60 * 2,
-          actions: <button className="text-blue-500">Edit</button>,
-        },
-        {
-          id: "site-5",
-          title: "Admin Dashboard",
-          status: "Down",
-          url: "https://admin.pingbay.com",
-          notifications: "Disabled",
-          lastCheck: Date.now() - 1000 * 60 * 30,
-          actions: <button className="text-blue-500">Edit</button>,
-        },
-      ];
+        credentials: 'include',
+      })
+      let sites = await response.json();
       setData(sites);
     }
     fetchData();

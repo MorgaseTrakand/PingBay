@@ -1,6 +1,6 @@
 import { Router } from "express"; 
 import { verifyToken } from "../utils/jwt.js";
-import { addSite } from "../Queries/siteQueries.js";
+import { addSite, getSites } from "../Queries/siteQueries.js";
 
 const router = Router();
 
@@ -15,8 +15,21 @@ router.post('/add-site', async (req, res) => {
       return res.status(401).send();
     }
 
-    let result = await addSite(userID, url, title, interval, notifications);
+    await addSite(userID, url, title, interval, notifications);
     return res.status(200).send();
+  } catch (e) {
+    return res.status(500).send();
+  }
+})
+
+router.post('/get-sites', async (req, res) => {
+  try {
+    let userID = req.cookies?.userID;
+    
+    if (userID) {
+      let sites = await getSites(userID);
+      return res.json(sites.rows);
+    }
   } catch (e) {
     return res.status(500).send();
   }
