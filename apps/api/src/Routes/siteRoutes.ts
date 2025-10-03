@@ -10,17 +10,23 @@ router.post('/add-site', async (req, res) => {
     const { url, title, interval, notifications} = data;
     let userID = req.cookies?.userID;
     
-    console.log(data, userID)
     let token = req.cookies?.accessToken;
     if (!token || !userID || !verifyToken(token)?.userId) {
       return res.status(401).send();
+    }
+    
+    let sites = (await getSites(userID)).rows;
+    const isDuplicate = sites.some(site => site.url === url || site.title === title);
+
+    if (isDuplicate) {
+      return res.status(500).json("You already have a site with this title or URL.");
     }
 
     await addSite(userID, url, title, interval, notifications);
     return res.status(200).send();
   } catch (e) {
     console.log(e)
-    return res.status(500).send();
+    return res.status(500).json("Something went wrong!");
   }
 })
 
@@ -35,6 +41,10 @@ router.post('/get-sites', async (req, res) => {
   } catch (e) {
     return res.status(500).send();
   }
+})
+
+router.post('/delete-site', async (req, res) => {
+
 })
 
 export default router
