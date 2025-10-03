@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import validator from 'validator';
-
+import { useDataTableTrigger } from '../../../../lib/zustand.ts';
 
 type Props = {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -28,6 +28,8 @@ export default function AddSiteSheetForm({ setOpen }: Props) {
   const [notifications, setNotifications] = useState(false);
 
   const [errors, setErrors] = useState({ url: "", title: "" })
+
+  const { increment } = useDataTableTrigger();
 
   function resetForm() {
     setUrl("");
@@ -63,6 +65,7 @@ export default function AddSiteSheetForm({ setOpen }: Props) {
       let data = await response;
       if (data.status == 200) {
         toast.success("Site has been successfully added");
+        increment();
       } else {
         toast.error("Something went wrong.")
       }
@@ -130,7 +133,7 @@ export default function AddSiteSheetForm({ setOpen }: Props) {
             </div>
             <div className="w-full">
               <h3 className="text-sm font-medium mb-1">Notifications</h3>
-              <Select defaultValue="false" onValueChange={(e) => {setNotifications(Boolean(e))}}>
+              <Select defaultValue="false" onValueChange={(e) => {setNotifications(JSON.parse(e))}}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Notifications" />
                 </SelectTrigger>

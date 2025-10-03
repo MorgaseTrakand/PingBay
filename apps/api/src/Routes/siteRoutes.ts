@@ -9,7 +9,8 @@ router.post('/add-site', async (req, res) => {
     let data = req.body;  
     const { url, title, interval, notifications} = data;
     let userID = req.cookies?.userID;
-
+    
+    console.log(data, userID)
     let token = req.cookies?.accessToken;
     if (!token || !userID || !verifyToken(token)?.userId) {
       return res.status(401).send();
@@ -18,6 +19,7 @@ router.post('/add-site', async (req, res) => {
     await addSite(userID, url, title, interval, notifications);
     return res.status(200).send();
   } catch (e) {
+    console.log(e)
     return res.status(500).send();
   }
 })

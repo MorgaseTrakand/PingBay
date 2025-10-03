@@ -1,6 +1,6 @@
 import { pool } from "../dbconfig.js";
 
-export async function addSite(userID: number, url: string, title: string, interval: number, notifications: boolean) {
+export async function addSite(userID: number, url: string, title: string, interval: number, notifications: string) {
   const result = await pool.query(
     `INSERT INTO user_sites (user_id, url, title, check_interval, notifications_enabled)
      VALUES ($1, $2, $3, $4, $5)
