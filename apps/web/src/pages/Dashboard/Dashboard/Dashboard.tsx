@@ -1,5 +1,5 @@
 import React from "react";
-import AddSiteBento from "./AddSiteBento";
+import AddSiteBento from "./AddSiteBento+Sheet/AddSiteBento";
 import DashboardHeader from "../DashboardHeader";
 import DataTable from "./Table/TableComponent";
 

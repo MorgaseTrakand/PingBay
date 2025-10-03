@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 
 import authRoutes from "./Routes/authRoutes.js";
 import homePageRoutes from "./Routes/homePageRoutes.js";
+import siteRoutes from "./Routes/siteRoutes.js";
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -19,6 +20,7 @@ app.use(cookieParser());
 
 app.use('/auth', authRoutes);
 app.use('/homepage', homePageRoutes);
+app.use('/site', siteRoutes);
   
 app.get("/health", (req, res) => {
   res.json({ status: "ok" });
