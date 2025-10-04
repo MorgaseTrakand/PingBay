@@ -14,9 +14,9 @@ router.get('/verify', async (req, res) => {
     if (verifyToken(token)?.userId) {
       return res.status(200).send();
     }
-    return res.status(401).send();
+    return res.status(401).json("Something went wrong!");
   } catch (e) {
-    return res.status(401).send();
+    return res.status(401).json(e);
   }
 });
 
@@ -100,7 +100,7 @@ router.get('/logout', (req, res) => {
   try {
     return res.clearCookie('isLoggedIn').clearCookie('userID').clearCookie('accessToken').status(200).send();
   } catch (e) {
-    return res.status(500).send();
+    return res.status(500).json(e);
   }
 })
 

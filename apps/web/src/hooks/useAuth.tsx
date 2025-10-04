@@ -11,10 +11,11 @@ export default function useAuth() {
         },
         body: JSON.stringify({ email: email, password: password })
       })
-      let data = await response.json()
-      if (response.ok) {
-        set(true)
+      if (!response.ok) {
+        return { error: response.statusText }
       }
+      let data = await response.json();
+      set(true)
       return data
   }
 
@@ -27,10 +28,12 @@ export default function useAuth() {
       credentials: 'include',
       body: JSON.stringify({ email: email, password: password })
     })
-    let data = await response.json();
-    if (response.ok) {
-      set(true)
+    if (!response.ok) {
+      return {error: response.statusText };
     }
+    let data = await response.json();
+    set(true)
+    
     return data
   }
 
