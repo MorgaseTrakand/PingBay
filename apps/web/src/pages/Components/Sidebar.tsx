@@ -25,7 +25,6 @@ const SiteSidebar: React.FC<Props> =  () => {
     if (title === "Logout") {
       await auth.logout();
       navigate("/");
-      return;
     }
   };
 

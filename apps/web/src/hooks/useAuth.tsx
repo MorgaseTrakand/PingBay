@@ -1,4 +1,8 @@
+import { useUpdateUserState } from "@/lib/zustand"
+
 export default function useAuth() {
+  const set = useUpdateUserState.getState().set;
+  
   async function signup(email: string, password: string) {
     let response = await fetch(import.meta.env.VITE_SIGNUP_URL, {
         method: "POST",
@@ -8,6 +12,9 @@ export default function useAuth() {
         body: JSON.stringify({ email: email, password: password })
       })
       let data = await response.json()
+      if (response.ok) {
+        set(true)
+      }
       return data
   }
 
@@ -21,17 +28,23 @@ export default function useAuth() {
       body: JSON.stringify({ email: email, password: password })
     })
     let data = await response.json();
+    if (response.ok) {
+      set(true)
+    }
     return data
   }
 
   async function logout() {
-    await fetch(import.meta.env.VITE_LOGOUT_URL, {
+    let response = await fetch(import.meta.env.VITE_LOGOUT_URL, {
       method: "GET",
       headers: {
         'Content-Type': 'application/json',
       },
       credentials: 'include',
     })
+    if (response.ok) {
+      set(false)
+    }
   } 
 
   return {

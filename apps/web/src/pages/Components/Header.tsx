@@ -1,12 +1,12 @@
 import React from "react";
-import { useCookies } from "react-cookie";
 import useAuth from "@/hooks/useAuth";
+import { useUpdateUserState } from "@/lib/zustand";
 
 type Props = {};
 
 const Header: React.FC<Props> = () => {
-  const [cookies] = useCookies(['isLoggedIn']);
-
+  const isLoggedIn = useUpdateUserState((state) => state.isLoggedIn);
+  
   return (
     <>
       <header className="w-[80%] absolute top-0 left-1/2 -translate-x-1/2 h-16 border border-border bg-background/80 backdrop-blur rounded-xl m-2">
@@ -21,7 +21,7 @@ const Header: React.FC<Props> = () => {
             </a>
 
           {/* Auth (right) */}
-          {!cookies.isLoggedIn && <nav className="flex items-center gap-3">
+          {!isLoggedIn && <nav className="flex items-center gap-3">
             <a
               href="/login"
               className="rounded-md px-3 py-2 text-sm font-medium hover:bg-muted"
@@ -35,7 +35,7 @@ const Header: React.FC<Props> = () => {
               Sign up
             </a>
           </nav>}
-          {cookies.isLoggedIn && <nav className="flex items-center gap-3">
+          {isLoggedIn && <nav className="flex items-center gap-3">
             <a
               href="/dashboard"
               className="rounded-md px-3 py-2 text-sm font-medium hover:bg-muted"
