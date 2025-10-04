@@ -59,22 +59,20 @@ export const ActionDropdown: React.FC<Props> = ({ siteID }) => {
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">
               Edit Site
             </DropdownMenuItem>
             <DropdownMenuItem>
               <span>Notifications</span>
-              <Switch id="notifications" />
+              <Switch id="notifications" className="cursor-pointer" />
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuLabel>Destructive Actions</DropdownMenuLabel>
-            <DropdownMenuItem>
               <AlertDialogTrigger asChild>
-                <Button size="sm" variant={"destructive"}>
+                <Button size="sm" variant={"destructive"} className="ml-2 mb-2 cursor-pointer mt-1">
                   Delete Site
                 </Button>
               </AlertDialogTrigger>
-            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
         <AlertDialogContent>

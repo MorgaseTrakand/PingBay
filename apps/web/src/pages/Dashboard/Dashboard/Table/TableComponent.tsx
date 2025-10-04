@@ -17,7 +17,11 @@ function TableComponent() {
         },
         credentials: 'include',
       })
-      let sites = await response.json();
+      let sites = (await response.json()).map((site: any) => ({
+        ...site,
+        notifications: site.notifications === "true" ? "Enabled" : "Disabled",
+      }));
+
       setData(sites);
     }
     fetchData();

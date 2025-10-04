@@ -1,5 +1,6 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { ActionDropdown } from "./ActionDropdown";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export type Sites = {
   id: string
@@ -7,11 +8,33 @@ export type Sites = {
   status: "Up" | "Down"
   url: string
   notifications: "Enabled" | "Disabled"
-  lastCheck: number
+  lastCheck: Date
   actions: React.ReactNode
 }
 
 export const columns: ColumnDef<Sites>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
   {
     accessorKey: "title",
     header: "Title",
@@ -35,7 +58,7 @@ export const columns: ColumnDef<Sites>[] = [
   },
   {
     accessorKey: "actions",
-    header: "Actions",
+    header: "",
     cell: ({ row }) => { return (<ActionDropdown siteID={parseInt(row.original.id)}/>) },
   },
 ]
