@@ -252,8 +252,8 @@
   --destructive-foreground: #ffffff;
 
   /* Form / borders / rings */
-  --border: #e5e7eb;
-  --input: #f8fafc;
+  --border: #bfc1c5;
+  --input: #e1e1e1;
   --ring: rgba(22, 119, 255, 0.12); /* subtle blue ring */
 
   /* Chart palette (keep distinct readable colors) */

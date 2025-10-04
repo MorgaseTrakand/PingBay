@@ -11,7 +11,6 @@ import { MoreHorizontal } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -20,10 +19,32 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
+import { useDataTableTrigger } from '../../../../lib/zustand.ts';
 
-type Props = {};
+type Props = {
+  siteID: number
+};
 
-export const ActionDropdown: React.FC<Props> = () => {
+export const ActionDropdown: React.FC<Props> = ({ siteID }) => {
+  const { increment } = useDataTableTrigger();
+
+  async function deleteSite() {
+    let response = await fetch(import.meta.env.VITE_DELETE_SITE_URL, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ siteID: siteID })
+    })
+    if (response.status == 200) {
+      toast.success("Site successfully deleted");
+      increment();
+    } else {
+      toast.error("Something went wrong!")
+    }
+  }
 
   return (
     <>
@@ -49,7 +70,7 @@ export const ActionDropdown: React.FC<Props> = () => {
             <DropdownMenuLabel>Destructive Actions</DropdownMenuLabel>
             <DropdownMenuItem>
               <AlertDialogTrigger asChild>
-                <Button size="sm">
+                <Button size="sm" variant={"destructive"}>
                   Delete Site
                 </Button>
               </AlertDialogTrigger>
@@ -60,13 +81,12 @@ export const ActionDropdown: React.FC<Props> = () => {
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your
-              account and remove your data from our servers.
+              This action cannot be undone. This will permanently delete this site along with any associated data and analytics.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction>Continue</AlertDialogAction>
+            <AlertDialogCancel className="cursor-pointer">Cancel</AlertDialogCancel>
+            <Button onClick={deleteSite} className="cursor-pointer" variant={"destructive"}>Confirm</Button>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

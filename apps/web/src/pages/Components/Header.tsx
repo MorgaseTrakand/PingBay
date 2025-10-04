@@ -1,7 +1,6 @@
 import React from "react";
 import { useCookies } from "react-cookie";
 import useAuth from "@/hooks/useAuth";
-import { SidebarMenuButton } from "@/components/ui/sidebar";
 
 type Props = {};
 

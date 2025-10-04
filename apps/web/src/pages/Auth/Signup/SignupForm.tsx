@@ -88,7 +88,7 @@ const SignupForm: React.FC<SignupProps> = ({setGeneralError, generalError}) => {
         </form>
       </CardContent>
       <CardFooter className="flex-col gap-2">
-        <Button type="button" className="w-full cursor-pointer" onClick={handleSignup}>
+        <Button type="submit" className="w-full cursor-pointer" onClick={handleSignup}>
           Signup
         </Button>
         <CardAction className="w-full">

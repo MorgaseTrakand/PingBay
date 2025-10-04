@@ -11,10 +11,11 @@ type Props = {
   result: PingResult | null, 
   loading: boolean,
   url: string,
-  newPing: number
+  newPing: number,
+  sendURL: Function
 };
 
-const ResultCard: React.FC<Props> = ({ result, loading, url, newPing }) => {
+const ResultCard: React.FC<Props> = ({ result, loading, url, newPing, sendURL }) => {
   return (
     <>
       {/* Sliding result card (floating, slides down & fades in) */}
@@ -63,12 +64,12 @@ const ResultCard: React.FC<Props> = ({ result, loading, url, newPing }) => {
                 <div className="mt-6 grid grid-cols-1 md:grid-cols-4 gap-4 mb-1">
                   <div className="">
                     <div className="text-xs text-muted-foreground">Fastest ping</div>
-                    <div className="text-lg font-medium">{result?.fastestResponseTime}</div>
+                    <div className="text-lg font-medium">{result?.fastestResponseTime}<span className="text-base">ms</span></div>
                   </div>
 
                   <div>
                     <div className="text-xs text-muted-foreground">Average ping</div>
-                    <div className="text-lg font-medium">{result?.averageResponseTime}</div>
+                    <div className="text-lg font-medium">{result?.averageResponseTime}<span className="text-base">ms</span></div>
                   </div>
 
                   <div>
@@ -79,9 +80,9 @@ const ResultCard: React.FC<Props> = ({ result, loading, url, newPing }) => {
                   <div className="flex items-center justify-center">
                     <button
                       onClick={() => {
-                        //sendURL();
+                        sendURL();
                       }}
-                      className="rounded-md bg-secondary px-3 py-2 text-sm font-medium text-secondary-foreground hover:opacity-95"
+                      className="cursor-pointer rounded-md bg-secondary px-3 py-2 text-sm font-medium text-secondary-foreground hover:opacity-95"
                     >
                       Re-check
                     </button>

@@ -1,19 +1,14 @@
 import { Router } from "express"; 
-import { verifyToken } from "../utils/jwt.js";
 import { addSite, getSites, deleteSite } from "../Queries/siteQueries.js";
+import { authMiddleware } from "../utils/authMiddleware.js";
 
 const router = Router();
 
-router.post('/add-site', async (req, res) => {
+router.post('/add-site', authMiddleware, async (req, res) => {
   try {
     let data = req.body;  
     const { url, title, interval, notifications} = data;
     let userID = req.cookies?.userID;
-    
-    let token = req.cookies?.accessToken;
-    if (!token || !userID || !verifyToken(token)?.userId) {
-      return res.status(401).send();
-    }
     
     let sites = (await getSites(userID)).rows;
     const isDuplicate = sites.some(site => site.url === url || site.title === title);
@@ -30,7 +25,7 @@ router.post('/add-site', async (req, res) => {
   }
 })
 
-router.post('/get-sites', async (req, res) => {
+router.post('/get-sites', authMiddleware, async (req, res) => {
   try {
     let userID = req.cookies?.userID;
     
@@ -43,7 +38,7 @@ router.post('/get-sites', async (req, res) => {
   }
 })
 
-router.post('/delete-site', async (req, res) => {
+router.post('/delete-site', authMiddleware, async (req, res) => {
   try {
     let siteID = req.body.siteID;  
 

@@ -36,6 +36,6 @@ export const columns: ColumnDef<Sites>[] = [
   {
     accessorKey: "actions",
     header: "Actions",
-    cell: () => { return (<ActionDropdown />) },
+    cell: ({ row }) => { return (<ActionDropdown siteID={parseInt(row.original.id)}/>) },
   },
 ]

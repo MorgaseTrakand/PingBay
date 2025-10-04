@@ -70,7 +70,7 @@ const FormWithSlidingCard: React.FC = () => {
           />
           <button
             type="submit"
-            className="shrink-0 rounded-lg bg-primary px-4 py-2 font-semibold text-primary-foreground hover:opacity-90 flex items-center gap-2"
+            className="cursor-pointer shrink-0 rounded-lg bg-primary px-4 py-2 font-semibold text-primary-foreground hover:opacity-90 flex items-center gap-2"
             aria-label="Go"
           >
             {loading && (
@@ -80,7 +80,7 @@ const FormWithSlidingCard: React.FC = () => {
           </button>
         </div>
       </form>
-      <ResultCard result={result} url={url} loading={loading} newPing={newPing} />
+      <ResultCard result={result} url={url} loading={loading} newPing={newPing} sendURL={sendURL}/>
     </div>
   );
 };

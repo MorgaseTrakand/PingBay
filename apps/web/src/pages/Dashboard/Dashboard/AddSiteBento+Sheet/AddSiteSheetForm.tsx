@@ -62,12 +62,11 @@ export default function AddSiteSheetForm({ setOpen }: Props) {
         credentials: 'include',
         body: JSON.stringify({ url: url, title: title, interval: interval, notifications: notifications })
       })
-      let data = await response.json();
-      if (data.status == 200) {
+      if (response.status == 200) {
         toast.success("Site has been successfully added");
         increment();
       } else {
-        toast.error(data)
+        toast.error("Something went wrong!")
       }
       setOpen(false);
       resetForm();

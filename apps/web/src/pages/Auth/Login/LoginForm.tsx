@@ -89,7 +89,7 @@ const LoginForm: React.FC<LoginProps> = ({ generalError, setGeneralError }) => {
         </form>
       </CardContent>
       <CardFooter className="flex-col gap-2">
-        <Button type="button" className="w-full cursor-pointer" onClick={handleLogin}>
+        <Button type="submit" className="w-full cursor-pointer" onClick={handleLogin}>
           Login
         </Button>
         <CardAction className="w-full">
