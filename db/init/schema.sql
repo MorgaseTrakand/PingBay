@@ -1,7 +1,5 @@
--- Drop tables if they already exist (for dev/resetting)
 DROP TABLE IF EXISTS pings CASCADE;
 DROP TABLE IF EXISTS user_sites CASCADE;
-DROP TABLE IF EXISTS sites CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
 
 -- Users table
@@ -12,38 +10,26 @@ CREATE TABLE users (
     created_at TIMESTAMPTZ DEFAULT now()
 );
 
--- Sites table (unique URL metadata)
-CREATE TABLE sites (
-    id BIGSERIAL PRIMARY KEY,
-    url TEXT UNIQUE NOT NULL,
-    created_at TIMESTAMPTZ DEFAULT now()
-);
-
--- User-Sites table (subscription/monitor config)
+-- Sites belonging to a user
 CREATE TABLE user_sites (
     id BIGSERIAL PRIMARY KEY,
     user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    site_id BIGINT NOT NULL REFERENCES sites(id) ON DELETE CASCADE,
-    frequency_seconds INT NOT NULL DEFAULT 300, -- default 5min
-    enabled BOOLEAN DEFAULT TRUE,
-    notify_email BOOLEAN DEFAULT TRUE,
-    created_at TIMESTAMPTZ DEFAULT now(),
-    UNIQUE (user_id, site_id) -- one subscription per user-site combo
+    url TEXT NOT NULL,
+    title TEXT NOT NULL,
+    check_interval INT NOT NULL, -- in seconds, minutes, etc.
+    notifications_enabled BOOLEAN DEFAULT true,
+    created_at TIMESTAMPTZ DEFAULT now()
 );
 
--- Pings table (append-only checks)
+-- Append-only table of ping results
 CREATE TABLE pings (
     id BIGSERIAL PRIMARY KEY,
-    site_id BIGINT NOT NULL REFERENCES sites(id) ON DELETE CASCADE,
     user_site_id BIGINT REFERENCES user_sites(id) ON DELETE SET NULL,
     checked_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     status TEXT NOT NULL CHECK (status IN ('up','down','error')),
-    latency_ms INT,
-    http_status INT,
-    error_message TEXT
+    latency_ms INT
 );
 
--- Helpful indexes
-CREATE INDEX idx_pings_site_time ON pings (site_id, checked_at DESC);
 CREATE INDEX idx_user_sites_user ON user_sites (user_id);
-CREATE INDEX idx_user_sites_site ON user_sites (site_id);
+CREATE INDEX idx_pings_site ON pings (user_site_id);
+CREATE INDEX idx_pings_checked_at ON pings (checked_at);
