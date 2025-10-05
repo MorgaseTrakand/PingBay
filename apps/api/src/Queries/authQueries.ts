@@ -14,7 +14,7 @@ export async function createUser(email: string, password: string) {
   let result = await pool.query(
     `INSERT INTO users (email, password_hash, created_at) 
      VALUES ($1, $2, $3)
-     RETURNING user_id`,
+     RETURNING id`,
     [email, hashedPassword, new Date()]
   );
   return result

@@ -38,6 +38,7 @@ router.post('/signup', async (req, res) => {
       const token = generateToken({
         userId: result.rows[0],
       });
+
       res.cookie('accessToken', token, {
         maxAge: 1000 * 60 * 60,
         httpOnly: true,
