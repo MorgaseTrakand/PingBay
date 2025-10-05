@@ -2,7 +2,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { ActionDropdown } from "./ActionDropdown";
 import { Checkbox } from "@/components/ui/checkbox";
 
-type Sites = {
+export type Sites = {
   id: string
   title: string
   status: "Up" | "Down"

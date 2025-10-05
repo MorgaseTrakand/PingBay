@@ -1,5 +1,5 @@
 import { Router } from "express"; 
-import { getSitesBasedOnInterval, insertPing } from "../Queries/cronQueries.js";
+import { getSitesBasedOnInterval, insertPing, downSample} from "../Queries/cronQueries.js";
 import { limitFunction } from "p-limit";
 
 const router = Router();
@@ -53,6 +53,10 @@ router.get("/handle-pings", async (req, res) => {
 
     let sites = await getSitesBasedOnInterval(interval);
     pingSitesWrapper(sites.rows);
+
+    if (currentMinute === 0) {
+      downSample();
+    }
     return res.json(sites.rows);
   } catch (e) {
     return res.status(500).json(e);

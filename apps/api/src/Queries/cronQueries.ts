@@ -28,3 +28,7 @@ export function insertPing(user_site_id: number, isUp: boolean, ms: number) {
     `INSERT INTO pings (user_site_id, checked_at, status, latency_ms) VALUES ($1, $2, $3, $4)`, [user_site_id, now, status, ms]
   )
 }
+
+export function downSample() {
+  
+}
