@@ -13,7 +13,7 @@ import SignupPage from './pages/Auth/Signup/Signup';
 import DashboardSwitchBoard from './pages/DashboardPage/DashboardSwitchBoard';
 import Dashboard from './pages/DashboardPage/Dashboard/Dashboard';
 import Settings from './pages/DashboardPage/Settings/Settings';
-import Analytics from './pages/DashboardPage/Analytics/Analytics';
+import Analytics from './pages/DashboardPage/Analytics/AnalyticsPage/Analytics';
 
 import { authLoader } from './utils/authLoader';
 
