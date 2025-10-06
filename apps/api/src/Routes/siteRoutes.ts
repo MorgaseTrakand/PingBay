@@ -1,5 +1,5 @@
 import { Router } from "express"; 
-import { addSite, getSites, deleteSite } from "../Queries/siteQueries.js";
+import { addSite, getSites, deleteMultipleSites} from "../Queries/siteQueries.js";
 import { authMiddleware } from "../utils/authMiddleware.js";
 
 const router = Router();
@@ -38,18 +38,16 @@ router.post('/get-sites', authMiddleware, async (req, res) => {
   }
 })
 
-router.post('/delete-site', authMiddleware, async (req, res) => {
+router.post('/delete-sites', authMiddleware, async (req, res) => {
   try {
-    let siteID = req.body.siteID;  
-
-    let result = await deleteSite(siteID)
-    if (result == 5) {
-      return res.status(200).send();
-    }
-    return res.status(500).send();
+    let siteIDs = req.body.siteIDs;  
+    
+    await deleteMultipleSites(siteIDs)
+    return res.status(200).send();
   } catch (e) {
     return res.status(500).send();
   }
 })
+
 
 export default router

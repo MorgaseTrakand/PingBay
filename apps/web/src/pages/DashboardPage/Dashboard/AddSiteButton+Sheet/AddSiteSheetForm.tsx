@@ -82,7 +82,7 @@ export default function AddSiteSheetForm({ setOpen }: Props) {
             id={`url-${id}`}
             placeholder="https://example.com or example.com"
             value={url}
-            onChange={(e) => setUrl(e.target.value)}
+            onChange={(e) => setUrl(e.target.value.toLowerCase())}
             className={`h-12 ${errors.url ? 'border-red-500 bg-red-50' : '' }`}
           />
           <p

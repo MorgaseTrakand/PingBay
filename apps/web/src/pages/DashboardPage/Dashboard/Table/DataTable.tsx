@@ -20,6 +20,8 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuChe
 import { Input } from "@/components/ui/input"; 
 import { Button } from "@/components/ui/button";
 import { ChevronDown, Loader2 } from "lucide-react";
+import { useDataTableTrigger } from '../../../../lib/zustand.ts';
+import { toast } from "sonner";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -37,6 +39,8 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
+
+  const { increment } = useDataTableTrigger();
 
   const table = useReactTable({
     data,
@@ -63,9 +67,41 @@ export function DataTable<TData, TValue>({
     },
   })
 
+  async function handleMassDeletion(rows: Array<any>) {
+    for (let i = 0; i < rows.length; i++) {
+      rows[i] = rows[i].original.id
+    }
+    let response = await fetch(import.meta.env.VITE_DELETE_SITES_URL, {
+      method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ siteIDs: rows })
+    })
+    if (response.status == 200) {
+      toast.success("Sites successfully deleted");
+      increment();
+    } else {
+      toast.error("Something went wrong!")
+    }
+  }
+
   return (
     <>
-      <div className="flex items-center py-4">
+      <div className="flex items-center justify-between py-4 gap-2">
+        <Button
+          className={`ml-2
+            ${
+              table.getFilteredSelectedRowModel().rows.length > 0
+                ? 'bg-blue-50 border-blue-800 cursor-pointer hover:bg-blue-500 hover:text-white'
+                : 'text-muted-foreground cursor-not-allowed pointer-events-none'
+            }`}
+          variant="outline"
+          onClick={() => {handleMassDeletion(table.getFilteredSelectedRowModel().rows)}}
+        >
+          Delete Selected
+        </Button>
         <Input
           placeholder="Filter URLs..."
           value={(table.getColumn("url")?.getFilterValue() as string) ?? ""}
@@ -76,7 +112,7 @@ export function DataTable<TData, TValue>({
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
+            <Button variant="outline">
               Columns <ChevronDown />
             </Button>
           </DropdownMenuTrigger>
@@ -114,7 +150,7 @@ export function DataTable<TData, TValue>({
         )}
 
         <div className="overflow-hidden rounded-md border h-full" aria-hidden={isLoading}>
-          <Table>
+          <Table className="h-full">
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
@@ -133,9 +169,6 @@ export function DataTable<TData, TValue>({
                 </TableRow>
               ))}
             </TableHeader>
-            <div>
-              
-            </div>
             <TableBody className="border-b border-border">
               {table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
@@ -151,8 +184,8 @@ export function DataTable<TData, TValue>({
                   </TableRow>
                 ))
               ) : (
-                <TableRow>
-                  <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableRow className="h-full">
+                  <TableCell colSpan={columns.length} className="text-center">
                     No results.
                   </TableCell>
                 </TableRow>
@@ -170,17 +203,17 @@ export function DataTable<TData, TValue>({
         <div className="space-x-2">
           <Button
             variant="outline"
-            size="sm"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
+            className="cursor-pointer"
           >
             Previous
           </Button>
           <Button
             variant="outline"
-            size="sm"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
+            className="cursor-pointer"
           >
             Next
           </Button>

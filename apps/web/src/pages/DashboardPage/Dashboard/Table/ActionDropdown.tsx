@@ -30,13 +30,13 @@ export const ActionDropdown: React.FC<Props> = ({ siteID }) => {
   const { increment } = useDataTableTrigger();
 
   async function deleteSite() {
-    let response = await fetch(import.meta.env.VITE_DELETE_SITE_URL, {
+    let response = await fetch(import.meta.env.VITE_DELETE_SITES_URL, {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
-        body: JSON.stringify({ siteID: siteID })
+        body: JSON.stringify({ siteIDs: [siteID] })
     })
     if (response.status == 200) {
       toast.success("Site successfully deleted");
@@ -66,13 +66,11 @@ export const ActionDropdown: React.FC<Props> = ({ siteID }) => {
               <span>Notifications</span>
               <Switch id="notifications" className="cursor-pointer" />
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuLabel>Destructive Actions</DropdownMenuLabel>
-              <AlertDialogTrigger asChild>
-                <Button size="sm" variant={"destructive"} className="ml-2 mb-2 cursor-pointer mt-1">
-                  Delete Site
-                </Button>
-              </AlertDialogTrigger>
+            <AlertDialogTrigger asChild>
+              <Button size="sm" variant={"destructive"} className="ml-2 mb-2 cursor-pointer mt-1">
+                Delete Site
+              </Button>
+            </AlertDialogTrigger>
           </DropdownMenuContent>
         </DropdownMenu>
         <AlertDialogContent>

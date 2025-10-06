@@ -25,3 +25,14 @@ export async function deleteSite(siteID: number) {
   )
   return 5
 }
+
+export async function deleteMultipleSites(siteIDs: number[]) {
+  if (siteIDs.length === 0) return;
+
+  const placeholders = siteIDs.map((_, i) => `$${i + 1}`).join(", ");
+
+  await pool.query(
+    `DELETE FROM user_sites WHERE id IN (${placeholders})`,
+    siteIDs
+  );
+}
