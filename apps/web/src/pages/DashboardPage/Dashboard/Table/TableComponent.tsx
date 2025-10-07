@@ -26,7 +26,7 @@ function TableComponent() {
       })
       let sites = (await response.json()).map((site: any) => ({
         ...site,
-        notifications: site.notifications === "true" ? "Enabled" : "Disabled",
+        notifications: site.notifications_enabled
       }));
       await sleep(300);
       setLoading(false);

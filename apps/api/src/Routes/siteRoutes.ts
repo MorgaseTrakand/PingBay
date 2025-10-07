@@ -1,5 +1,5 @@
 import { Router } from "express"; 
-import { addSite, getSites, deleteMultipleSites} from "../Queries/siteQueries.js";
+import { addSite, getSites, deleteMultipleSites, changeNotifications } from "../Queries/siteQueries.js";
 import { authMiddleware } from "../utils/authMiddleware.js";
 
 const router = Router();
@@ -46,6 +46,17 @@ router.post('/delete-sites', authMiddleware, async (req, res) => {
     return res.status(200).send();
   } catch (e) {
     return res.status(500).send();
+  }
+})
+
+router.post('/change-notifications', authMiddleware, async (req, res) => {
+  try {
+    let siteID = req.body.siteID;
+
+    await changeNotifications(siteID);
+    return res.status(200).send();
+  } catch (e) {
+    return res.status(500).send()
   }
 })
 

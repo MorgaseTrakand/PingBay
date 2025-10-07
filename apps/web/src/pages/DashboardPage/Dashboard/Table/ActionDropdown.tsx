@@ -21,13 +21,16 @@ import {
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import { useDataTableTrigger } from '../../../../lib/zustand.ts';
+import { useState } from "react";
 
 type Props = {
-  siteID: number
+  siteID: number,
+  notificationString: string
 };
 
-export const ActionDropdown: React.FC<Props> = ({ siteID }) => {
+export const ActionDropdown: React.FC<Props> = ({ siteID, notificationString }) => {
   const { increment } = useDataTableTrigger();
+  const [notificationBoolean] = useState(notificationString === 'Enabled' ? true : false)
 
   async function deleteSite() {
     let response = await fetch(import.meta.env.VITE_DELETE_SITES_URL, {
@@ -40,6 +43,23 @@ export const ActionDropdown: React.FC<Props> = ({ siteID }) => {
     })
     if (response.status == 200) {
       toast.success("Site successfully deleted");
+      increment();
+    } else {
+      toast.error("Something went wrong!")
+    }
+  }
+
+  async function changeNotifications() {
+    let response = await fetch(import.meta.env.VITE_CHANGE_NOTIFICATIONS_URL, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({ siteID: siteID })
+    })
+    if (response.status == 200) {
+      toast.success("Notifications Changed!")
       increment();
     } else {
       toast.error("Something went wrong!")
@@ -64,7 +84,7 @@ export const ActionDropdown: React.FC<Props> = ({ siteID }) => {
             </DropdownMenuItem>
             <DropdownMenuItem>
               <span>Notifications</span>
-              <Switch id="notifications" className="cursor-pointer" />
+              <Switch id="notifications" className="cursor-pointer" onCheckedChange={changeNotifications} checked={notificationBoolean}/>
             </DropdownMenuItem>
             <AlertDialogTrigger asChild>
               <Button size="sm" variant={"destructive"} className="ml-2 mb-2 cursor-pointer mt-1">

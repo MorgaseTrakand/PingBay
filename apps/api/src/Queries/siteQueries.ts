@@ -36,3 +36,10 @@ export async function deleteMultipleSites(siteIDs: number[]) {
     siteIDs
   );
 }
+
+export async function changeNotifications(siteID: number) {
+  await pool.query(
+    'UPDATE user_sites SET notifications_enabled = NOT notifications_enabled WHERE id = $1',
+    [siteID]
+  );
+}

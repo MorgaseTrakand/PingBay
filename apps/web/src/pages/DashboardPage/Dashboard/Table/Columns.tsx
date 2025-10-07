@@ -7,7 +7,7 @@ export type Sites = {
   title: string
   status: "Up" | "Down"
   url: string
-  notifications: "Enabled" | "Disabled"
+  notifications: 'Enabled' | 'Disabled'
   lastCheck: Date
   actions: React.ReactNode
 }
@@ -50,6 +50,11 @@ export const columns: ColumnDef<Sites>[] = [
   {
     accessorKey: "notifications",
     header: "Notifications",
+    cell: ({ getValue }) => {
+      const val = getValue();
+      if (typeof val === "boolean") return val ? "Enabled" : "Disabled";
+      return String(val);
+    },
   },
   {
     accessorKey: "lastCheck",
@@ -59,6 +64,6 @@ export const columns: ColumnDef<Sites>[] = [
   {
     accessorKey: "actions",
     header: "",
-    cell: ({ row }) => { return (<ActionDropdown siteID={parseInt(row.original.id)}/>) },
+    cell: ({ row }) => { return (<ActionDropdown siteID={parseInt(row.original.id)} notificationString={row.original.notifications} />) },
   },
 ]
