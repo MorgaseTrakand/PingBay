@@ -11,6 +11,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import useAuth from "@/hooks/useAuth";
 import useFormValidation from "@/hooks/useFormValidation";
+import { useSearchParams } from "react-router-dom";
 
 interface LoginProps {
   generalError: string | null;
@@ -23,6 +24,9 @@ const LoginForm: React.FC<LoginProps> = ({ generalError, setGeneralError }) => {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const navigate = useNavigate();
+
+  const [searchParams] = useSearchParams();
+  const [redirectURL] = useState(searchParams.get('redirect'));
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
@@ -37,7 +41,11 @@ const LoginForm: React.FC<LoginProps> = ({ generalError, setGeneralError }) => {
         setGeneralError(data.error);
       } else {
         setGeneralError('');
-        navigate('/dashboard');
+        if (redirectURL) {
+          navigate(redirectURL)
+        } else {
+          navigate('/dashboard');
+        }
       }
     } else {
       setEmailError(errors.email ?? '')

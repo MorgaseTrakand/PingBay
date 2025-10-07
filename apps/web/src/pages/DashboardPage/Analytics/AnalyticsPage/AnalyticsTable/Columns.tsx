@@ -5,9 +5,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 export type Sites = {
   id: string
   title: string
-  status: "Up" | "Down"
   url: string
-  notifications: "Enabled" | "Disabled"
+  uptime: string
+  totalPings: number
+  incidents: number
   lastCheck: Date
   actions: React.ReactNode
 }
@@ -40,21 +41,24 @@ export const columns: ColumnDef<Sites>[] = [
     header: "Title",
   },
   {
-    accessorKey: "status",
-    header: "Status",
-  },
-  {
     accessorKey: "url",
     header: "URL",
   },
   {
-    accessorKey: "notifications",
-    header: "Notifications",
+    accessorKey: "uptime",
+    header: "Uptime",
+  },
+  {
+    accessorKey: "totalPings",
+    header: "Total Pings"
+  },
+  {
+    accessorKey: "incidents",
+    header: "Incidents"
   },
   {
     accessorKey: "lastCheck",
     header: "Last Check",
-    cell: ({ getValue }) => new Date(getValue() as number).toLocaleString(),
   },
   {
     accessorKey: "actions",

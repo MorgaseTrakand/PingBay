@@ -3,10 +3,6 @@ import { columns } from "./Columns";
 import type { Sites } from "./Columns";
 import { DataTable } from "./DataTable";
 import { useDataTableTrigger } from '../../../../../lib/zustand.ts';
-
-function sleep(ms: number) {
-  return new Promise((res) => setTimeout(res, ms));
-}
   
 function AnalyticsTableComponent() {
   const [data, setData] = useState<Sites[]>([]);
@@ -28,7 +24,6 @@ function AnalyticsTableComponent() {
         ...site,
         notifications: site.notifications === "true" ? "Enabled" : "Disabled",
       }));
-      await sleep(300);
       setLoading(false);
       setData(sites);
     }

@@ -14,11 +14,14 @@ import DashboardSwitchBoard from './pages/DashboardPage/DashboardSwitchBoard';
 import Dashboard from './pages/DashboardPage/Dashboard/Dashboard';
 import Settings from './pages/DashboardPage/Settings/Settings';
 import Analytics from './pages/DashboardPage/Analytics/AnalyticsPage/Analytics';
+import SinglePageAnalytics from './pages/DashboardPage/Analytics/SingleSiteAnalyticsPage/SinglePageAnalytics';
 
 import { authLoader } from './utils/authLoader';
 
 const router = createBrowserRouter([
   { path: "/", element: <HomePage /> },
+  { path: "/login", element: <LoginPage /> },
+  { path: "/signup", element: <SignupPage /> },
   { 
     path: "/dashboard", 
     element: <DashboardSwitchBoard />,
@@ -27,11 +30,9 @@ const router = createBrowserRouter([
       { index: true, element: <Dashboard /> },
       { path: 'settings', element: <Settings /> },
       { path: 'analytics', element: <Analytics /> },
+      { path: "site-analytics", element: <SinglePageAnalytics /> },
     ]
-  },
-  { path: "/login", element: <LoginPage /> },
-  { path: "/signup", element: <SignupPage /> },
-  
+  },  
 ]);
 
 createRoot(document.getElementById('root')!).render(

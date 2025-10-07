@@ -46,3 +46,4 @@ docker-compose.override.yml
 # Docker
 compose.dev.yaml
 compose.cmds
+dbNotes.txt

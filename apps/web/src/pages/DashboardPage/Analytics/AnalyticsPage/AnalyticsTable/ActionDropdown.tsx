@@ -59,9 +59,6 @@ export const ActionDropdown: React.FC<Props> = ({ siteID }) => {
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="cursor-pointer">
-              Edit Site
-            </DropdownMenuItem>
             <DropdownMenuItem>
               <span>Notifications</span>
               <Switch id="notifications" className="cursor-pointer" />

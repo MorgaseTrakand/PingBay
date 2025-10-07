@@ -91,7 +91,7 @@ export function DataTable<TData, TValue>({
     <>
       <div className="flex items-center justify-between py-4 gap-2">
         <Button
-          className={`ml-2
+          className={`
             ${
               table.getFilteredSelectedRowModel().rows.length > 0
                 ? 'bg-blue-50 border-blue-800 cursor-pointer hover:bg-blue-500 hover:text-white'
@@ -150,7 +150,7 @@ export function DataTable<TData, TValue>({
         )}
 
         <div className="overflow-hidden rounded-md border h-full" aria-hidden={isLoading}>
-          <Table className="h-full">
+          <Table className={`${table.getRowModel().rows?.length ? '' : 'h-full'}`}>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
