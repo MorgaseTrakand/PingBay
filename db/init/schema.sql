@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS pings CASCADE;
 DROP TABLE IF EXISTS user_sites CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS monitor_state CASCADE;
 
 -- Users table
 CREATE TABLE users (
@@ -33,3 +34,13 @@ CREATE TABLE pings (
 CREATE INDEX idx_user_sites_user ON user_sites (user_id);
 CREATE INDEX idx_pings_site ON pings (user_site_id);
 CREATE INDEX idx_pings_checked_at ON pings (checked_at);
+
+CREATE TABLE monitor_state (
+  monitor_id BIGINT PRIMARY KEY REFERENCES user_sites(id) ON DELETE CASCADE,
+  last_check TIMESTAMPTZ,
+  status BOOLEAN,
+  last_status_code INT,
+  last_latency_ms INT,
+  consecutive_fails INT DEFAULT 0,
+  consecutive_successes INT DEFAULT 0
+);

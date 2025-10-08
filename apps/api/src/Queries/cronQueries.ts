@@ -20,10 +20,10 @@ export async function getSitesBasedOnInterval(interval: number) {
   return result;
 }
 
-export function insertPing(user_site_id: number, isUp: boolean, ms: number) {
+export function insertPing(user_site_id: number, isUp: boolean, ms: number | null) {
   const now = new Date();
   const status = isUp ? 'up' : 'down';
-
+  console.log(user_site_id, isUp, ms)
   pool.query(
     `INSERT INTO pings (user_site_id, checked_at, status, latency_ms) VALUES ($1, $2, $3, $4)`, [user_site_id, now, status, ms]
   )
@@ -31,4 +31,38 @@ export function insertPing(user_site_id: number, isUp: boolean, ms: number) {
 
 export function downSample() {
   
+}
+
+export async function monitorStateUpdate(
+  user_site_id: number,
+  last_check: Date,
+  status: boolean,
+  last_status_code: number,
+  last_latency_ms: number | null
+) {
+  await pool.query(
+    `
+    INSERT INTO monitor_state (
+      monitor_id,
+      last_check,
+      status,
+      last_status_code,
+      last_latency_ms
+    )
+    VALUES ($1, $2, $3, $4, $5)
+    ON CONFLICT (monitor_id)
+    DO UPDATE SET
+      last_check = EXCLUDED.last_check,
+      status = EXCLUDED.status,
+      last_status_code = EXCLUDED.last_status_code,
+      last_latency_ms = EXCLUDED.last_latency_ms
+    `,
+    [
+      user_site_id,
+      last_check,
+      status,
+      last_status_code,
+      last_latency_ms,
+    ]
+  );
 }

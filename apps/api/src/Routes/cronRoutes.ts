@@ -1,6 +1,7 @@
 import { Router } from "express"; 
-import { getSitesBasedOnInterval, insertPing, downSample} from "../Queries/cronQueries.js";
+import { getSitesBasedOnInterval, insertPing, downSample, monitorStateUpdate } from "../Queries/cronQueries.js";
 import { limitFunction } from "p-limit";
+import type { QueryResult } from "pg";
 
 const router = Router();
 
@@ -9,31 +10,56 @@ type Row = {
   url: string
 }
 
+type SiteRow = {
+  id: string;        
+  user_id: string;      
+  url: string;    
+  title: string;      
+  check_interval: number;  
+  notifications_enabled: boolean; 
+  created_at: string;             
+};
+
 //const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 const pingSite = limitFunction(async (site: Row) => {
   try {
     const t0 = performance.now();
-    let response = await fetch(site.url, { 
+    const response = await fetch(site.url, {
       method: "HEAD",
       redirect: "manual",
       signal: AbortSignal.timeout(5000),
       headers: { "User-Agent": "PingBay" },
       cache: "no-store",
-    })
+    });
     const ms = Math.round(performance.now() - t0);
 
-    insertPing(site.id, response.status < 400 ? true : false, ms)
-  } catch (e) {
-    console.error('Ping failed for', site.url, e);
-    insertPing(site.id, false, -1);
-  }
-}, {concurrency: 50})
+    const success = response.ok;
+    const statusCode = response.status;
 
-const pingSitesWrapper = limitFunction(async (sites: Array<Row>) => {
-  for (let i = 0; i < sites.length; i++) {
-    pingSite(sites[i])
+    await Promise.all([
+      insertPing(site.id, success, ms),
+      monitorStateUpdate(site.id, new Date(), success, statusCode, ms),
+    ]);
+  } catch (e) {
+    console.error("Ping failed for", site.url, e);
+
+    await Promise.all([
+      insertPing(site.id, false, null),
+      monitorStateUpdate(site.id, new Date(), false, 500, null),
+    ]);
   }
+}, { concurrency: 50 });
+
+const pingSitesWrapper = limitFunction(async (sites: SiteRow[]) => {
+  const promises = sites.map((site) =>
+    pingSite({
+      ...site,
+      id: Number(site.id),
+    })
+  );
+
+  await Promise.allSettled(promises);
 }, {concurrency: 50})
 
 router.get("/handle-pings", async (req, res) => {
@@ -50,14 +76,15 @@ router.get("/handle-pings", async (req, res) => {
     } else {
       interval = 60
     }
+    const result: QueryResult<SiteRow> = await getSitesBasedOnInterval(interval);
+    const sites: SiteRow[] = result.rows;
 
-    let sites = await getSitesBasedOnInterval(interval);
-    pingSitesWrapper(sites.rows);
+    pingSitesWrapper(sites)
 
     if (currentMinute === 0) {
       downSample();
     }
-    return res.json(sites.rows);
+    return res.json(sites);
   } catch (e) {
     return res.status(500).json(e);
   }
