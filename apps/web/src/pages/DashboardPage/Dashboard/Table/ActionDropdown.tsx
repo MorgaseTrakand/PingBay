@@ -22,16 +22,18 @@ import {
 import { toast } from "sonner";
 import { useDataTableTrigger } from '../../../../lib/zustand.ts';
 import { useState } from "react";
+import { EditRowDialogButton } from "./EditRowDialog.tsx";
 
 type Props = {
   siteID: number,
-  notificationString: string
+  notificationString: string,
+  data: any
 };
 
-export const ActionDropdown: React.FC<Props> = ({ siteID, notificationString }) => {
+export const ActionDropdown: React.FC<Props> = ({ siteID, notificationString, data }) => {
   const { increment } = useDataTableTrigger();
   const [notificationBoolean] = useState(notificationString === 'Enabled' ? true : false)
-
+  
   async function deleteSite() {
     let response = await fetch(import.meta.env.VITE_DELETE_SITES_URL, {
         method: "POST",
@@ -66,6 +68,8 @@ export const ActionDropdown: React.FC<Props> = ({ siteID, notificationString }) 
     }
   }
 
+  const [open, setOpen] = useState(false);
+
   return (
     <>
       <AlertDialog>
@@ -79,7 +83,7 @@ export const ActionDropdown: React.FC<Props> = ({ siteID, notificationString }) 
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="cursor-pointer">
+            <DropdownMenuItem className="cursor-pointer" onClick={() => setOpen(true)}>
               Edit Site
             </DropdownMenuItem>
             <DropdownMenuItem>
@@ -106,6 +110,8 @@ export const ActionDropdown: React.FC<Props> = ({ siteID, notificationString }) 
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <EditRowDialogButton setOpen={setOpen} open={open} siteID={siteID} defaultTitle={data.title} defaultURL={data.url} />
     </>
   )
 }

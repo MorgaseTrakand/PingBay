@@ -28,7 +28,6 @@ router.post('/signup', async (req, res) => {
     let user: any = await findUser(email);
 
     if (user.rows.length > 0) {
-      console.log('user already exists')
       return res.status(409).json({ error: "User already exists" });
     }
     
@@ -76,7 +75,7 @@ router.post("/login", async (req, res) => {
   const user = result.rows[0];
   const valid = await bcrypt.compare(password, user.password_hash);
   if (!valid) {
-    return res.status(401).json({ error: "Invalid email or password" });
+    return res.json({ error: "Invalid email or password" });
   }
 
   const token = generateToken({

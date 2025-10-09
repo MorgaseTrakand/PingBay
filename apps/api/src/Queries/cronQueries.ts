@@ -23,7 +23,6 @@ export async function getSitesBasedOnInterval(interval: number) {
 export function insertPing(user_site_id: number, isUp: boolean, ms: number | null) {
   const now = new Date();
   const status = isUp ? 'up' : 'down';
-  console.log(user_site_id, isUp, ms)
   pool.query(
     `INSERT INTO pings (user_site_id, checked_at, status, latency_ms) VALUES ($1, $2, $3, $4)`, [user_site_id, now, status, ms]
   )

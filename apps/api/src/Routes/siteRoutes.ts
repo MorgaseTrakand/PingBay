@@ -1,5 +1,5 @@
 import { Router } from "express"; 
-import { addSite, getSites, deleteMultipleSites, changeNotifications, getStates } from "../Queries/siteQueries.js";
+import { addSite, getSites, deleteMultipleSites, changeNotifications, getStates, editSite } from "../Queries/siteQueries.js";
 import { authMiddleware } from "../utils/authMiddleware.js";
 
 const router = Router();
@@ -45,7 +45,6 @@ router.post('/get-states', authMiddleware, async (req, res) => {
 
     if (siteIDs.length > 0) {
       let states = await getStates(siteIDs);
-      console.log('get-states log', states.rows)
       return res.status(200).json(states.rows);
     }
     return res.json([]);
@@ -77,5 +76,18 @@ router.post('/change-notifications', authMiddleware, async (req, res) => {
   }
 })
 
+router.post('/edit-site', authMiddleware, async (req, res) => {
+  try {
+    let siteID = req.body.siteID;
+    let newURL = req.body.url;
+    let newTitle = req.body.title; 
+
+    await editSite(siteID, newTitle, newURL);
+    res.status(200).send();
+    console.log('resposne sent')
+  } catch (e) {
+    return res.status(500).send();
+  }
+})
 
 export default router

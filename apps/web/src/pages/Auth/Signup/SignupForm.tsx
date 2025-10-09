@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { 
@@ -11,13 +10,14 @@ import {
 import useAuth from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import useFormValidation from "@/hooks/useFormValidation";
+import { FormRow } from "@/pages/Components/FormRow";
 
 interface SignupProps {
   generalError: string | null;
   setGeneralError: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const SignupForm: React.FC<SignupProps> = ({setGeneralError, generalError}) => {
+export const SignupForm: React.FC<SignupProps> = ({setGeneralError, generalError}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
@@ -30,7 +30,7 @@ const SignupForm: React.FC<SignupProps> = ({setGeneralError, generalError}) => {
     setPasswordError('');
     setEmailError('');
 
-    const {valid, errors} = useFormValidation().checkForm(email, password)
+    const {valid, errors} = useFormValidation().checkAuthForm(email, password)
 
     if (valid) {
       let data = await useAuth().signup(email, password);
@@ -52,38 +52,8 @@ const SignupForm: React.FC<SignupProps> = ({setGeneralError, generalError}) => {
         <form>
           <Label className={`mb-4 font-normal ${generalError ? 'text-red-500' : '' }`}>{generalError}</Label>
           <div className="flex flex-col gap-0">
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <div className="grid gap-1">
-                <Input
-                  className={`h-12 ${emailError ? 'border-red-500 bg-red-50' : '' }`}
-                  id="email"
-                  type="email"
-                  onChange={(e) => {
-                    setEmail(e.target.value)
-                  }}
-                  placeholder="email@example.com"
-                  required
-                />
-                <CardDescription className={`mb-4 leading-none ${emailError ? 'text-red-500' : 'text-white'}`}>{emailError}</CardDescription>
-              </div>
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
-              <div className="grid gap-1">
-                <Input 
-                  className={`h-12 ${passwordError ? 'border-red-500 bg-red-50' : '' }`}
-                  onChange={(e) => {
-                    setPassword(e.target.value)
-                  }}
-                  placeholder="password"
-                  id="password"
-                  type="password" 
-                  required 
-                />
-                <CardDescription className={`mb-2 leading-none ${emailError ? 'text-red-500' : 'text-white'}`}>{passwordError}</CardDescription>
-              </div>
-            </div>
+            <FormRow setValue={setEmail} error={emailError} labelTitle="Email" type="email" placeholder="email@example.com" />
+            <FormRow setValue={setPassword} error={passwordError} labelTitle="Password" type="password" placeholder="password" />            
           </div>
         </form>
       </CardContent>
@@ -103,5 +73,3 @@ const SignupForm: React.FC<SignupProps> = ({setGeneralError, generalError}) => {
     </>
   );
 };
-
-export default SignupForm;

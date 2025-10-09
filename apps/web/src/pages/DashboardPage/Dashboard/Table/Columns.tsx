@@ -76,6 +76,6 @@ export const columns: ColumnDef<Sites>[] = [
   {
     accessorKey: "actions",
     header: "",
-    cell: ({ row }) => { return (<ActionDropdown siteID={parseInt(row.original.id)} notificationString={row.original.notifications_enabled} />) },
+    cell: ({ row }) => { return (<ActionDropdown siteID={parseInt(row.original.id)} notificationString={row.original.notifications_enabled} data={row.original} />) },
   },
 ]

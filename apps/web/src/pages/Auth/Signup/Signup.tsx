@@ -6,7 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Header from "../../Components/Header";
-import SignupForm from "./SignupForm";
+import { SignupForm } from "./SignupForm";
 
 const SignupPage: React.FC = () => {
   const [generalError, setGeneralError] = useState('');
