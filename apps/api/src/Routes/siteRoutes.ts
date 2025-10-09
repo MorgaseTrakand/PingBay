@@ -1,6 +1,7 @@
 import { Router } from "express"; 
 import { addSite, getSites, deleteMultipleSites, changeNotifications, getStates, editSite } from "../Queries/siteQueries.js";
 import { authMiddleware } from "../utils/authMiddleware.js";
+import { initialPing } from "../utils/pingCodeExports.js";
 
 const router = Router();
 
@@ -16,8 +17,8 @@ router.post('/add-site', authMiddleware, async (req, res) => {
     if (isDuplicate) {
       return res.status(500).json("You already have a site with this title or URL.");
     }
-
-    await addSite(userID, url, title, interval, notifications);
+    let site = await (await addSite(userID, url, title, interval, notifications)).rows[0]
+    await initialPing(site)
     return res.status(200).send();
   } catch (e) {
     console.log(e)

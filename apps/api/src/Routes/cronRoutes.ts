@@ -1,66 +1,14 @@
 import { Router } from "express"; 
-import { getSitesBasedOnInterval, insertPing, downSample, monitorStateUpdate } from "../Queries/cronQueries.js";
+import { getSitesBasedOnInterval, downSample } from "../Queries/cronQueries.js";
 import { limitFunction } from "p-limit";
 import type { QueryResult } from "pg";
+import { SiteRow, initialPing } from "../utils/pingCodeExports.js";
 
 const router = Router();
 
-type Row = {
-  id: number,
-  url: string
-}
-
-type SiteRow = {
-  id: string;        
-  user_id: string;      
-  url: string;    
-  title: string;      
-  check_interval: number;  
-  notifications_enabled: boolean; 
-  created_at: string;             
-};
-
-//const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-
-const pingSite = limitFunction(async (site: Row) => {
-  try {
-    const t0 = performance.now();
-    const response = await fetch(site.url, {
-      method: "HEAD",
-      redirect: "manual",
-      signal: AbortSignal.timeout(5000),
-      headers: { "User-Agent": "PingBay" },
-      cache: "no-store",
-    });
-    const ms = Math.round(performance.now() - t0);
-
-    const success = response.ok;
-    const statusCode = response.status;
-
-    await Promise.all([
-      insertPing(site.id, success, ms),
-      monitorStateUpdate(site.id, new Date(), success, statusCode, ms),
-    ]);
-  } catch (e) {
-    console.error("Ping failed for", site.url, e);
-
-    await Promise.all([
-      insertPing(site.id, false, null),
-      monitorStateUpdate(site.id, new Date(), false, 500, null),
-    ]);
-  }
+const pingSite = limitFunction(async (site: SiteRow) => {
+  await initialPing(site);
 }, { concurrency: 50 });
-
-const pingSitesWrapper = limitFunction(async (sites: SiteRow[]) => {
-  const promises = sites.map((site) =>
-    pingSite({
-      ...site,
-      id: Number(site.id),
-    })
-  );
-
-  await Promise.allSettled(promises);
-}, {concurrency: 50})
 
 router.get("/handle-pings", async (req, res) => {
   try {
@@ -79,7 +27,10 @@ router.get("/handle-pings", async (req, res) => {
     const result: QueryResult<SiteRow> = await getSitesBasedOnInterval(interval);
     const sites: SiteRow[] = result.rows;
 
-    pingSitesWrapper(sites)
+    for (let i = 0; i < sites.length; i++) {
+      pingSite(sites[i])
+    }
+
     if (currentMinute === 0) {
       downSample();
     }
