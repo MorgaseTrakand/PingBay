@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { columns } from "./Columns";
-import type { Sites } from "./Columns";
-import { DataTable } from "@/pages/Components/Table/DataTable.tsx";
-import { useDataTableTrigger } from '../../../../../lib/zustand.ts';
+import { columns } from "./Columns.tsx";
+import type { Sites } from "./Columns.tsx";
+import { DataTable } from "../../../Components/Table/DataTable.tsx";
+import { useDataTableTrigger } from '../../../../lib/zustand.ts';
 import { toast } from "sonner";
 import { fetchDataAPI } from "@/pages/Components/Table/FetchDataFunction.ts";
-  
-function AnalyticsTableComponent() {
+
+function TableComponent() {
   const [data, setData] = useState<Sites[]>([]);
   const [loading, setLoading] = useState(false);
   const count = useDataTableTrigger((state) => state.count);
@@ -35,4 +35,4 @@ function AnalyticsTableComponent() {
   );
 }
 
-export default AnalyticsTableComponent;
+export default TableComponent;

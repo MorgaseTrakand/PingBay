@@ -1,6 +1,6 @@
 import React from "react";
 import DashboardHeader from "../DashboardHeader";
-import DataTable from "./Table/TableComponent";
+import DataTable from "./DashboardTable/TableComponent";
 import DashboardTableTitle from "./DashboardTableTitle";
 
 type Props = {};

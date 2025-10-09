@@ -45,6 +45,15 @@ export const columns: ColumnDef<Sites>[] = [
     header: "URL",
   },
   {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ getValue }) => {
+      const val = getValue();
+      if (typeof val === "boolean") return val ? "Up" : "Down";
+      return String(val)
+    }
+  },
+  {
     accessorKey: "uptime",
     header: "Uptime",
   },
@@ -57,8 +66,16 @@ export const columns: ColumnDef<Sites>[] = [
     header: "Incidents"
   },
   {
-    accessorKey: "lastCheck",
+    accessorKey: "last_checked",
     header: "Last Check",
+    cell: ({ getValue }) => 
+      new Date(getValue() as number).toLocaleString(undefined, {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+    }),
   },
   {
     accessorKey: "actions",

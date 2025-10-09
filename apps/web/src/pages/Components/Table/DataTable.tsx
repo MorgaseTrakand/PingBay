@@ -16,12 +16,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuCheckboxItem } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input"; 
-import { Button } from "@/components/ui/button";
-import { ChevronDown, Loader2 } from "lucide-react";
-import { useDataTableTrigger } from '../../../../lib/zustand.ts';
-import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
+import { TableHeaderButtons } from "./TableHeaderButtons.tsx";
+import { TableFooterButtons } from "./TableFooterButtons.tsx";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -39,8 +36,6 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
-
-  const { increment } = useDataTableTrigger();
 
   const table = useReactTable({
     data,
@@ -67,76 +62,9 @@ export function DataTable<TData, TValue>({
     },
   })
 
-  async function handleMassDeletion(rows: Array<any>) {
-    for (let i = 0; i < rows.length; i++) {
-      rows[i] = rows[i].original.id
-    }
-    let response = await fetch(import.meta.env.VITE_DELETE_SITES_URL, {
-      method: "POST",
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({ siteIDs: rows })
-    })
-    if (response.status == 200) {
-      toast.success("Sites successfully deleted");
-      increment();
-    } else {
-      toast.error("Something went wrong!")
-    }
-  }
-
   return (
     <>
-      <div className="flex items-center justify-between py-4 gap-2">
-        <Button
-          className={`
-            ${
-              table.getFilteredSelectedRowModel().rows.length > 0
-                ? 'bg-blue-50 border-blue-800 cursor-pointer hover:bg-blue-500 hover:text-white'
-                : 'text-muted-foreground cursor-not-allowed pointer-events-none'
-            }`}
-          variant="outline"
-          onClick={() => {handleMassDeletion(table.getFilteredSelectedRowModel().rows)}}
-        >
-          Delete Selected
-        </Button>
-        <Input
-          placeholder="Filter URLs..."
-          value={(table.getColumn("url")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("url")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline">
-              Columns <ChevronDown />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                )
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+      <TableHeaderButtons table={table} />
 
       <div className="relative flex-1">
         {isLoading && (
@@ -200,30 +128,7 @@ export function DataTable<TData, TValue>({
         </div>
       </div>
 
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="text-muted-foreground flex-1 text-sm">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div>
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-            className="cursor-pointer"
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-            className="cursor-pointer"
-          >
-            Next
-          </Button>
-        </div>
-      </div>
+      <TableFooterButtons table={table} />
     </>
   )
 }
