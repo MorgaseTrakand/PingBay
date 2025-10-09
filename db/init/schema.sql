@@ -25,15 +25,11 @@ CREATE TABLE user_sites (
 -- Append-only table of ping results
 CREATE TABLE pings (
     id BIGSERIAL PRIMARY KEY,
-    user_site_id BIGINT REFERENCES user_sites(id) ON DELETE SET NULL,
+    user_site_id BIGINT REFERENCES user_sites(id) ON DELETE CASCADE,
     checked_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     status TEXT NOT NULL CHECK (status IN ('up','down','error')),
     latency_ms INT
 );
-
-CREATE INDEX idx_user_sites_user ON user_sites (user_id);
-CREATE INDEX idx_pings_site ON pings (user_site_id);
-CREATE INDEX idx_pings_checked_at ON pings (checked_at);
 
 CREATE TABLE monitor_state (
   monitor_id BIGINT PRIMARY KEY REFERENCES user_sites(id) ON DELETE CASCADE,
@@ -44,3 +40,7 @@ CREATE TABLE monitor_state (
   consecutive_fails INT DEFAULT 0,
   consecutive_successes INT DEFAULT 0
 );
+
+CREATE INDEX idx_user_sites_user ON user_sites (user_id);
+CREATE INDEX idx_pings_site ON pings (user_site_id);
+CREATE INDEX idx_pings_checked_at ON pings (checked_at);

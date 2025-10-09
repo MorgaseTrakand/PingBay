@@ -20,7 +20,7 @@ export async function getSites(userID: number) {
 
 export async function deleteSite(siteID: number) {
   await pool.query(
-    "DELETE FROM user_sites WHERE id = ($1)",
+    `DELETE FROM user_sites WHERE id = ($1)`,
     [siteID]
   )
   return 5
@@ -42,4 +42,14 @@ export async function changeNotifications(siteID: number) {
     'UPDATE user_sites SET notifications_enabled = NOT notifications_enabled WHERE id = $1',
     [siteID]
   );
+}
+
+export async function getStates(siteIDs: number[]) {
+  const placeholders = siteIDs.map((_, i) => `$${i + 1}`).join(", ");
+  
+  const result = await pool.query(
+    `SELECT * FROM monitor_state WHERE monitor_id IN (${placeholders})`,
+    siteIDs
+  );
+  return result
 }

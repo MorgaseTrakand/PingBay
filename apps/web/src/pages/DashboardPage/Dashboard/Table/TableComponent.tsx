@@ -4,10 +4,16 @@ import type { Sites } from "./Columns";
 import { DataTable } from "./DataTable";
 import { useDataTableTrigger } from '../../../../lib/zustand.ts';
 
-function sleep(ms: number) {
-  return new Promise((res) => setTimeout(res, ms));
+export type State = {
+  monitor_id: string,
+  last_check: Date,
+  status: boolean,
+  last_status_code: number,
+  last_latency_ms: number,
+  consecutive_fails: number,
+  consecutive_successes: number
 }
-  
+
 function TableComponent() {
   const [data, setData] = useState<Sites[]>([]);
   const [loading, setLoading] = useState(false);
@@ -18,19 +24,35 @@ function TableComponent() {
       setData([]);
       setLoading(true);
       let response = await fetch(import.meta.env.VITE_GET_SITES_URL, {
-        method: "POST",
+        method: "GET",
         headers: {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
       })
-      let sites = (await response.json()).map((site: any) => ({
-        ...site,
-        notifications: site.notifications_enabled
-      }));
-      await sleep(300);
+      let sites = await response.json();
+
+      let siteIDs = sites.map((site: any) => site.id);
+      response = await fetch(import.meta.env.VITE_GET_STATE_URL, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ siteIDs: siteIDs })
+      })
+      let stateData: State[] = await response.json();
+      let mergedSites = sites.map((site: any) => {
+        const state = stateData.find(s => s.monitor_id === site.id);
+        return {
+          ...site,
+          last_checked: state ? state.last_check : null,
+          status: state ? state.status : null,
+        };
+      });
+      setData(mergedSites);
       setLoading(false);
-      setData(sites);
+      console.log(mergedSites)
     }
     fetchData();
   }, [count]);

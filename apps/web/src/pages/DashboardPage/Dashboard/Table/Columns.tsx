@@ -7,8 +7,8 @@ export type Sites = {
   title: string
   status: "Up" | "Down"
   url: string
-  notifications: 'Enabled' | 'Disabled'
-  lastCheck: Date
+  notifications_enabled: 'Enabled' | 'Disabled'
+  last_checked: Date
   actions: React.ReactNode
 }
 
@@ -40,15 +40,20 @@ export const columns: ColumnDef<Sites>[] = [
     header: "Title",
   },
   {
-    accessorKey: "status",
-    header: "Status",
-  },
-  {
     accessorKey: "url",
     header: "URL",
   },
   {
-    accessorKey: "notifications",
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ getValue }) => {
+      const val = getValue();
+      if (typeof val === "boolean") return val ? "Up" : "Down";
+      return String(val)
+    }
+  },
+  {
+    accessorKey: "notifications_enabled",
     header: "Notifications",
     cell: ({ getValue }) => {
       const val = getValue();
@@ -57,13 +62,20 @@ export const columns: ColumnDef<Sites>[] = [
     },
   },
   {
-    accessorKey: "lastCheck",
+    accessorKey: "last_checked",
     header: "Last Check",
-    cell: ({ getValue }) => new Date(getValue() as number).toLocaleString(),
+    cell: ({ getValue }) => 
+      new Date(getValue() as number).toLocaleString(undefined, {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+    }),
   },
   {
     accessorKey: "actions",
     header: "",
-    cell: ({ row }) => { return (<ActionDropdown siteID={parseInt(row.original.id)} notificationString={row.original.notifications} />) },
+    cell: ({ row }) => { return (<ActionDropdown siteID={parseInt(row.original.id)} notificationString={row.original.notifications_enabled} />) },
   },
 ]

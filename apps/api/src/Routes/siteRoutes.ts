@@ -1,5 +1,5 @@
 import { Router } from "express"; 
-import { addSite, getSites, deleteMultipleSites, changeNotifications } from "../Queries/siteQueries.js";
+import { addSite, getSites, deleteMultipleSites, changeNotifications, getStates } from "../Queries/siteQueries.js";
 import { authMiddleware } from "../utils/authMiddleware.js";
 
 const router = Router();
@@ -25,7 +25,7 @@ router.post('/add-site', authMiddleware, async (req, res) => {
   }
 })
 
-router.post('/get-sites', authMiddleware, async (req, res) => {
+router.get('/get-sites', authMiddleware, async (req, res) => {
   try {
     let userID = req.cookies?.userID;
     
@@ -35,6 +35,21 @@ router.post('/get-sites', authMiddleware, async (req, res) => {
     }
   } catch (e) {
     return res.status(500).send();
+  }
+})
+
+router.post('/get-states', authMiddleware, async (req, res) => {
+  try {
+    let siteIDs = req.body.siteIDs;
+
+    if (siteIDs.length > 0) {
+      let states = await getStates(siteIDs);
+      console.log('get-states log', states.rows)
+      return res.status(200).json(states.rows);
+    }
+  } catch (e) {
+    console.log(e)
+    return res.status(500).json(e)
   }
 })
 
