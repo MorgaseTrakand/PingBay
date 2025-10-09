@@ -31,6 +31,22 @@ CREATE TABLE pings (
     latency_ms INT
 );
 
+-- Hourly Aggregate version
+CREATE TABLE hourly_pings (
+    id BIGSERIAL PRIMARY KEY,
+    user_site_id BIGINT REFERENCES user_sites(id) ON DELETE CASCADE,
+    hour_checked TIMESTAMPTZ NOT NULL DEFAULT now(),
+    status TEXT NOT NULL CHECK (status IN ('up','down','error')),
+    average_latency INT,
+    median_latency INT,
+    min_latency INT,
+    max_latency INT,
+    total_successes INT,
+    total_failures INT,
+    p95_latency INT,
+    latency_sumsq BIGINT
+);
+
 CREATE TABLE monitor_state (
   monitor_id BIGINT PRIMARY KEY REFERENCES user_sites(id) ON DELETE CASCADE,
   last_check TIMESTAMPTZ,

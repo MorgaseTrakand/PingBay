@@ -28,12 +28,13 @@ router.post('/add-site', authMiddleware, async (req, res) => {
 router.get('/get-sites', authMiddleware, async (req, res) => {
   try {
     let userID = req.cookies?.userID;
-    
+
     if (userID) {
       let sites = await getSites(userID);
       return res.json(sites.rows);
     }
   } catch (e) {
+    console.log(e)
     return res.status(500).send();
   }
 })
@@ -47,6 +48,7 @@ router.post('/get-states', authMiddleware, async (req, res) => {
       console.log('get-states log', states.rows)
       return res.status(200).json(states.rows);
     }
+    return res.json([]);
   } catch (e) {
     console.log(e)
     return res.status(500).json(e)

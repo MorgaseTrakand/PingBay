@@ -39,8 +39,8 @@ export default function AddSiteSheetForm({ setOpen }: Props) {
   async function handleCreate() {
     let valid = true;
 
-    if (validator.isURL(url) == false) {
-      setErrors(prev => ({ ...prev, url: "URL is not valid." }));
+    if (validator.isURL(url) == false || !url.includes('www.')) {
+      setErrors(prev => ({ ...prev, url: "URL invalid. Ensure format matches https://www.url.com" }));
       valid = false;
     } else {
       setErrors(prev => ({ ...prev, url: "" }));

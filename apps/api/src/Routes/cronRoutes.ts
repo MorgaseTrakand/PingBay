@@ -80,7 +80,6 @@ router.get("/handle-pings", async (req, res) => {
     const sites: SiteRow[] = result.rows;
 
     pingSitesWrapper(sites)
-
     if (currentMinute === 0) {
       downSample();
     }
