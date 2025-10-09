@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware'
 
 interface CounterState {
   count: number;
@@ -15,7 +16,14 @@ interface UserState {
   set: (val: boolean) => void;
 }
 
-export const useUpdateUserState = create<UserState>((set) => ({
-  isLoggedIn: false,
-  set: (val: boolean) => set(() => ({ isLoggedIn: val }))
-}))
+export const useUpdateUserState = create<UserState>()(
+  persist(
+    (set) => ({
+      isLoggedIn: false,
+      set: (val: boolean) => set(() => ({ isLoggedIn: val })),
+    }),
+    {
+      name: "user-state"
+    }
+  )
+);

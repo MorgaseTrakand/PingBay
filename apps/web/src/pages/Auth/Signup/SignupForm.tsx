@@ -49,7 +49,7 @@ export const SignupForm: React.FC<SignupProps> = ({setGeneralError, generalError
   return (  
     <>
       <CardContent>
-        <form>
+        <form id="signup-form">
           <Label className={`mb-4 font-normal ${generalError ? 'text-red-500' : '' }`}>{generalError}</Label>
           <div className="flex flex-col gap-0">
             <FormRow setValue={setEmail} error={emailError} labelTitle="Email" type="email" placeholder="email@example.com" />
@@ -58,7 +58,7 @@ export const SignupForm: React.FC<SignupProps> = ({setGeneralError, generalError
         </form>
       </CardContent>
       <CardFooter className="flex-col gap-2">
-        <Button type="submit" className="w-full cursor-pointer" onClick={handleSignup}>
+        <Button type="submit" className="w-full cursor-pointer" onClick={handleSignup} form="signup-form">
           Signup
         </Button>
         <CardAction className="w-full">
