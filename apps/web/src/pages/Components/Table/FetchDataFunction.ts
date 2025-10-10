@@ -17,7 +17,6 @@ export async function fetchDataAPI() {
     credentials: 'include',
   })
   let sites = await response.json();
-
   let siteIDs = sites.map((site: any) => site.id);
   response = await fetch(import.meta.env.VITE_GET_STATE_URL, {
     method: "POST",
@@ -28,7 +27,6 @@ export async function fetchDataAPI() {
     body: JSON.stringify({ siteIDs: siteIDs })
   })
   let stateData: State[] = await response.json();
-  console.log(stateData)
   let mergedSites = sites.map((site: any) => {
     const state = stateData.find(s => s.monitor_id === site.id);
     return {
@@ -37,6 +35,5 @@ export async function fetchDataAPI() {
       status: state ? state.status : null,
     };
   });
-  console.log(mergedSites)
   return mergedSites
 }

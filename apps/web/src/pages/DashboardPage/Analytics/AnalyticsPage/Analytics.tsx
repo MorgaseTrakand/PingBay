@@ -1,7 +1,7 @@
 import React from "react";
 import DashboardHeader from "../../DashboardHeader";
 import { OverviewChart } from "./OverviewChart";
-import AnalyticsBentos from "./AnalyticsBento";
+import AnalyticsBentos from "./AnalyticsBentos/AnalyticsBentos";
 import AnalyticsTableComponent from "./AnalyticsTable/AnalyticsTableComponent";
 
 type Props = {};

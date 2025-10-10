@@ -1,16 +1,16 @@
 import React, { useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import DashboardHeader from "../../DashboardHeader";
 import SiteAnalyticsHeaderUI from "./SinglePageAnalyticsComponent";
 
 type Props = {};
 
 const SinglePageAnalytics: React.FC<Props> = () => {
-  const [searchParams] = useSearchParams();
+  const { id } = useParams();
 
   useEffect(() => {
-    console.log(searchParams)
-  }, [searchParams])
+    console.log(id)
+  }, [id])
 
   return (
     <>

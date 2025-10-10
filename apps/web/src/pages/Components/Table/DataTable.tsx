@@ -19,6 +19,7 @@ import {
 import { Loader2 } from "lucide-react";
 import { TableHeaderButtons } from "./TableHeaderButtons.tsx";
 import { TableFooterButtons } from "./TableFooterButtons.tsx";
+import { useNavigate } from "react-router-dom";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -26,7 +27,7 @@ interface DataTableProps<TData, TValue> {
   isLoading?: boolean
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends { id: string | number }, TValue>({
   columns,
   data,
   isLoading = false,
@@ -61,6 +62,8 @@ export function DataTable<TData, TValue>({
       rowSelection,
     },
   })
+
+  const navigate = useNavigate();
 
   return (
     <>
@@ -106,7 +109,8 @@ export function DataTable<TData, TValue>({
                     <TableRow
                       key={row.id}
                       data-state={row.getIsSelected() && "selected"}
-                      className={!status ? "bg-red-50" : ""}
+                      className={`${!status ? "bg-red-50" : ""} cursor-pointer`}
+                      onClick={() => navigate(`/dashboard/site-analytics/${row.original.id}`)}
                     >
                       {row.getVisibleCells().map((cell) => (
                         <TableCell key={cell.id}>

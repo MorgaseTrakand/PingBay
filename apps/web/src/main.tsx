@@ -30,7 +30,7 @@ const router = createBrowserRouter([
       { index: true, element: <Dashboard /> },
       { path: 'settings', element: <Settings /> },
       { path: 'analytics', element: <Analytics /> },
-      { path: "site-analytics", element: <SinglePageAnalytics /> },
+      { path: "site-analytics/:id", element: <SinglePageAnalytics /> },
     ]
   },  
 ]);

@@ -8,6 +8,7 @@ import authRoutes from "./Routes/authRoutes.js";
 import homePageRoutes from "./Routes/homePageRoutes.js";
 import siteRoutes from "./Routes/siteRoutes.js";
 import cronRoutes from "./Routes/cronRoutes.js";
+import analyticsRoutes from "./Routes/analyticsRoutes.js";
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -22,7 +23,8 @@ app.use(cookieParser());
 app.use('/auth', authRoutes);
 app.use('/homepage', homePageRoutes);
 app.use('/site', siteRoutes);
-app.use('/cron', cronRoutes)
+app.use('/cron', cronRoutes);
+app.use('/analytics', analyticsRoutes);
   
 app.get("/health", (req, res) => {
   res.json({ status: "ok" });
