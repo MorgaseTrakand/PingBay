@@ -1,5 +1,5 @@
 import { Router } from "express"; 
-import { getNumberOfSites } from "../Queries/analyticsQueries.js";
+import { getHourlyData, getNumberOfSites } from "../Queries/analyticsQueries.js";
 
 const router = Router();
 
@@ -11,10 +11,25 @@ router.get('/get-number-of-sites', async (req, res) => {
     if (numberOfSites.n) {
       return res.json({numberOfSites: numberOfSites.n})
     }
-    return res.status(401).json("Something went wrong!");
+    return res.status(500).json("Something went wrong!");
   } catch (e) {
-    return res.status(401).json(e);
+    return res.status(500).json(e);
   }
 });
+
+router.get('/get-site-latency-data', async (req, res) => {
+  try {
+    let userID = req.cookies?.userID;
+
+    if (!userID) {
+      return res.status(401).send();
+    }
+
+    return res.json(await getHourlyData(userID))
+  } catch (e) {
+    console.log(e)
+    return res.status(500).json(e)
+  }
+})
 
 export default router

@@ -1,6 +1,6 @@
 import React from "react";
 import DashboardHeader from "../../DashboardHeader";
-import { OverviewChart } from "./OverviewChart";
+import { OverviewChartContainer } from "./OverviewChart/OverviewChartContainer";
 import AnalyticsBentos from "./AnalyticsBentos/AnalyticsBentos";
 import AnalyticsTableComponent from "./AnalyticsTable/AnalyticsTableComponent";
 
@@ -16,7 +16,7 @@ const Analytics: React.FC<Props> = () => {
           <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-foreground mb-8">Overview</h1>
           <AnalyticsBentos />
           <h1 className="text-lg sm:text-2xl font-semibold tracking-tight text-foreground mb-4">Detailed Breakdown</h1>
-          <OverviewChart />
+          <OverviewChartContainer />
           <h1 className="text-lg sm:text-2xl font-semibold tracking-tight text-foreground">Site Table</h1>
           <div className="min-h-[60vh]">
             <AnalyticsTableComponent />
