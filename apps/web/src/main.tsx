@@ -16,12 +16,12 @@ import Settings from './pages/DashboardPage/Settings/Settings';
 import Analytics from './pages/DashboardPage/Analytics/AnalyticsPage/Analytics';
 import SinglePageAnalytics from './pages/DashboardPage/Analytics/SingleSiteAnalyticsPage/SinglePageAnalytics';
 
-import { authLoader } from './utils/authLoader';
+import { authLoader, updateUserState } from './utils/authLoader';
 
 const router = createBrowserRouter([
-  { path: "/", element: <HomePage /> },
-  { path: "/login", element: <LoginPage /> },
-  { path: "/signup", element: <SignupPage /> },
+  { path: "/", element: <HomePage />, loader: updateUserState },
+  { path: "/login", element: <LoginPage />, loader: updateUserState },
+  { path: "/signup", element: <SignupPage />, loader: updateUserState },
   { 
     path: "/dashboard", 
     element: <DashboardSwitchBoard />,

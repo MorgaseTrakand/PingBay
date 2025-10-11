@@ -5,44 +5,47 @@ import { OverviewChart } from "./OverviewChart";
 
 export const description = "An interactive latency chart"
 
+async function fetchData(setChartData: React.Dispatch<React.SetStateAction<Record<string, any>>>) {
+  let response = await fetch(import.meta.env.VITE_GET_OVERALL_CHART_DATA, {
+    method: "GET",
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+  })
+  let data = await response.json();
+  const allDates = Array.from(
+    new Set(
+      data.flatMap((site: { json_agg: any[]; }) => site.json_agg.map(row => row.hour_checked))
+    )
+  ).sort();
+
+  const ChartData = allDates.map(date => {
+    const row: Record<string, any> = { date };
+
+    data.forEach((site: { json_agg: any[]; site_title: string | number; }) => {
+      const siteRow = site.json_agg.find(r => r.hour_checked === date);
+      row[site.site_title] = siteRow ? siteRow.average_latency : null;
+    });
+
+    return row;
+  });
+
+  setChartData(ChartData)
+} 
+
 export function OverviewChartContainer() {
   const [timeRange, setTimeRange] = React.useState("30 days")
   const [chartData, setChartData] = useState<Record<string, any>>([]);
 
   useEffect(() => {
-    async function fetchData() {
-      let response = await fetch(import.meta.env.VITE_GET_OVERALL_CHART_DATA, {
-        method: "GET",
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-      })
-      let data = await response.json();
-      const allDates = Array.from(
-        new Set(
-          data.flatMap((site: { json_agg: any[]; }) => site.json_agg.map(row => row.hour_checked))
-        )
-      ).sort();
-      // Step 2: Build the chart data array
-      const testChartData = allDates.map(date => {
-        const row: Record<string, any> = { date };
-
-        data.forEach((site: { json_agg: any[]; site_title: string | number; }) => {
-          // Find the entry for this date for the current site
-          const siteRow = site.json_agg.find(r => r.hour_checked === date);
-          row[site.site_title] = siteRow ? siteRow.average_latency : null;
-        });
-
-        return row;
-      });
-
-      console.log(testChartData)
-      setChartData(testChartData)
-    } 
-    fetchData()
+    fetchData(setChartData)
   }, [])
 
+  useEffect(() => {
+    console.log('chart data updated')
+  }, [chartData])
+  
   //filters the data to only have days from (current date - timerange) to current date
   const filteredData = chartData.filter((item: { date: string | number | Date; }) => {
     const date = new Date(item.date)
