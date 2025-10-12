@@ -1,67 +1,49 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { TimeRangeSelect } from "./TimeRangeSelect";
 import { OverviewChart } from "./OverviewChart";
+import { fetchHourlyData, fetchDailyData } from "./OverviewChartFunctions";
 
 export const description = "An interactive latency chart"
 
-async function fetchData(setChartData: React.Dispatch<React.SetStateAction<Record<string, any>>>) {
-  let response = await fetch(import.meta.env.VITE_GET_OVERALL_CHART_DATA, {
-    method: "GET",
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
-  })
-  let data = await response.json();
-  const allDates = Array.from(
-    new Set(
-      data.flatMap((site: { json_agg: any[]; }) => site.json_agg.map(row => row.hour_checked))
-    )
-  ).sort();
+export function OverviewChartContainer() {
+  const [timeRange, setTimeRange] = useState("30 days");
 
-  const ChartData = allDates.map(date => {
-    const row: Record<string, any> = { date };
+  const [hourlyData, setHourlyData] = useState<Record<string, any>>([]);
+  const [dailyData, setDailyData] = useState<Record<string, any>>([]);
+  const [currentData, setCurrentData] = useState<Record<string, any>>([]);
 
-    data.forEach((site: { json_agg: any[]; site_title: string | number; }) => {
-      const siteRow = site.json_agg.find(r => r.hour_checked === date);
-      row[site.site_title] = siteRow ? siteRow.average_latency : null;
-    });
-
-    return row;
+  const filteredData = currentData.filter((item: { date: string | number | Date; }) => {
+    const referenceDate = new Date();
+    let daysToSubtract = timeRange === "7 days" ? 7 : timeRange === "30 days" ? 30 : 90;
+    const startDate = new Date(referenceDate);
+    startDate.setDate(startDate.getDate() - daysToSubtract);
+    return new Date(item.date) >= startDate;
   });
 
-  setChartData(ChartData)
-} 
-
-export function OverviewChartContainer() {
-  const [timeRange, setTimeRange] = React.useState("30 days")
-  const [chartData, setChartData] = useState<Record<string, any>>([]);
-
   useEffect(() => {
-    fetchData(setChartData)
+    const loadDailyData = async () => {
+      const newData = await fetchHourlyData();
+      setHourlyData(newData);
+    };
+
+    const loadHourlyData = async () => {
+      const newData = await fetchDailyData();
+      setDailyData(newData);
+      setCurrentData(newData)
+    }
+
+    loadDailyData();
+    loadHourlyData();
   }, [])
 
   useEffect(() => {
-    console.log('chart data updated')
-  }, [chartData])
-  
-  //filters the data to only have days from (current date - timerange) to current date
-  const filteredData = chartData.filter((item: { date: string | number | Date; }) => {
-    const date = new Date(item.date)
-    const referenceDate = new Date()
-
-    let daysToSubtract = 90
-    if (timeRange === "30 days") {
-      daysToSubtract = 30
-    } else if (timeRange === "7 days") {
-      daysToSubtract = 7
+    if (timeRange == "7 days") {
+      setCurrentData(hourlyData)
+    } else {
+      setCurrentData(dailyData)
     }
-    const startDate = new Date(referenceDate)
-    startDate.setDate(startDate.getDate() - daysToSubtract)
-    return date >= startDate
-  })
-
+  }, [timeRange])
   return (
     <Card className="pt-0 mb-12">
       <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
@@ -74,7 +56,7 @@ export function OverviewChartContainer() {
         <TimeRangeSelect timeRange={timeRange} setTimeRange={setTimeRange} />
       </CardHeader>
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
-        <OverviewChart filteredData={filteredData}/>
+        <OverviewChart data={filteredData} hourly={timeRange == "7 days"}/>
       </CardContent>
     </Card>
   )

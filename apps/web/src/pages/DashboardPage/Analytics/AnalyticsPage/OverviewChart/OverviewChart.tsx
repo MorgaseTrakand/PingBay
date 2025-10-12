@@ -3,18 +3,23 @@ import { ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartToo
 import type { ChartConfig } from "@/components/ui/chart";
 import { useMemo, useState } from "react";
 
+type dataStructure = {
+  date: string,
+  [site: string]: number | string
+}
+
 type Props = {
-  filteredData: any
+  data: Array<dataStructure>
+  hourly: boolean
 };
 
-export const OverviewChart: React.FC<Props> = ({ filteredData }) => {
+export const OverviewChart: React.FC<Props> = ({ data, hourly }) => {
   const [titles, setTitles] = useState<string[]>([]);
-
   const chartConfig = useMemo<ChartConfig>(() => {
-    if (!filteredData || filteredData.length === 0) return {} as ChartConfig;
+    if (!data || data.length === 0) return {} as ChartConfig;
 
-    const last = filteredData[filteredData.length - 1];
-    const seriesKeys = Object.keys(last).filter((k) => k !== "date");
+    const lastElement = data[data.length - 1];
+    const seriesKeys = Object.keys(lastElement).filter((k) => k !== "date");
     setTitles(seriesKeys);
 
     const cfg: Record<string, { label: string; color?: string; fillId?: string }> = {};
@@ -28,7 +33,7 @@ export const OverviewChart: React.FC<Props> = ({ filteredData }) => {
     });
 
     return cfg as ChartConfig;
-  }, [filteredData]);
+  }, [data]);
   
   return (
     <>
@@ -36,7 +41,7 @@ export const OverviewChart: React.FC<Props> = ({ filteredData }) => {
         config={chartConfig}
         className="aspect-auto h-[250px] w-full"
       >
-        <AreaChart data={filteredData}>
+        <AreaChart data={data}>
           <defs>
             {titles.map((title, index) => (
               <linearGradient key={`${title}${index}`} id={`fill-${title}`} x1="0" y1="0" x2="0" y2="1">
@@ -76,6 +81,7 @@ export const OverviewChart: React.FC<Props> = ({ filteredData }) => {
                   return new Date(value).toLocaleDateString("en-US", {
                     month: "short",
                     day: "numeric",
+                    ...(hourly && { hour: "numeric" })                  
                   })
                 }}
                 indicator="dot"
