@@ -43,7 +43,7 @@ export const FormRow: React.FC<Props> = ({ error, setValue, labelTitle, placehol
                     setPasswordHidden(!passwordHidden); 
                     setInputType(inputType == 'password' ? 'text' : 'password');
                   }} 
-                size="22" 
+                size="20" 
                 className="absolute right-2 top-[50%] translate-y-[-50%] text-muted-foreground cursor-pointer"
               />
             }
@@ -54,7 +54,7 @@ export const FormRow: React.FC<Props> = ({ error, setValue, labelTitle, placehol
                     setPasswordHidden(!passwordHidden);
                     setInputType(inputType == 'password' ? 'text' : 'password');
                   }} 
-                size="22" 
+                size="20" 
                 className="absolute right-2 top-[50%] translate-y-[-50%] text-muted-foreground cursor-pointer"
               />
             }

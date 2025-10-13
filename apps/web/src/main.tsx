@@ -10,7 +10,7 @@ import HomePage from './pages/HomePage/HomePage';
 import LoginPage from './pages/Auth/Login/Login';
 import SignupPage from './pages/Auth/Signup/Signup';
 
-import DashboardSwitchBoard from './pages/DashboardPage/DashboardSwitchBoard';
+import { DashboardSwitchBoard } from './pages/DashboardPage/DashboardSwitchBoard';
 import Dashboard from './pages/DashboardPage/Dashboard/Dashboard';
 import Settings from './pages/DashboardPage/Settings/Settings';
 import Analytics from './pages/DashboardPage/Analytics/AnalyticsPage/Analytics';

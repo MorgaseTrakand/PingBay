@@ -4,6 +4,7 @@ import { Sidebar, SidebarHeader, SidebarContent, SidebarFooter, SidebarMenuItem,
 import { Separator } from "@/components/ui/separator";
 import useAuth from "@/hooks/useAuth";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 type Props = {};
 
@@ -18,8 +19,8 @@ const contentItems = [
 ]
 
 const SiteSidebar: React.FC<Props> =  () => {
-  const [selectedItem, setSelectedItem] = useState(window.location.pathname);
-  const [pageChanged, setPageChanged] = useState(0);
+  const location = useLocation();
+  const [selectedItem, setSelectedItem] = useState<string>();
 
   const navigate = useNavigate();
   const auth = useAuth();
@@ -29,12 +30,17 @@ const SiteSidebar: React.FC<Props> =  () => {
       await auth.logout();
       navigate("/");
     }
-    setPageChanged(pageChanged+1);
   };
 
   useEffect(() => {
-    setSelectedItem(window.location.pathname);
-  }, [pageChanged])
+    let pathnames = ['/dashboard', '/dashboard/analytics', '/dashboard/settings']
+
+    if (pathnames.includes(location.pathname)) {
+      setSelectedItem(location.pathname)
+    } else {
+      setSelectedItem('/dashboard/analytics')
+    }
+  }, [location])
 
   return (
       <Sidebar>
@@ -55,7 +61,7 @@ const SiteSidebar: React.FC<Props> =  () => {
           <SidebarMenu className="gap-2 pl-2 pr-2">
             {contentItems.map((item) => (
               <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton asChild className={`${item.url == selectedItem ? 'bg-blue-200' : 'bg-white'} h-12 border-1`} onClick={() => handleClick(item.title)}>
+                <SidebarMenuButton asChild className={`${item.url == selectedItem ? 'bg-blue-100 border-blue-400' : 'bg-white'} h-12 border-1`} onClick={() => handleClick(item.title)}>
                   <NavLink to={item.url}> <item.icon /> <span>{item.title}</span> </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -68,7 +74,7 @@ const SiteSidebar: React.FC<Props> =  () => {
           <SidebarMenu className="gap-2">
             {footerItems.map((item) => (
               <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton asChild className={`${item.url == selectedItem ? 'bg-blue-200' : 'bg-white'} h-12 border-1`} onClick={() => handleClick(item.title)}>
+                <SidebarMenuButton asChild className={`${item.url == selectedItem ? 'bg-blue-100 border-blue-500' : 'bg-white'} h-12 border-1`} onClick={() => handleClick(item.title)}>
                   <NavLink to={item.url}> <item.icon /> <span>{item.title}</span> </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
