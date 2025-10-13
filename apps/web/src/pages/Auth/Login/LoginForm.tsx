@@ -60,7 +60,7 @@ export const LoginForm: React.FC<LoginProps> = ({ generalError, setGeneralError 
           <Label className={`mb-4 font-normal ${generalError ? 'text-red-500' : '' }`}>{generalError}</Label>
           <div className="flex flex-col gap-0">
             <FormRow setValue={setEmail} error={emailError} labelTitle="Email" type="email" placeholder="email@example.com" />
-            <FormRow setValue={setPassword} error={passwordError} labelTitle="Password" type="password" placeholder="password" />
+            <FormRow setValue={setPassword} error={passwordError} labelTitle="Password" type="password" placeholder="password" passwordRowBoolean={true} />
           </div>
         </form>
       </CardContent>

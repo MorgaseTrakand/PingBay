@@ -3,8 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { RefreshCw, Clock } from "lucide-react";
+import { useEffect } from "react";
 
 export default function SiteAnalyticsHeaderUI() {
+  useEffect(() => {
+    
+  })
+
   const site = {
     name: "Google",
     url: "https://www.google.com",
