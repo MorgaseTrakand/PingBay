@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Settings, LogOut, LayoutDashboard, ChartColumn } from "lucide-react";
 import { Sidebar, SidebarHeader, SidebarContent, SidebarFooter, SidebarMenuItem, SidebarMenu, SidebarMenuButton } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
@@ -18,6 +18,9 @@ const contentItems = [
 ]
 
 const SiteSidebar: React.FC<Props> =  () => {
+  const [selectedItem, setSelectedItem] = useState(window.location.pathname);
+  const [pageChanged, setPageChanged] = useState(0);
+
   const navigate = useNavigate();
   const auth = useAuth();
 
@@ -26,7 +29,12 @@ const SiteSidebar: React.FC<Props> =  () => {
       await auth.logout();
       navigate("/");
     }
+    setPageChanged(pageChanged+1);
   };
+
+  useEffect(() => {
+    setSelectedItem(window.location.pathname);
+  }, [pageChanged])
 
   return (
       <Sidebar>
@@ -47,7 +55,7 @@ const SiteSidebar: React.FC<Props> =  () => {
           <SidebarMenu className="gap-2 pl-2 pr-2">
             {contentItems.map((item) => (
               <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton asChild className="h-12 border-1 bg-white" onClick={() => handleClick(item.title)}>
+                <SidebarMenuButton asChild className={`${item.url == selectedItem ? 'bg-blue-200' : 'bg-white'} h-12 border-1`} onClick={() => handleClick(item.title)}>
                   <NavLink to={item.url}> <item.icon /> <span>{item.title}</span> </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -60,7 +68,7 @@ const SiteSidebar: React.FC<Props> =  () => {
           <SidebarMenu className="gap-2">
             {footerItems.map((item) => (
               <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton asChild className="h-12 border-1" onClick={() => handleClick(item.title)}>
+                <SidebarMenuButton asChild className={`${item.url == selectedItem ? 'bg-blue-200' : 'bg-white'} h-12 border-1`} onClick={() => handleClick(item.title)}>
                   <NavLink to={item.url}> <item.icon /> <span>{item.title}</span> </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>

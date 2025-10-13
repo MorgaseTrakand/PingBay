@@ -3,6 +3,7 @@ import { RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useDataTableTrigger } from '../../../lib/zustand.ts';
 import AddSiteButton from "./AddSiteButton+Sheet/AddSiteButton.tsx";
+import { PageH1 } from "@/pages/Components/PageH1.tsx";
 
 type Props = {};
 
@@ -15,9 +16,7 @@ const DashboardTableTitle: React.FC<Props> = () => {
   return (
     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
       <div className="flex-1 min-w-0">
-        <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-foreground">
-          Monitored Sites
-        </h1>
+        <PageH1 text="Monitored Sites" />
         <p className="mt-1 text-sm text-muted-foreground">
           Keep track of uptime & notifications for your monitored URLs.
         </p>
