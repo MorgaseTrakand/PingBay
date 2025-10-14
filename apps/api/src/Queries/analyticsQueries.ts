@@ -125,14 +125,27 @@ export async function getUptimeAllSites7D(userID: number) {
 
 export async function getLatencyAllSites7D(userID: number) {
   const result = await pool.query(`
-    SELECT hp.user_site_id, ROUND(AVG(hp.average_latency)) as latency
-    FROM hourly_pings hp
-    WHERE user_site_id IN (SELECT user_site_id FROM user_sites WHERE user_id = ($1))
-    AND hp.hour_checked >= NOW() - INTERVAL '7 days'
-    GROUP BY hp.user_site_id
-    ORDER BY hp.user_site_id
+    SELECT ROUND(AVG(latency)) as latency 
+    FROM (
+      SELECT hp.user_site_id, ROUND(AVG(hp.average_latency)) as latency
+      FROM hourly_pings hp
+      WHERE user_site_id IN (SELECT user_site_id FROM user_sites WHERE user_id = ($1))
+      AND hp.hour_checked >= NOW() - INTERVAL '7 days'
+      GROUP BY hp.user_site_id
+      ORDER BY hp.user_site_id
+    )
   `, [userID])
 
   const lantency = Number(result.rows[0]?.latency ?? 0);
   return lantency;
+}
+
+export async function getState(siteID: number) {
+  
+  const result = await pool.query(
+    `SELECT * FROM monitor_state WHERE monitor_id = ($1)`,
+    [siteID]
+  );
+
+  return result.rows[0]
 }

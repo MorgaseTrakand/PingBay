@@ -36,3 +36,16 @@ export async function fetchAvgLatencyData(siteID: number) {
   let data = await response.json();
   return data
 }
+
+export async function handleRefresh(siteID: number) {
+  let response = await fetch(import.meta.env.VITE_GET_SINGLE_SITE_STATE_URL, {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+    body: JSON.stringify({ siteID: siteID })
+  })
+  let data = await response.json();
+  return { last_checked: data.last_check, status: data.status }
+}

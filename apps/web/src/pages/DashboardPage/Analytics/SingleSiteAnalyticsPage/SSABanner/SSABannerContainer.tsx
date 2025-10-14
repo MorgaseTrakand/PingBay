@@ -5,10 +5,19 @@ import { Badge } from "@/components/ui/badge";
 import { RefreshCw, Clock } from "lucide-react";
 import { useSetCurrentSite } from "@/lib/zustand";
 import SSABannerStats from "./SSABannerStats";
+import { handleRefresh } from "./SSABannerFunctions";
+import { useParams } from "react-router-dom";
 
 export default function SSABannerContainer() {
-  const { title, url, last_checked, status } = useSetCurrentSite();
+  let { title, url, last_checked, status } = useSetCurrentSite();
   const [lastChecked, setLastChecked] = useState('m ago');
+  const set = useSetCurrentSite((s) => s.set);
+
+  let siteID: number;
+  let params = useParams();
+  if (typeof params.id == 'string') {
+    siteID = parseInt(params.id);
+  }
 
   useEffect(() => {
     if (!last_checked) return;
@@ -58,7 +67,6 @@ export default function SSABannerContainer() {
   return (
     <Card className="w-full rounded-2xl shadow-sm border p-0 mb-12">
       <CardContent className="flex items-center justify-between gap-6 p-6">
-        {/* Left: Site identity */}
         <div className="flex items-start gap-4 min-w-0">
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-3">
@@ -78,7 +86,14 @@ export default function SSABannerContainer() {
         <SSABannerStats />
 
         <div className="items-center">
-          <Button variant="outline" className="px-3 py-2  cursor-pointer">
+          <Button 
+            variant="outline" 
+            className="px-3 py-2  cursor-pointer" 
+            onClick={async () => {
+              if (!siteID) return;
+              const { last_checked: newLastChecked, status: newStatus } = await handleRefresh(siteID);
+              set({ last_checked: newLastChecked, status: newStatus });
+              }}>
             <RefreshCw className="w-4 h-4" />
             <span>Refresh</span>
           </Button>

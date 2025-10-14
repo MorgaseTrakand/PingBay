@@ -74,7 +74,7 @@ const ResultCard: React.FC<Props> = ({ result, loading, url, newPing, sendURL })
 
                   <div>
                     <div className="text-xs text-muted-foreground">Last checked</div>
-                    <div className="text-lg font-medium">Just Now</div>
+                    <div className="text-normal font-medium">Just Now</div>
                   </div>
 
                   <div className="flex items-center justify-center">

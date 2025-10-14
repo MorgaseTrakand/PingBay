@@ -29,9 +29,8 @@ export default function SSABannerStats() {
 
   return (
     <>
-      {/* Middle: compact stats */}
-      <div className="hidden md:flex flex-1 items-center justify-center">
-        <div className="flex items-center gap-6">
+      <div className="flex flex-1 items-center justify-center">
+        <div className="flex items-center gap-5">
           <div className="flex flex-col text-center">
             <span className="text-sm text-muted-foreground uppercase">Uptime (7 d)</span>
             <span className="text-xl font-semibold">{uptime}%</span>

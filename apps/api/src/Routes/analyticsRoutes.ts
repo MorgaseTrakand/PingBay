@@ -1,6 +1,7 @@
 import { Router } from "express"; 
 import { getDailyData, getHourlyData, getNumberOfSites, getIncidents7D, 
-  getLatency7D, getUptime7D, getUptimeAllSites7D, getLatencyAllSites7D } 
+  getLatency7D, getUptime7D, getUptimeAllSites7D, getLatencyAllSites7D, 
+  getState} 
 from "../Queries/analyticsQueries.js";
 
 const router = Router();
@@ -106,7 +107,7 @@ router.get('/get-uptime-last-week-overall', async (req, res) => {
 });
 
 router.get('/get-latency-last-week-overall', async (req, res) => {
-    try {
+  try {
     let userID = req.cookies?.userID;
 
     if (!userID) {
@@ -118,5 +119,19 @@ router.get('/get-latency-last-week-overall', async (req, res) => {
     return res.status(500).json(e)
   }
 });
+
+router.post('/get-single-site-state', async (req, res) => {
+  try {
+    let siteID = req.body.siteID;
+
+    if (!siteID) {
+      return res.status(401).send();
+    }
+
+    return res.json(await getState(siteID))
+  } catch (e) {
+    return res.status(500).json(e)
+  }
+})
 
 export default router

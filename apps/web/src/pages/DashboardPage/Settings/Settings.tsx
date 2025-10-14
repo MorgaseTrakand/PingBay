@@ -16,9 +16,9 @@ const Settings: React.FC<Props> = () => {
     <>
       <PageH1 text="Settings" marginBottom={4} />   
       <Tabs defaultValue="account">
-        <TabsList>
-          <TabsTrigger value="account">Account</TabsTrigger>
-          <TabsTrigger value="customization">Customization</TabsTrigger>
+        <TabsList className="h-auto p-1 gap-1.5 bg-slate-100">
+          <TabsTrigger value="account" className="py-2.5 px-3 cursor-pointer">Account</TabsTrigger>
+          <TabsTrigger value="customization" className="py-2.5 px-3 cursor-pointer">Customization</TabsTrigger>
         </TabsList>
         <TabsContent value="account">
           

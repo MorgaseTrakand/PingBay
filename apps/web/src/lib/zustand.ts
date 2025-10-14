@@ -29,12 +29,12 @@ export const useUpdateUserState = create<UserState>()(
 );
 
 interface CurrentSite {
-  id: number | string,
+  id: number | string;
   title: string;
   url: string;
   last_checked: string;
-  status: boolean
-  set: (id: number | string, title: string, url: string, last_checked: string, status: boolean) => void;
+  status: boolean;
+  set: (data: Partial<CurrentSite>) => void;
 }
 
 export const useSetCurrentSite = create<CurrentSite>()(
@@ -45,10 +45,10 @@ export const useSetCurrentSite = create<CurrentSite>()(
       url: '',
       last_checked: '',
       status: false,
-      set: (id: number | string, title: string, url: string, last_checked: string, status: boolean) => set(() => ({ id: id, title: title, url: url, last_checked: last_checked, status: status}))
+      set: (data) => set((state) => ({ ...state, ...data })),
     }),
     {
-      name: "current-site"
+      name: "current-site",
     }
   )
 );
