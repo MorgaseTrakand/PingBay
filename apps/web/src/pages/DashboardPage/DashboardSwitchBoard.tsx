@@ -32,7 +32,7 @@ export const DashboardSwitchBoard: React.FC<Props> = () => {
     <>
       <SidebarProvider>
         <SiteSidebar></SiteSidebar>
-        <SidebarInset>
+        <SidebarInset className="relative @container">
           <DashboardHeader title={DashboardHeaderText} breadcrumbBoolean={breadcrumbStatus}></DashboardHeader>
           <div className="flex flex-1 flex-col gap-4 p-4 bg-muted/100">
             <div className="bg-white flex flex-col flex-1 rounded-xl md:min-h-min border-1 p-8 pb-4">

@@ -5,8 +5,10 @@ import { OverviewChart } from "./OverviewChart";
 import { fetchHourlyData, fetchDailyData } from "./OverviewChartFunctions";
 
 export const description = "An interactive latency chart"
-
-export function OverviewChartContainer() {
+type Props = {
+  marginBottom?: number
+}
+export const OverviewChartContainer: React.FC<Props> = ({ marginBottom}) => {
   const [timeRange, setTimeRange] = useState("30 days");
 
   const [hourlyData, setHourlyData] = useState<Record<string, any>>([]);
@@ -44,8 +46,9 @@ export function OverviewChartContainer() {
       setCurrentData(dailyData)
     }
   }, [timeRange])
+  
   return (
-    <Card className="pt-0 mb-12">
+    <Card className={`${marginBottom ? `mb-${marginBottom}` : 'mb-12'} pt-0`}>
       <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
         <div className="grid flex-1 gap-1">
           <CardTitle className="text-xl">Site Latency Chart - Interactive</CardTitle>

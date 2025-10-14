@@ -53,7 +53,7 @@ export default function AnalyticsBentos() {
       description: "Active",
       value: nSites,
       delta: null,
-      deltaLabel: "",
+      deltaLabel: '\u200B',
       icon: <Globe className="w-6 h-6" />,
     },
   ];

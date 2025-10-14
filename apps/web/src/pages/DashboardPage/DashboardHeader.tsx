@@ -23,7 +23,7 @@ const DashboardHeader: React.FC<Props> = ({ title, breadcrumbBoolean }) => {
   
   return (
     <>
-      <header className="flex h-16 shrink-0 items-center gap-2 border-b">
+      <header className="flex h-16 shrink-0 items-center gap-2 border-b sticky top-0 bg-white z-10">
         <div className="flex items-center gap-2 px-3">
           <SidebarTrigger className="cursor-pointer"/>
           <Separator orientation="vertical" className="mr-2 h-4" />

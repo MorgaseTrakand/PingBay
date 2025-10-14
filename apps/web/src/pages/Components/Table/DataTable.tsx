@@ -87,7 +87,7 @@ export function DataTable<TData extends { id: string | number }, TValue>({
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => {
                     return (
-                      <TableHead key={header.id}>
+                      <TableHead key={header.id} className="text-[14px]">
                         {header.isPlaceholder
                           ? null
                           : flexRender(
@@ -109,7 +109,7 @@ export function DataTable<TData extends { id: string | number }, TValue>({
                     <TableRow
                       key={row.id}
                       data-state={row.getIsSelected() && "selected"}
-                      className={`${!status ? "bg-red-50" : ""} cursor-pointer`}
+                      className={`${!status} cursor-pointer`}
                       onClick={() => navigate(`/dashboard/site-analytics/${row.original.id}`)}
                     >
                       {row.getVisibleCells().map((cell) => (

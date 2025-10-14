@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { ArrowUp, ArrowDown, Activity } from "lucide-react";
+import { ArrowUp, ArrowDown } from "lucide-react";
 
 export type BentoStat = {
   id: string;
@@ -34,22 +34,20 @@ type Props = {
 export const SingleAnalyticsBento: React.FC<Props> = ({ s }) => {
 
   return (
-    <Card key={s.id} className="bg-white/60 shadow-sm flex justify-between">
-      <CardHeader className="flex items-start justify-between gap-3">
+    <Card key={s.id} className="bg-white/60 shadow-sm flex justify-between gap-12 p-4">
+      <CardHeader className="flex items-start justify-between gap-3 p-0">
         <div>
-          <CardTitle className="text-base font-semibold">{s.title}</CardTitle>
+          <CardTitle className="text-base font-semibold leading-none mb-1">{s.title}</CardTitle>
           {s.description && (
             <CardDescription className="text-xs text-muted-foreground">
               {s.description}
             </CardDescription>
           )}
         </div>
-        <div className="flex items-center gap-2">
-          {s.icon ?? <Activity className="w-6 h-6 text-muted-foreground" />}
-        </div>
+        {s.icon}
       </CardHeader>
 
-      <CardContent className="flex items-center justify-between pt-2">
+      <CardContent className="flex items-center justify-between pt-2 p-0">
         <div>
           <div className="text-2xl font-semibold leading-none">{s.value}</div>
           {s.deltaLabel && (
@@ -57,7 +55,7 @@ export const SingleAnalyticsBento: React.FC<Props> = ({ s }) => {
           )}
         </div>
 
-        <div className="flex items-center space-x-2">
+        <div className="flex items-end space-x-2 h-full">
           <TrendBadge delta={s.delta ?? null} />
         </div>
       </CardContent>
