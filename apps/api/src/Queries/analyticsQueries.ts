@@ -99,3 +99,40 @@ export async function getUptime7D(siteID: number) {
   const uptime = Number(result.rows[0]?.uptime ?? 0);
   return uptime;
 }
+
+export async function getUptimeAllSites7D(userID: number) {
+ const result = await pool.query(`
+  SELECT ROUND(AVG(uptime)::numeric, 3) AS avg_uptime
+  FROM (
+    SELECT
+      hp.user_site_id,
+      COALESCE(
+        (COALESCE(SUM(hp.total_successes),0)::numeric /
+        NULLIF((COALESCE(SUM(hp.total_successes),0) + COALESCE(SUM(hp.total_failures),0))::numeric, 0)
+        ),
+        0
+      ) AS uptime
+    FROM hourly_pings hp
+    WHERE hp.user_site_id IN (SELECT user_site_id FROM user_sites WHERE user_id = ($1))
+      AND hp.hour_checked >= NOW() - INTERVAL '7 days'
+    GROUP BY hp.user_site_id
+  ) AS per_site;
+ `, [userID])
+
+  const uptime = Number(result.rows[0]?.avg_uptime ?? 0);
+  return uptime;
+}
+
+export async function getLatencyAllSites7D(userID: number) {
+  const result = await pool.query(`
+    SELECT hp.user_site_id, ROUND(AVG(hp.average_latency)) as latency
+    FROM hourly_pings hp
+    WHERE user_site_id IN (SELECT user_site_id FROM user_sites WHERE user_id = ($1))
+    AND hp.hour_checked >= NOW() - INTERVAL '7 days'
+    GROUP BY hp.user_site_id
+    ORDER BY hp.user_site_id
+  `, [userID])
+
+  const lantency = Number(result.rows[0]?.latency ?? 0);
+  return lantency;
+}

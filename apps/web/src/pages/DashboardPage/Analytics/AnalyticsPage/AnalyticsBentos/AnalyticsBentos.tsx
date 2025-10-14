@@ -2,31 +2,34 @@ import { Activity, Server, Clock, Globe } from "lucide-react";
 import type { BentoStat } from "./AnalyticsBento";
 import { SingleAnalyticsBento } from "./AnalyticsBento";
 import { useEffect, useState } from "react";
-import { getSites } from "./bentoFunctions";
+import { getSites, getUptime, getLatency } from "./bentoFunctions";
 
 export default function AnalyticsBentos() {
   const [uptime, setUptime] = useState('100%');
   const [nSites, setNSites] = useState(0);
+  const [latency, setLatency] = useState(0);
 
   useEffect(() => {
     async function fetchData() {
       try {
-        setUptime('99.6%')
+        setUptime(`${String(await getUptime()*100)}%`)
         setNSites(await getSites())
+        setLatency(await getLatency())
       } catch (e) {
         console.log(e)
       }
     }
     fetchData();
-  })
+  });
+
   const stats: BentoStat[] = [
     {
       id: "uptime",
       title: "Average Uptime",
       description: "Across all monitored sites",
-      value: uptime,
+      value: `${String(parseFloat(uptime).toFixed(1))}%`,
       delta: 0.2,
-      deltaLabel: "vs last 7d",
+      deltaLabel: "vs last week",
       icon: <Server className="w-6 h-6" />,
     },
     {
@@ -35,16 +38,16 @@ export default function AnalyticsBentos() {
       description: "Last 7 days",
       value: 3,
       delta: -25,
-      deltaLabel: "vs last 7d",
+      deltaLabel: "vs last week",
       icon: <Clock className="w-6 h-6" />,
     },
     {
-      id: "response",
-      title: "Avg Response",
-      description: "Last 24 hours",
-      value: "218ms",
+      id: "latency",
+      title: "Avg Latency",
+      description: "Last 7 days",
+      value: `${latency}ms`,
       delta: -5,
-      deltaLabel: "vs last 24h",
+      deltaLabel: "vs last week",
       icon: <Activity className="w-6 h-6" />,
     },
     {

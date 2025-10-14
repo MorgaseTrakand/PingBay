@@ -1,6 +1,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { ActionDropdown } from "./ActionDropdown";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "@/components/ui/badge";
 
 export type Sites = {
   id: string
@@ -44,13 +45,18 @@ export const columns: ColumnDef<Sites>[] = [
     accessorKey: "url",
     header: "URL",
   },
-  {
+{
     accessorKey: "status",
     header: "Status",
     cell: ({ getValue }) => {
-      const val = getValue();
-      if (typeof val === "boolean") return val ? "Up" : "Down";
-      return String(val)
+      let val = getValue();
+      let badge : { variant: string, text: string, className: string };
+      if (val) {
+          badge = { variant: "default", text: "Online", className: "bg-green-50 text-green-800 ring-green-200" };
+      } else {
+          badge = { variant: "destructive", text: "Down", className: "bg-red-50 text-red-800 ring-red-200" };
+      }
+      return <Badge className={`px-2 py-1 text-sm font-medium ring-1 ring-inset ${badge.className}`}>{badge.text}</Badge>
     }
   },
   {

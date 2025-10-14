@@ -1,5 +1,7 @@
 import { Router } from "express"; 
-import { getDailyData, getHourlyData, getNumberOfSites, getIncidents7D, getLatency7D, getUptime7D } from "../Queries/analyticsQueries.js";
+import { getDailyData, getHourlyData, getNumberOfSites, getIncidents7D, 
+  getLatency7D, getUptime7D, getUptimeAllSites7D, getLatencyAllSites7D } 
+from "../Queries/analyticsQueries.js";
 
 const router = Router();
 
@@ -84,6 +86,34 @@ router.post('/get-uptime-last-week-single-site', async (req, res) => {
     }
 
     return res.json(await getUptime7D(siteID));
+  } catch (e) { 
+    return res.status(500).json(e)
+  }
+});
+
+router.get('/get-uptime-last-week-overall', async (req, res) => {
+    try {
+    let userID = req.cookies?.userID;
+
+    if (!userID) {
+      return res.status(401).send();
+    }
+
+    return res.json(await getUptimeAllSites7D(userID))
+  } catch (e) { 
+    return res.status(500).json(e)
+  }
+});
+
+router.get('/get-latency-last-week-overall', async (req, res) => {
+    try {
+    let userID = req.cookies?.userID;
+
+    if (!userID) {
+      return res.status(401).send();
+    }
+
+    return res.json(await getLatencyAllSites7D(userID))
   } catch (e) { 
     return res.status(500).json(e)
   }
