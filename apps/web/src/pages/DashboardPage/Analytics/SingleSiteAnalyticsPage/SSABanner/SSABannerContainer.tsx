@@ -1,31 +1,51 @@
+import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { RefreshCw, Clock } from "lucide-react";
-import { useEffect } from "react";
+import { useSetCurrentSite } from "@/lib/zustand";
+import SSABannerStats from "./SSABannerStats";
 
-export default function SiteAnalyticsHeaderUI() {
+export default function SSABannerContainer() {
+  const { title, url, last_checked, status } = useSetCurrentSite();
+  const [lastChecked, setLastChecked] = useState('m ago');
+
   useEffect(() => {
-    
-  })
+    if (!last_checked) return;
+
+    const isoMatch = last_checked.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z/);
+    if (!isoMatch) return;
+
+    const lastCheckedDate = new Date(isoMatch[0]);
+    const diffMs = Date.now() - lastCheckedDate.getTime();
+    const diffMinutes = diffMs / 1000 / 60;
+
+    let displayText = '';
+
+    if (diffMinutes < 1) {
+      displayText = 'Just now';
+    } else if (diffMinutes < 60) {
+      displayText = `${Math.floor(diffMinutes)}m ago`;
+    } else if (diffMinutes < 1440) {
+      displayText = `${Math.floor(diffMinutes / 60)}h ago`;
+    } else {
+      displayText = `${Math.floor(diffMinutes / 60 / 24)}d ago`;
+    }
+
+    setLastChecked(displayText);
+  }, [last_checked, status]);
 
   const site = {
-    name: "Google",
-    url: "https://www.google.com",
-    status: "online", // online | slow | down
-    lastChecked: "2m ago",
-    uptime: 99.97,
-    avgResponseMs: 231,
-    incidents30d: 2,
+    name: title || "Unknown Site",
+    url: url || "www.unknown.com",
+    status: status ? 'online' : 'down',
+    lastChecked: lastChecked || "2m ago",
   };
 
   function statusToBadgeProps(status: string) {
     switch (status) {
       case "online":
         return { variant: "default", text: "Online", className: "bg-green-50 text-green-800 ring-green-200" };
-      case "slow":
-        return { variant: "outline", text: "Slow", className: "bg-yellow-50 text-yellow-800 ring-yellow-200" };
       case "down":
         return { variant: "destructive", text: "Down", className: "bg-red-50 text-red-800 ring-red-200" };
       default:
@@ -36,7 +56,7 @@ export default function SiteAnalyticsHeaderUI() {
   const badge = statusToBadgeProps(site.status);
 
   return (
-    <Card className="w-full rounded-2xl shadow-sm border p-0 mb-4">
+    <Card className="w-full rounded-2xl shadow-sm border p-0 mb-12">
       <CardContent className="flex items-center justify-between gap-6 p-6">
         {/* Left: Site identity */}
         <div className="flex items-start gap-4 min-w-0">
@@ -55,29 +75,7 @@ export default function SiteAnalyticsHeaderUI() {
           </div>
         </div>
 
-        {/* Middle: compact stats */}
-        <div className="hidden md:flex flex-1 items-center justify-center">
-          <div className="flex items-center gap-6">
-            <div className="flex flex-col text-center">
-              <span className="text-sm text-muted-foreground uppercase">Uptime (30d)</span>
-              <span className="text-xl font-semibold">{site.uptime}%</span>
-            </div>
-
-            <Separator orientation="vertical" className="h-8" />
-
-            <div className="flex flex-col text-center">
-              <span className="text-sm text-muted-foreground uppercase">Avg Response</span>
-              <span className="text-xl font-semibold">{site.avgResponseMs}ms</span>
-            </div>
-
-            <Separator orientation="vertical" className="h-8" />
-
-            <div className="flex flex-col text-center">
-              <span className="text-sm text-muted-foreground uppercase">Incidents (30d)</span>
-              <span className="text-xl font-semibold">{site.incidents30d}</span>
-            </div>
-          </div>
-        </div>
+        <SSABannerStats />
 
         <div className="items-center">
           <Button variant="outline" className="px-3 py-2  cursor-pointer">

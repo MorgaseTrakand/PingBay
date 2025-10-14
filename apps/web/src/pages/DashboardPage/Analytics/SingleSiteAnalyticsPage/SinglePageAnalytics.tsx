@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
-import { useParams } from "react-router-dom";
-import SiteAnalyticsHeaderUI from "./SinglePageAnalyticsComponent";
+import React from "react";
+import SSABannerContainer from "./SSABanner/SSABannerContainer";
 import { PageH1 } from "@/pages/Components/PageH1";
 import { IncidentBarChart } from "./Charts/IncidentBarChart";
 import { LatencyLineChart } from "./Charts/LatencyLineChart";
@@ -9,15 +8,10 @@ import { OverviewChartContainer } from "../AnalyticsPage/OverviewChart/OverviewC
 type Props = {};
 
 const SinglePageAnalytics: React.FC<Props> = () => {
-  const { id } = useParams();
-
-  useEffect(() => {
-    console.log(id)
-  }, [id])
 
   return (
     <>
-      <SiteAnalyticsHeaderUI />
+      <SSABannerContainer />
       <PageH1 text="Detailed Breakdown" marginBottom={4} />
       <LatencyLineChart />
       <OverviewChartContainer marginBottom={4}/>

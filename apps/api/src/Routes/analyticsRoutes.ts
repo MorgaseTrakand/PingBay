@@ -1,5 +1,5 @@
 import { Router } from "express"; 
-import { getDailyData, getHourlyData, getNumberOfSites } from "../Queries/analyticsQueries.js";
+import { getDailyData, getHourlyData, getNumberOfSites, getIncidents7D, getLatency7D, getUptime7D } from "../Queries/analyticsQueries.js";
 
 const router = Router();
 
@@ -45,6 +45,48 @@ router.get('/get-daily-data', async (req, res) => {
     console.log(e)
     return res.status(500).json(e)
   }
-})
+});
+
+router.post('/get-incidents-last-week-single-site', async (req, res) => {
+  try {
+    let siteID = req.body.siteID;
+
+    if (!siteID) {
+      return res.status(500).send();
+    }
+
+    return res.json(await getIncidents7D(siteID));
+  } catch (e) { 
+    return res.status(500).json(e)
+  }
+});
+
+router.post('/get-latency-last-week-single-site', async (req, res) => {
+    try {
+    let siteID = req.body.siteID;
+
+    if (!siteID) {
+      return res.status(500).send();
+    }
+
+    return res.json(await getLatency7D(siteID));
+  } catch (e) { 
+    return res.status(500).json(e)
+  }
+});
+
+router.post('/get-uptime-last-week-single-site', async (req, res) => {
+    try {
+    let siteID = req.body.siteID;
+
+    if (!siteID) {
+      return res.status(500).send();
+    }
+
+    return res.json(await getUptime7D(siteID));
+  } catch (e) { 
+    return res.status(500).json(e)
+  }
+});
 
 export default router

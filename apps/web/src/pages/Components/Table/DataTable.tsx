@@ -20,6 +20,7 @@ import { Loader2 } from "lucide-react";
 import { TableHeaderButtons } from "./TableHeaderButtons.tsx";
 import { TableFooterButtons } from "./TableFooterButtons.tsx";
 import { useNavigate } from "react-router-dom";
+import { useSetCurrentSite } from "@/lib/zustand.ts";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -27,7 +28,7 @@ interface DataTableProps<TData, TValue> {
   isLoading?: boolean
 }
 
-export function DataTable<TData extends { id: string | number }, TValue>({
+export function DataTable<TData extends { id: string | number, title: string, url: string, last_checked: string, status: boolean }, TValue>({
   columns,
   data,
   isLoading = false,
@@ -64,6 +65,13 @@ export function DataTable<TData extends { id: string | number }, TValue>({
   })
 
   const navigate = useNavigate();
+  
+  const set = useSetCurrentSite((s) => s.set);
+
+  function handleRowClick(siteID: string | number, title: string, url: string, last_checked: string, status: boolean) {
+    set(siteID, title, url, last_checked, status)
+    navigate(`/dashboard/site-analytics/${siteID}`)
+  }
 
   return (
     <>
@@ -110,7 +118,7 @@ export function DataTable<TData extends { id: string | number }, TValue>({
                       key={row.id}
                       data-state={row.getIsSelected() && "selected"}
                       className={`${!status} cursor-pointer`}
-                      onClick={() => navigate(`/dashboard/site-analytics/${row.original.id}`)}
+                      onClick={() => handleRowClick(row.original.id, row.original.title, row.original.url, row.original.last_checked, row.original.status)}
                     >
                       {row.getVisibleCells().map((cell) => (
                         <TableCell key={cell.id}>
