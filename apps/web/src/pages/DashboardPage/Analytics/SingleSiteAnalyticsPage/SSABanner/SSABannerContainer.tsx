@@ -10,14 +10,13 @@ import { useParams } from "react-router-dom";
 
 export default function SSABannerContainer() {
   let { title, url, last_checked, status } = useSetCurrentSite();
+
   const [lastChecked, setLastChecked] = useState('m ago');
   const set = useSetCurrentSite((s) => s.set);
 
   let siteID: number;
   let params = useParams();
-  if (typeof params.id == 'string') {
-    siteID = parseInt(params.id);
-  }
+  siteID = parseInt(params.id!);
 
   useEffect(() => {
     if (!last_checked) return;
@@ -83,7 +82,7 @@ export default function SSABannerContainer() {
           </div>
         </div>
 
-        <SSABannerStats />
+        <SSABannerStats siteID={siteID}/>
 
         <div className="items-center">
           <Button 

@@ -69,7 +69,7 @@ export function DataTable<TData extends { id: string | number, title: string, ur
   const set = useSetCurrentSite((s) => s.set);
 
   function handleRowClick(siteID: string | number, title: string, url: string, last_checked: string, status: boolean) {
-    set(siteID, title, url, last_checked, status)
+    set({ last_checked: last_checked, status: status, title: title, url: url });
     navigate(`/dashboard/site-analytics/${siteID}`)
   }
 

@@ -47,8 +47,6 @@ router.post('/signup', async (req, res) => {
         maxAge: 1000 * 60 * 60,
         httpOnly: true,
         sameSite: 'strict'
-      }).cookie('isLoggedIn', 'true', {
-        maxAge: 1000 * 60 * 60,
       })
 
       return res.status(200).json({ message: "success" })
@@ -90,9 +88,8 @@ router.post("/login", async (req, res) => {
     maxAge: 1000 * 60 * 60,
     httpOnly: true,
     sameSite: 'strict'
-  }).cookie('isLoggedIn', "true", {
-    maxAge: 1000 * 60 * 60,
   })
+  
   return res.status(200).json({ message: "success" })
 });
 

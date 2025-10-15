@@ -1,26 +1,24 @@
 import { useEffect, useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import { fetchAvgLatencyData, fetchIncidentsData, fetchUptimeData } from "./SSABannerFunctions";
-import { useSetCurrentSite } from "@/lib/zustand";
 
-export default function SSABannerStats() {
+type Props = {
+  siteID: number
+}
+export default function SSABannerStats({ siteID } : Props) {
   const [incidents, setIncidents] = useState<number>();
   const [uptime, setUptime] = useState<number>();
   const [avgLatency, setAvgLatency] = useState<number>();
-  let { id } = useSetCurrentSite();
 
   useEffect(() => {
     const loadData = async () => {
-      if (typeof id === "string") {
-        id = parseInt(id, 10);
-      }
-      const incidents = await fetchIncidentsData(id);
+      const incidents = await fetchIncidentsData(siteID);
       setIncidents(incidents);
 
-      const uptime = await fetchUptimeData(id);
+      const uptime = await fetchUptimeData(siteID);
       setUptime(uptime * 100);
 
-      const avgLatency = await fetchAvgLatencyData(id);
+      const avgLatency = await fetchAvgLatencyData(siteID);
       setAvgLatency(avgLatency);
     };
 
