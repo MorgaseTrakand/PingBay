@@ -6,10 +6,10 @@ import { Badge } from "@/components/ui/badge";
 export type Sites = {
   id: string
   title: string
-  status: "Up" | "Down"
   url: string
+  status: boolean; 
   notifications_enabled: 'Enabled' | 'Disabled'
-  last_checked: Date
+  last_checked: string
   actions: React.ReactNode
 }
 
@@ -74,6 +74,23 @@ export const columns: ColumnDef<Sites>[] = [
           badge = { variant: "outline", text: "Disabled", className: "bg-yellow-50 text-yellow-800 ring-yellow-200" };
       }
       return <Badge className={`px-2 py-1 text-sm font-medium ring-1 ring-inset ${badge.className}`}>{badge.text}</Badge>
+    },
+  },
+  {
+    accessorKey: "check_interval",
+    header: "Frequency",
+    cell: ({ getValue }) => {
+      const val = getValue();
+      let valString : string;
+      if (val == 60) {
+        valString = '1m'
+      } else if (val == 300) {
+        valString = '5m'
+      } else {
+        valString = '1hr'
+      }
+
+      return <td>{valString}</td>
     },
   },
   {

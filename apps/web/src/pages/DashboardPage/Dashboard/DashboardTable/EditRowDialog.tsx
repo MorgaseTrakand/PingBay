@@ -14,6 +14,15 @@ import { useState } from "react";
 import useFormValidation from "@/hooks/useFormValidation";
 import { toast } from "sonner";
 import { useDataTableTrigger } from "@/lib/zustand";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 type Props = {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -21,11 +30,13 @@ type Props = {
   siteID: number
   defaultTitle: string
   defaultURL: string
+  defaultInterval: string
 };
 
-export const EditRowDialogButton: React.FC<Props> = ({ open, setOpen, siteID, defaultTitle, defaultURL }) => {
+export const EditRowDialogButton: React.FC<Props> = ({ open, setOpen, siteID, defaultTitle, defaultURL, defaultInterval }) => {
   const [title, setTitle] = useState(defaultTitle);
   const [url, setURL] = useState(defaultURL);
+  const [interval, setInterval] = useState('');
 
   const [titleError, setTitleError] = useState('');
   const [urlError, setURLError] = useState('');
@@ -46,8 +57,9 @@ export const EditRowDialogButton: React.FC<Props> = ({ open, setOpen, siteID, de
             'Content-Type': 'application/json',
           },
           credentials: 'include',
-          body: JSON.stringify({ siteID: siteID, title: title, url: url })
+          body: JSON.stringify({ siteID: siteID, title: title, url: url, interval: parseInt(interval) })
         })
+        console.log(response)
         if (!response.ok) { 
           toast.error("Something went wrong!")
         } else {
@@ -77,12 +89,30 @@ export const EditRowDialogButton: React.FC<Props> = ({ open, setOpen, siteID, de
             <div>
               <FormRow setValue={setTitle} error={titleError} labelTitle="Title" type="title" placeholder="Title" initialValue={title}/>
               <FormRow setValue={setURL} error={urlError} labelTitle="URL" type="url" placeholder="URL" initialValue={url} />
+              <div className="w-[50%}">
+                <h3 className="text-sm font-medium mb-1">Interval</h3>
+                <Select defaultValue={defaultInterval} onValueChange={(e) => {setInterval(e)}}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select an Interval"/>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Interval</SelectLabel>
+                      <SelectItem value="60">1 Minute</SelectItem>
+                      <SelectItem value="300">5 Minutes</SelectItem>
+                      <SelectItem value="3600">Hourly</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
             <DialogFooter className="mt-3">
-              <DialogClose asChild>
-                <Button variant="outline" className="cursor-pointer">Cancel</Button>
-              </DialogClose>
-              <Button type="submit" onClick={handleEdit} className="cursor-pointer">Save changes</Button>
+              <div className="w-full flex justify-between">
+                <Button type="submit" onClick={handleEdit} className="cursor-pointer">Save changes</Button>
+                <DialogClose asChild>
+                  <Button variant="outline" className="cursor-pointer">Cancel</Button>
+                </DialogClose>
+              </div>
             </DialogFooter>
           </DialogContent>
         </form>

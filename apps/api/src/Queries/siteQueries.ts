@@ -26,10 +26,10 @@ export async function deleteSite(siteID: number) {
   return 5
 }
 
-export async function editSite(siteID: number, newTitle: string, newURL: string) {
+export async function editSite(siteID: number, newTitle: string, newURL: string, newInterval: number) {
   await pool.query(
-    `UPDATE user_sites SET url = ($2), title = ($3) WHERE id = ($1)`,
-    [siteID, newURL, newTitle]
+    `UPDATE user_sites SET url = ($2), title = ($3), check_interval = ($4) WHERE id = ($1)`,
+    [siteID, newURL, newTitle, newInterval]
   )
   return
 }

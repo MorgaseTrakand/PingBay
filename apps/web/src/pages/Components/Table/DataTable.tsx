@@ -68,9 +68,11 @@ export function DataTable<TData extends { id: string | number, title: string, ur
   
   const set = useSetCurrentSite((s) => s.set);
 
-  function handleRowClick(siteID: string | number, title: string, url: string, last_checked: string, status: boolean) {
-    set({ last_checked: last_checked, status: status, title: title, url: url });
-    navigate(`/dashboard/site-analytics/${siteID}`)
+  function handleRowClick(cellID: string, siteID: string | number, title: string, url: string, last_checked: string, status: boolean) {
+    if (!cellID.includes('actions')) {
+      set({ last_checked: last_checked, status: status, title: title, url: url });
+      navigate(`/dashboard/site-analytics/${siteID}`)
+    }
   }
 
   return (
@@ -118,10 +120,9 @@ export function DataTable<TData extends { id: string | number, title: string, ur
                       key={row.id}
                       data-state={row.getIsSelected() && "selected"}
                       className={`${!status} cursor-pointer`}
-                      onClick={() => handleRowClick(row.original.id, row.original.title, row.original.url, row.original.last_checked, row.original.status)}
                     >
                       {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id}>
+                        <TableCell key={cell.id} onClick={() => handleRowClick(cell.id, row.original.id, row.original.title, row.original.url, row.original.last_checked, row.original.status)}>
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </TableCell>
                       ))}

@@ -82,10 +82,10 @@ router.post('/edit-site', authMiddleware, async (req, res) => {
     let siteID = req.body.siteID;
     let newURL = req.body.url;
     let newTitle = req.body.title; 
+    let newInterval = req.body.interval;
 
-    await editSite(siteID, newTitle, newURL);
-    res.status(200).send();
-    console.log('resposne sent')
+    await editSite(siteID, newTitle, newURL, newInterval);
+    return res.status(200).send();
   } catch (e) {
     return res.status(500).send();
   }

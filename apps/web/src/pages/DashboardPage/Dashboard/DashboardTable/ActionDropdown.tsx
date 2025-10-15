@@ -111,7 +111,7 @@ export const ActionDropdown: React.FC<Props> = ({ siteID, notificationString, da
         </AlertDialogContent>
       </AlertDialog>
 
-      <EditRowDialogButton setOpen={setOpen} open={open} siteID={siteID} defaultTitle={data.title} defaultURL={data.url} />
+      <EditRowDialogButton setOpen={setOpen} open={open} siteID={siteID} defaultTitle={data.title} defaultURL={data.url} defaultInterval={String(data.check_interval)} />
     </>
   )
 }
