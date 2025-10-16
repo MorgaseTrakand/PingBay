@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { ArrowUp, ArrowDown } from "lucide-react";
+import { SpinnerComponent } from "@/pages/Components/SpinnerComponent";
 
 export type BentoStat = {
   id: string;
@@ -8,7 +9,7 @@ export type BentoStat = {
   description?: string;
   value: string | number;
   delta?: number | null; // positive or negative percent change
-  deltaLabel?: string; // e.g. "vs. last 7d"
+  deltaLabel?: string;
   icon?: React.ReactNode;
 };
 
@@ -32,9 +33,21 @@ type Props = {
 };
 
 export const SingleAnalyticsBento: React.FC<Props> = ({ s }) => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let checkVal = s.value
+    if (typeof checkVal == 'string') {
+      checkVal = parseInt(checkVal)
+    }
+    if (checkVal > 0) {
+      setLoading(false)
+    }
+  }, [s])
 
   return (
-    <Card key={s.id} className="bg-white/60 shadow-sm flex justify-between gap-12 p-4">
+    <Card key={s.id} className="bg-white/60 shadow-sm flex justify-between gap-12 p-4 relative">
+      <SpinnerComponent loading={loading} />
       <CardHeader className="flex items-start justify-between gap-3 p-0">
         <div>
           <CardTitle className="text-base font-semibold leading-none mb-1">{s.title}</CardTitle>

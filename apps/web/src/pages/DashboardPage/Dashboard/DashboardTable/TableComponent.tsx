@@ -19,7 +19,6 @@ function TableComponent() {
         let mergedSites = await fetchDataAPI();
         setData(mergedSites);
         setLoading(false);
-        console.log(mergedSites)
       } catch (e) {
         console.log(e)
         setLoading(false)

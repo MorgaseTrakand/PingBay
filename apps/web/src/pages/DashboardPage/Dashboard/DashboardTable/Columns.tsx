@@ -90,7 +90,7 @@ export const columns: ColumnDef<Sites>[] = [
         valString = '1hr'
       }
 
-      return <td>{valString}</td>
+      return <p>{valString}</p>
     },
   },
   {

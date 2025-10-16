@@ -21,6 +21,7 @@ import { TableHeaderButtons } from "./TableHeaderButtons.tsx";
 import { TableFooterButtons } from "./TableFooterButtons.tsx";
 import { useNavigate } from "react-router-dom";
 import { useSetCurrentSite } from "@/lib/zustand.ts";
+import { SpinnerComponent } from "../SpinnerComponent.tsx";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -80,15 +81,7 @@ export function DataTable<TData extends { id: string | number, title: string, ur
       <TableHeaderButtons table={table} />
 
       <div className="relative flex-1">
-        {isLoading && (
-          <div
-            role="status"
-            aria-busy="true"
-            className="absolute inset-0 z-30 flex items-center justify-center bg-white/60 dark:bg-black/50 backdrop-blur-sm"
-          >
-            <Loader2 className="animate-spin w-10 h-10 text-primary" />
-          </div>
-        )}
+        <SpinnerComponent loading={isLoading} />
 
         <div className="overflow-hidden rounded-md border h-full" aria-hidden={isLoading}>
           <Table className={`${table.getRowModel().rows?.length ? '' : 'h-full'}`}>

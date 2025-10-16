@@ -5,9 +5,10 @@ import { useEffect, useState } from "react";
 import { getSites, getUptime, getLatency } from "./bentoFunctions";
 
 export default function AnalyticsBentos() {
-  const [uptime, setUptime] = useState('100%');
+  const [uptime, setUptime] = useState('');
   const [nSites, setNSites] = useState(0);
   const [latency, setLatency] = useState(0);
+  const [incidents, setIncidents] = useState(0);
 
   useEffect(() => {
     async function fetchData() {
@@ -15,6 +16,7 @@ export default function AnalyticsBentos() {
         setUptime(`${String(await getUptime()*100)}%`)
         setNSites(await getSites())
         setLatency(await getLatency())
+        setIncidents(43)
       } catch (e) {
         console.log(e)
       }
@@ -36,7 +38,7 @@ export default function AnalyticsBentos() {
       id: "downtime",
       title: "Downtime Events",
       description: "Last 7 days",
-      value: 3,
+      value: incidents,
       delta: -25,
       deltaLabel: "vs last week",
       icon: <Clock className="w-6 h-6" />,
