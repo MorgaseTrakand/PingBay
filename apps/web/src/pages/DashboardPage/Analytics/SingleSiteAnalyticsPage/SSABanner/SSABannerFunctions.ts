@@ -37,7 +37,8 @@ export async function fetchAvgLatencyData(siteID: number) {
   return data
 }
 
-export async function handleRefresh(siteID: number) {
+export async function handleRefresh(siteID: number, setLoading: React.Dispatch<React.SetStateAction<boolean>>) {
+  setLoading(true)
   let response = await fetch(import.meta.env.VITE_GET_SINGLE_SITE_STATE_URL, {
     method: "POST",
     headers: {
@@ -47,5 +48,6 @@ export async function handleRefresh(siteID: number) {
     body: JSON.stringify({ siteID: siteID })
   })
   let data = await response.json();
+  setLoading(false)
   return { last_checked: data.last_check, status: data.status }
 }

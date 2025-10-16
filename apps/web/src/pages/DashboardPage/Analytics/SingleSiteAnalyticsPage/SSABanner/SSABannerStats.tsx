@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import { fetchAvgLatencyData, fetchIncidentsData, fetchUptimeData } from "./SSABannerFunctions";
+import { SpinnerComponent } from "@/pages/Components/SpinnerComponent";
 
 type Props = {
   siteID: number
@@ -9,6 +10,8 @@ export default function SSABannerStats({ siteID } : Props) {
   const [incidents, setIncidents] = useState<number>();
   const [uptime, setUptime] = useState<number>();
   const [avgLatency, setAvgLatency] = useState<number>();
+
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadData = async () => {
@@ -20,6 +23,7 @@ export default function SSABannerStats({ siteID } : Props) {
 
       const avgLatency = await fetchAvgLatencyData(siteID);
       setAvgLatency(avgLatency);
+      setLoading(false);
     };
 
     loadData();
@@ -27,8 +31,9 @@ export default function SSABannerStats({ siteID } : Props) {
 
   return (
     <>
-      <div className="flex flex-1 items-center justify-center">
+      <div className="flex flex-1 items-center justify-center relative h-full">
         <div className="flex items-center gap-5">
+          <SpinnerComponent loading={loading} />
           <div className="flex flex-col text-center">
             <span className="text-sm text-muted-foreground uppercase">Uptime (7 d)</span>
             <span className="text-xl font-semibold">{uptime}%</span>

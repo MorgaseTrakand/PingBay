@@ -7,6 +7,7 @@ import { useSetCurrentSite } from "@/lib/zustand";
 import SSABannerStats from "./SSABannerStats";
 import { handleRefresh } from "./SSABannerFunctions";
 import { useParams } from "react-router-dom";
+import { SpinnerComponent } from "@/pages/Components/SpinnerComponent";
 
 export default function SSABannerContainer() {
   let { title, url, last_checked, status } = useSetCurrentSite();
@@ -63,8 +64,11 @@ export default function SSABannerContainer() {
 
   const badge = statusToBadgeProps(site.status);
 
+  const [loading, setLoading] = useState(false)
+
   return (
-    <Card className="w-full rounded-2xl shadow-sm border p-0 mb-12">
+    <Card className="w-full rounded-2xl shadow-sm border p-0 mb-12 relative">
+      <SpinnerComponent loading={loading} />
       <CardContent className="flex items-center justify-between gap-6 p-6">
         <div className="flex items-start gap-4 min-w-0">
           <div className="flex flex-col gap-1">
@@ -90,7 +94,7 @@ export default function SSABannerContainer() {
             className="px-3 py-2  cursor-pointer" 
             onClick={async () => {
               if (!siteID) return;
-              const { last_checked: newLastChecked, status: newStatus } = await handleRefresh(siteID);
+              const { last_checked: newLastChecked, status: newStatus } = await handleRefresh(siteID, setLoading);
               set({ last_checked: newLastChecked, status: newStatus });
               }}>
             <RefreshCw className="w-4 h-4" />
