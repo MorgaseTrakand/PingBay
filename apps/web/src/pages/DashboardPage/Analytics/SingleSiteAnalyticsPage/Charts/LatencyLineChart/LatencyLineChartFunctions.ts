@@ -8,7 +8,7 @@ export async function fetchHourlyLatencyData(siteID: number) {
     body: JSON.stringify({ siteID: siteID })
   })
   if (!response.ok) {
-    throw new Error(`Failed to fetch hourly data: ${response.status} ${response.statusText}`);
+    throw new Error(`Failed to fetch hourly latency data: ${response.status} ${response.statusText}`);
   }
   let data = await response.json();
   return data
@@ -24,7 +24,7 @@ export async function fetchDailyLatencyData(siteID: number) {
     body: JSON.stringify({ siteID: siteID })
   })
   if (!response.ok) {
-    throw new Error(`Failed to fetch daily data: ${response.status} ${response.statusText}`);
+    throw new Error(`Failed to fetch daily latency data: ${response.status} ${response.statusText}`);
   }
   let data = await response.json();
   return data

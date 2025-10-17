@@ -74,30 +74,85 @@ export async function getState(siteID: number) {
 
 export async function getHourlyLatencyData(siteID: number) {
   const result = await pool.query(`
-    SELECT
-      (jsonb_build_object('date', hp.hour_checked)
-      || jsonb_object_agg('latency', hp.average_latency)) AS result
+    SELECT json_agg(
+      json_build_object(
+        'date', hp.hour_checked,
+        'latency', hp.average_latency
+      ) ORDER BY hp.hour_checked
+    ) AS result
     FROM hourly_pings hp
-    WHERE hp.user_site_id = ($1)
-    GROUP BY hp.hour_checked
-    ORDER BY hp.hour_checked;
+    WHERE hp.user_site_id = ($1);
     `, [siteID])
 
-  const data = result.rows.map(row => row.result);
+  const data = result.rows.map(row => row.result)[0];
   return data
 }
 
 export async function getDailyLatencyData(siteID: number) {
   const result = await pool.query(`
-    SELECT
-      (jsonb_build_object('date', DATE(hp.hour_checked))
-      || jsonb_object_agg('latency', hp.average_latency)) AS result
-    FROM hourly_pings hp
-    WHERE hp.user_site_id = ($1)
-    GROUP BY DATE(hp.hour_checked)
-    ORDER BY DATE(hp.hour_checked);
+    SELECT json_agg(
+      json_build_object(
+        'date', date,
+        'latency', latency
+      ) ORDER BY date
+    ) AS result
+    FROM (
+      SELECT
+        DATE(hp.hour_checked) AS date,
+        AVG(hp.average_latency) AS latency
+      FROM hourly_pings hp
+      WHERE hp.user_site_id = $1
+      GROUP BY DATE(hp.hour_checked)
+      ORDER BY DATE(hp.hour_checked)
+    ) sub;
   `, [siteID])
 
-  const data = result.rows.map(row => row.result);
+  const data = result.rows.map(row => row.result)[0];
+  return data
+}
+
+export async function getHourlyIncidentData(siteID: number) {
+  const result = await pool.query(`
+    SELECT json_agg(
+      json_build_object(
+        'date', date,
+        'incidents', incidents
+      ) ORDER BY date
+    ) AS result
+    FROM (
+      SELECT
+        hp.hour_checked::timestamptz AS date,
+        SUM(hp.total_failures) AS incidents
+      FROM hourly_pings hp
+      WHERE hp.user_site_id = ($1)
+      GROUP BY hp.hour_checked
+      ORDER BY hp.hour_checked
+    ) sub;
+  `, [siteID])
+
+  const data = result.rows.map(row => row.result)[0];
+  return data
+}
+
+export async function getDailyIncidentData(siteID: number) {
+  const result = await pool.query(`
+    SELECT json_agg(
+      json_build_object(
+        'date', date,
+        'incidents', incidents
+      ) ORDER BY date
+    ) AS result
+    FROM (
+      SELECT
+        DATE(hp.hour_checked::timestamptz) AS date,
+        SUM(hp.total_failures) AS incidents
+      FROM hourly_pings hp
+      WHERE hp.user_site_id = ($1)
+      GROUP BY DATE(hp.hour_checked)
+      ORDER BY DATE(hp.hour_checked)
+    ) sub;
+  `, [siteID])
+
+  const data = result.rows.map(row => row.result)[0];
   return data
 }
