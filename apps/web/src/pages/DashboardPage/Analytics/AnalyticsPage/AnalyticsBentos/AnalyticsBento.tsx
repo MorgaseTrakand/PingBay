@@ -40,7 +40,7 @@ export const SingleAnalyticsBento: React.FC<Props> = ({ s }) => {
     if (typeof checkVal == 'string') {
       checkVal = parseInt(checkVal)
     }
-    if (checkVal > 0) {
+    if (checkVal > -1) {
       setLoading(false)
     }
   }, [s])

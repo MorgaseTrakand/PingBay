@@ -3,12 +3,13 @@ import type { BentoStat } from "./AnalyticsBento";
 import { SingleAnalyticsBento } from "./AnalyticsBento";
 import { useEffect, useState } from "react";
 import { getSites, getUptime, getLatency } from "./bentoFunctions";
+import { toast } from "sonner";
 
 export default function AnalyticsBentos() {
   const [uptime, setUptime] = useState('');
-  const [nSites, setNSites] = useState(0);
-  const [latency, setLatency] = useState(0);
-  const [incidents, setIncidents] = useState(0);
+  const [nSites, setNSites] = useState(-1);
+  const [latency, setLatency] = useState(-1);
+  const [incidents, setIncidents] = useState(-1);
 
   useEffect(() => {
     async function fetchData() {
@@ -17,8 +18,9 @@ export default function AnalyticsBentos() {
         setNSites(await getSites())
         setLatency(await getLatency())
         setIncidents(43)
-      } catch (e) {
-        console.log(e)
+       } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : String(err);
+        toast.error(message);
       }
     }
     fetchData();

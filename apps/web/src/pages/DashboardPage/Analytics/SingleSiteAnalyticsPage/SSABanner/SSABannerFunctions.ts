@@ -7,8 +7,10 @@ export async function fetchIncidentsData(siteID: number) {
     credentials: 'include',
     body: JSON.stringify({ siteID: siteID })
   })
-  let data = await response.json();
-  return data
+  if (response.ok) {
+    return await response.json();
+  }
+  throw new Error(`Failed to fetch incidents: ${response.status} ${response.statusText}`);
 }
 
 export async function fetchUptimeData(siteID: number) {
@@ -20,8 +22,10 @@ export async function fetchUptimeData(siteID: number) {
     credentials: 'include',
     body: JSON.stringify({ siteID: siteID })
   })
-  let data = await response.json();
-  return data
+  if (response.ok) {
+    return await response.json();
+  }
+  throw new Error(`Failed to fetch uptime: ${response.status} ${response.statusText}`);
 }
 
 export async function fetchAvgLatencyData(siteID: number) {
@@ -33,8 +37,10 @@ export async function fetchAvgLatencyData(siteID: number) {
     credentials: 'include',
     body: JSON.stringify({ siteID: siteID })
   })
-  let data = await response.json();
-  return data
+  if (response.ok) {
+    return await response.json();
+  }
+  throw new Error(`Failed to fetch latency: ${response.status} ${response.statusText}`);
 }
 
 export async function handleRefresh(siteID: number, setLoading: React.Dispatch<React.SetStateAction<boolean>>) {
@@ -47,6 +53,9 @@ export async function handleRefresh(siteID: number, setLoading: React.Dispatch<R
     credentials: 'include',
     body: JSON.stringify({ siteID: siteID })
   })
+  if (!response.ok) {
+    throw new Error(`Failed to refresh data: ${response.status} ${response.statusText}`);
+  }
   let data = await response.json();
   setLoading(false)
   return { last_checked: data.last_check, status: data.status }

@@ -14,7 +14,7 @@ export async function getSites() {
     let data: getSites = await response.json();
     return data.numberOfSites
   }
-  return 0
+  throw new Error(`Failed to fetch sites: ${response.status} ${response.statusText}`);
 }
 
 export async function getUptime() {
@@ -29,7 +29,7 @@ export async function getUptime() {
     let data = await response.json();
     return data
   }
-  return 0
+  throw new Error(`Failed to fetch uptime: ${response.status} ${response.statusText}`);
 }
 
 export async function getLatency() {
@@ -44,5 +44,5 @@ export async function getLatency() {
     let data = await response.json();
     return data
   }
-  return 0
+  throw new Error(`Failed to fetch latency: ${response.status} ${response.statusText}`);
 }

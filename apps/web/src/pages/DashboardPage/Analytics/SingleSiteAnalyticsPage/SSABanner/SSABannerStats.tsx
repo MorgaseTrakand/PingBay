@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import { fetchAvgLatencyData, fetchIncidentsData, fetchUptimeData } from "./SSABannerFunctions";
 import { SpinnerComponent } from "@/pages/Components/SpinnerComponent";
+import { toast } from "sonner";
 
 type Props = {
   siteID: number
@@ -15,17 +16,21 @@ export default function SSABannerStats({ siteID } : Props) {
 
   useEffect(() => {
     const loadData = async () => {
-      const incidents = await fetchIncidentsData(siteID);
-      setIncidents(incidents);
+      try {
+        const incidents = await fetchIncidentsData(siteID);
+        setIncidents(incidents);
 
-      const uptime = await fetchUptimeData(siteID);
-      setUptime(uptime * 100);
+        const uptime = await fetchUptimeData(siteID);
+        setUptime(uptime * 100);
 
-      const avgLatency = await fetchAvgLatencyData(siteID);
-      setAvgLatency(avgLatency);
-      setLoading(false);
+        const avgLatency = await fetchAvgLatencyData(siteID);
+        setAvgLatency(avgLatency);
+        setLoading(false);
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : String(err);
+        toast.error(message);
+      }
     };
-
     loadData();
   }, [])
 
