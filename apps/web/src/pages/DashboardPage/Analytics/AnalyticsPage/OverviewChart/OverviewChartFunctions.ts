@@ -6,6 +6,9 @@ export async function fetchHourlyData() {
     },
     credentials: 'include',
   })
+  if (!response.ok) {
+    throw new Error(`Failed to fetch hourly data: ${response.status} ${response.statusText}`);
+  }
   let data = await response.json();
   return data
 }
@@ -18,6 +21,9 @@ export async function fetchDailyData() {
     },
     credentials: 'include',
   })
+  if (!response.ok) {
+    throw new Error(`Failed to fetch daily data: ${response.status} ${response.statusText}`);
+  }
   let data = await response.json();
   return data
 }

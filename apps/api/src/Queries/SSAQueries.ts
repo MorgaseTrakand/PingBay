@@ -71,3 +71,33 @@ export async function getState(siteID: number) {
 
   return result.rows[0]
 }
+
+export async function getHourlyLatencyData(siteID: number) {
+  const result = await pool.query(`
+    SELECT
+      (jsonb_build_object('date', hp.hour_checked)
+      || jsonb_object_agg('latency', hp.average_latency)) AS result
+    FROM hourly_pings hp
+    WHERE hp.user_site_id = ($1)
+    GROUP BY hp.hour_checked
+    ORDER BY hp.hour_checked;
+    `, [siteID])
+
+  const data = result.rows.map(row => row.result);
+  return data
+}
+
+export async function getDailyLatencyData(siteID: number) {
+  const result = await pool.query(`
+    SELECT
+      (jsonb_build_object('date', DATE(hp.hour_checked))
+      || jsonb_object_agg('latency', hp.average_latency)) AS result
+    FROM hourly_pings hp
+    WHERE hp.user_site_id = ($1)
+    GROUP BY DATE(hp.hour_checked)
+    ORDER BY DATE(hp.hour_checked);
+  `, [siteID])
+
+  const data = result.rows.map(row => row.result);
+  return data
+}

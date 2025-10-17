@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { TimeRangeSelect } from "./TimeRangeSelect";
 import { OverviewChart } from "./OverviewChart";
 import { fetchHourlyData, fetchDailyData } from "./OverviewChartFunctions";
+import { toast } from "sonner";
 
 export const description = "An interactive latency chart"
 type Props = {
@@ -25,14 +26,22 @@ export const OverviewChartContainer: React.FC<Props> = ({ marginBottom}) => {
 
   useEffect(() => {
     const loadDailyData = async () => {
-      const newData = await fetchHourlyData();
-      setHourlyData(newData);
+      try {
+        const newData = await fetchHourlyData();
+        setHourlyData(newData);
+      } catch (err: unknown) {
+        toast.error(String(err));
+      }
     };
 
     const loadHourlyData = async () => {
-      const newData = await fetchDailyData();
-      setDailyData(newData);
-      setCurrentData(newData)
+      try {
+        const newData = await fetchDailyData();
+        setDailyData(newData);
+        setCurrentData(newData)
+      } catch (err: unknown) {
+        toast.error(String(err));
+      }
     }
 
     loadDailyData();

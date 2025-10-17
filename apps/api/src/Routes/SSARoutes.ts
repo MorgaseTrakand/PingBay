@@ -1,5 +1,5 @@
 import { Router } from "express"; 
-import { getIncidents7D, getLatency7D, getUptime7D, getState } 
+import { getIncidents7D, getLatency7D, getUptime7D, getState, getHourlyLatencyData, getDailyLatencyData } 
 from "../Queries/SSAQueries.js";
 
 const router = Router();
@@ -60,4 +60,31 @@ router.post('/get-single-site-state', async (req, res) => {
   }
 })
 
+router.post('/get-hourly-latency-data', async (req, res) => {
+  try {
+    let siteID = req.body.siteID;
+
+    if (!siteID) {
+      return res.status(401).send();
+    }
+
+    return res.json(await getHourlyLatencyData(siteID))
+  } catch (e) {
+    return res.status(500).json(e)
+  }
+})
+
+router.post('/get-daily-latency-data', async (req, res) => {
+    try {
+    let siteID = req.body.siteID;
+
+    if (!siteID) {
+      return res.status(401).send();
+    }
+
+    return res.json(await getDailyLatencyData(siteID))
+  } catch (e) {
+    return res.status(500).json(e)
+  }
+})
 export default router

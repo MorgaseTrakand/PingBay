@@ -1,4 +1,4 @@
-  import { useState } from "react"
+  import { useState, useEffect } from "react"
   import {
     Card,
     CardContent,
@@ -8,19 +8,62 @@
   } from "@/components/ui/card"
   import { TimeRangeSelect } from "../../../AnalyticsPage/OverviewChart/TimeRangeSelect"
   import { LatencyLineChart } from "./LatencyLineChart"
+import { fetchDailyLatencyData, fetchHourlyLatencyData } from "./LatencyLineChartFunctions";
+import { useParams } from "react-router-dom";
+import { toast } from "sonner";
 
-  export const description = "An interactive line chart"
-
-  const chartData = [
-    { date: "2024-04-01",  latency: 222 },
-    { date: "2024-04-02", latency: 97 },
-    { date: "2024-04-03", latency: 167 },
-    { date: "2024-04-04", latency: 242 },
-    { date: "2024-04-05", latency: 373 },
-  ]
+  export const description = "An interactive line chart";
 
   export function LatencyLineChartContainer() {
     const [timeRange, setTimeRange] = useState("30 days");
+
+    const [hourlyData, setHourlyData] = useState<Record<string, any>>([]);
+    const [dailyData, setDailyData] = useState<Record<string, any>>([]);
+    const [currentData, setCurrentData] = useState<Record<string, any>>([]);
+
+    const filteredData = currentData.filter((item: { date: string | number | Date; }) => {
+      const referenceDate = new Date();
+      let daysToSubtract = timeRange === "7 days" ? 7 : timeRange === "30 days" ? 30 : 90;
+      const startDate = new Date(referenceDate);
+      startDate.setDate(startDate.getDate() - daysToSubtract);
+      return new Date(item.date) >= startDate;
+    });
+
+    let siteID: number;
+    let params = useParams();
+    siteID = parseInt(params.id!);
+
+    useEffect(() => {
+      const loadDailyData = async () => {
+        try {
+          const newData = await fetchHourlyLatencyData(siteID);
+          setHourlyData(newData);
+        } catch (err: unknown) {
+          toast.error(String(err))
+        }
+      };
+
+      const loadHourlyData = async () => {
+        try {
+          const newData = await fetchDailyLatencyData(siteID);
+          setDailyData(newData);
+          setCurrentData(newData)
+        } catch (err: unknown) {
+          toast.error(String(err))
+        }
+      }
+
+      loadDailyData();
+      loadHourlyData();
+    }, [])
+
+    useEffect(() => {
+      if (timeRange == "7 days") {
+        setCurrentData(hourlyData)
+      } else {
+        setCurrentData(dailyData)
+      }
+    }, [timeRange])
 
     return (
       <Card className="py-4 sm:py-0 mb-4">
@@ -34,7 +77,7 @@
           <TimeRangeSelect timeRange={timeRange} setTimeRange={setTimeRange} />
         </CardHeader>
         <CardContent className="px-2 sm:p-6">
-          <LatencyLineChart data={chartData}/>
+          <LatencyLineChart data={filteredData}/>
         </CardContent>
       </Card>
     )
