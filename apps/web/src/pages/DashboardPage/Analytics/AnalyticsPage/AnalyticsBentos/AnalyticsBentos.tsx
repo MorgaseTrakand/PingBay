@@ -2,7 +2,7 @@ import { Activity, Server, Clock, Globe } from "lucide-react";
 import type { BentoStat } from "./AnalyticsBento";
 import { SingleAnalyticsBento } from "./AnalyticsBento";
 import { useEffect, useState } from "react";
-import { getSites, getUptime, getLatency } from "./bentoFunctions";
+import { getSites, getUptime, getLatency, getIncidents } from "./bentoFunctions";
 import { toast } from "sonner";
 
 export default function AnalyticsBentos() {
@@ -17,7 +17,8 @@ export default function AnalyticsBentos() {
         setUptime(`${String(await getUptime()*100)}%`)
         setNSites(await getSites())
         setLatency(await getLatency())
-        setIncidents(43)
+        setIncidents(await getIncidents())
+        
        } catch (err: unknown) {
         const message = err instanceof Error ? err.message : String(err);
         toast.error(message);

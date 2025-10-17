@@ -9,6 +9,7 @@ import homePageRoutes from "./Routes/homePageRoutes.js";
 import siteRoutes from "./Routes/siteRoutes.js";
 import cronRoutes from "./Routes/cronRoutes.js";
 import analyticsRoutes from "./Routes/analyticsRoutes.js";
+import SSARoutes from "./Routes/SSARoutes.js";
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -25,6 +26,7 @@ app.use('/homepage', homePageRoutes);
 app.use('/site', siteRoutes);
 app.use('/cron', cronRoutes);
 app.use('/analytics', analyticsRoutes);
+app.use('/ssa', SSARoutes);
   
 app.get("/health", (req, res) => {
   res.json({ status: "ok" });

@@ -46,3 +46,18 @@ export async function getLatency() {
   }
   throw new Error(`Failed to fetch latency: ${response.status} ${response.statusText}`);
 }
+
+export async function getIncidents() {
+  let response = await fetch(import.meta.env.VITE_GET_OVERALL_INCIDENTS_7D_URL, {
+    method: "GET",
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: "include"
+  })
+  if (response.ok) {
+    let data = await response.json();
+    return data
+  }
+  throw new Error(`Failed to fetch incidents: ${response.status} ${response.statusText}`);
+}
