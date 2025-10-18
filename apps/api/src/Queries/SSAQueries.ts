@@ -156,3 +156,50 @@ export async function getDailyIncidentData(siteID: number) {
   const data = result.rows.map(row => row.result)[0];
   return data
 }
+
+export async function getHourlyUptimeData(siteID: number) {
+  const result = await pool.query(`
+    SELECT json_agg(
+      json_build_object(
+      'date', date,
+      'uptime', CAST(successes AS NUMERIC) / (successes + failures)
+      ) ORDER BY date
+    ) AS result
+    FROM (
+      SELECT
+      hp.hour_checked::timestamptz AS date,
+      SUM(hp.total_failures) AS failures,
+      SUM(hp.total_successes) AS successes
+      FROM hourly_pings hp
+      WHERE hp.user_site_id = ($1)
+      GROUP BY hp.hour_checked
+      ORDER BY hp.hour_checked
+    ) sub;
+  `, [siteID])
+
+  const data = result.rows.map(row => row.result)[0];
+  return data
+}
+
+export async function getDailyUptimeData(siteID: number) {
+  const result = await pool.query(`
+    SELECT json_agg(
+      json_build_object(
+      'date', DATE(date),
+      'uptime', CAST(successes AS NUMERIC) / (successes + failures)
+      ) ORDER BY DATE(date)
+    ) AS result
+    FROM (
+      SELECT
+      DATE(hp.hour_checked::timestamptz) AS date,
+      SUM(hp.total_failures) AS failures,
+      SUM(hp.total_successes) AS successes
+      FROM hourly_pings hp
+      WHERE hp.user_site_id = ($1)
+      GROUP BY DATE(hp.hour_checked)
+      ORDER BY DATE(hp.hour_checked)
+    ) sub;
+  `, [siteID])
+  const data = result.rows.map(row => row.result)[0];
+  return data
+}
