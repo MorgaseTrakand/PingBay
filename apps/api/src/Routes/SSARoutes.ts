@@ -1,10 +1,11 @@
 import { Router } from "express"; 
 import { getIncidents7D, getLatency7D, getUptime7D, getState, getHourlyLatencyData, getDailyLatencyData, getHourlyIncidentData, getDailyIncidentData, getHourlyUptimeData, getDailyUptimeData } 
 from "../Queries/SSAQueries.js";
+import { authMiddleware } from "../utils/authMiddleware.js";
 
 const router = Router();
 
-router.post('/get-incidents-last-week-single-site', async (req, res) => {
+router.post('/get-incidents-last-week-single-site', authMiddleware, async (req, res) => {
   try {
     let siteID = req.body.siteID;
 
@@ -18,7 +19,7 @@ router.post('/get-incidents-last-week-single-site', async (req, res) => {
   }
 });
 
-router.post('/get-latency-last-week-single-site', async (req, res) => {
+router.post('/get-latency-last-week-single-site', authMiddleware, async (req, res) => {
     try {
     let siteID = req.body.siteID;
 
@@ -32,7 +33,7 @@ router.post('/get-latency-last-week-single-site', async (req, res) => {
   }
 });
 
-router.post('/get-uptime-last-week-single-site', async (req, res) => {
+router.post('/get-uptime-last-week-single-site', authMiddleware, async (req, res) => {
     try {
     let siteID = req.body.siteID;
 
@@ -46,7 +47,7 @@ router.post('/get-uptime-last-week-single-site', async (req, res) => {
   }
 });
 
-router.post('/get-single-site-state', async (req, res) => {
+router.post('/get-single-site-state', authMiddleware, async (req, res) => {
   try {
     let siteID = req.body.siteID;
 
@@ -60,7 +61,7 @@ router.post('/get-single-site-state', async (req, res) => {
   }
 })
 
-router.post('/get-hourly-latency-data', async (req, res) => {
+router.post('/get-hourly-latency-data', authMiddleware, async (req, res) => {
   try {
     let siteID = req.body.siteID;
 
@@ -74,7 +75,7 @@ router.post('/get-hourly-latency-data', async (req, res) => {
   }
 })
 
-router.post('/get-daily-latency-data', async (req, res) => {
+router.post('/get-daily-latency-data', authMiddleware, async (req, res) => {
     try {
     let siteID = req.body.siteID;
 
@@ -88,7 +89,7 @@ router.post('/get-daily-latency-data', async (req, res) => {
   }
 })
 
-router.post('/get-hourly-incident-data', async (req, res) => {
+router.post('/get-hourly-incident-data', authMiddleware, async (req, res) => {
   try {
     let siteID = req.body.siteID;
 
@@ -102,7 +103,7 @@ router.post('/get-hourly-incident-data', async (req, res) => {
   }
 })
 
-router.post('/get-daily-incident-data', async (req, res) => {
+router.post('/get-daily-incident-data', authMiddleware, async (req, res) => {
     try {
     let siteID = req.body.siteID;
 
@@ -116,7 +117,7 @@ router.post('/get-daily-incident-data', async (req, res) => {
   }
 })
 
-router.post('/get-hourly-uptime-data', async (req, res) => {
+router.post('/get-hourly-uptime-data', authMiddleware, async (req, res) => {
   try {
     let siteID = req.body.siteID;
 
@@ -130,7 +131,7 @@ router.post('/get-hourly-uptime-data', async (req, res) => {
   }
 })
 
-router.post('/get-daily-uptime-data', async (req, res) => {
+router.post('/get-daily-uptime-data', authMiddleware, async (req, res) => {
     try {
     let siteID = req.body.siteID;
 

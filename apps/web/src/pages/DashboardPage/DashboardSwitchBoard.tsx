@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import SiteSidebar from "../Components/Sidebar";
+import SiteSidebar from "../Components/Sidebar/Sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Outlet } from "react-router-dom";
 import DashboardHeader from "./DashboardHeader";

@@ -1,5 +1,5 @@
 import { Router } from "express"; 
-import { addSite, getSites, deleteMultipleSites, changeNotifications, getStates, editSite } from "../Queries/siteQueries.js";
+import { addSite, getSites, deleteMultipleSites, changeNotifications, getStates, editSite, getSiteTitles } from "../Queries/siteQueries.js";
 import { authMiddleware } from "../utils/authMiddleware.js";
 import { initialPing } from "../utils/pingCodeExports.js";
 
@@ -91,4 +91,13 @@ router.post('/edit-site', authMiddleware, async (req, res) => {
   }
 })
 
+router.get('/get-site-titles', authMiddleware, async (req, res) => {
+  try {
+    let userID = req.cookies?.userID;
+    let titles = await getSiteTitles(userID)
+    return res.json(titles);
+  } catch (e) {
+    return res.status(500).send();
+  }
+})
 export default router

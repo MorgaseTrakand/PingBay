@@ -61,3 +61,10 @@ export async function getStates(siteIDs: number[]) {
   );
   return result
 }
+
+export async function getSiteTitles(userID: number) {
+  const result = await pool.query(`
+    SELECT id, title FROM user_sites WHERE user_id = ($1)
+  `, [userID]);
+  return result.rows
+}

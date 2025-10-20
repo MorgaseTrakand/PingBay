@@ -5,6 +5,7 @@ import { Separator } from "@/components/ui/separator";
 import useAuth from "@/hooks/useAuth";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import SiteSidebarDropdown from "./SidebarDropdown";
 
 type Props = {};
 
@@ -66,9 +67,9 @@ const SiteSidebar: React.FC<Props> =  () => {
                 </SidebarMenuButton>
               </SidebarMenuItem>
             ))}
+            <SiteSidebarDropdown selectedItem={selectedItem} setSelectedItem={setSelectedItem} />
           </SidebarMenu>
         </SidebarContent>
-
         <SidebarFooter className="gap-2 bg-white">
           <Separator />
           <SidebarMenu className="gap-2">

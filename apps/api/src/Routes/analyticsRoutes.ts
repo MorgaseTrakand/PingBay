@@ -1,10 +1,11 @@
 import { Router } from "express"; 
 import { getDailyData, getHourlyData, getNumberOfSites, getUptimeAllSites7D, getLatencyAllSites7D, getIncidentsAllSites7D } 
 from "../Queries/analyticsQueries.js";
+import { authMiddleware } from "../utils/authMiddleware.js";
 
 const router = Router();
 
-router.get('/get-number-of-sites', async (req, res) => {
+router.get('/get-number-of-sites', authMiddleware, async (req, res) => {
   try {
     let userID = req.cookies?.userID;
     let numberOfSites = await getNumberOfSites(userID)
@@ -18,7 +19,7 @@ router.get('/get-number-of-sites', async (req, res) => {
   }
 });
 
-router.get('/get-hourly-data', async (req, res) => {
+router.get('/get-hourly-data', authMiddleware, async (req, res) => {
   try {
     let userID = req.cookies?.userID;
 
@@ -33,7 +34,7 @@ router.get('/get-hourly-data', async (req, res) => {
   }
 })
 
-router.get('/get-daily-data', async (req, res) => {
+router.get('/get-daily-data', authMiddleware, async (req, res) => {
   try {
     let userID = req.cookies?.userID;
 
@@ -48,7 +49,7 @@ router.get('/get-daily-data', async (req, res) => {
   }
 });
 
-router.get('/get-uptime-last-week-overall', async (req, res) => {
+router.get('/get-uptime-last-week-overall', authMiddleware, async (req, res) => {
   try {
     let userID = req.cookies?.userID;
 
@@ -62,7 +63,7 @@ router.get('/get-uptime-last-week-overall', async (req, res) => {
   }
 });
 
-router.get('/get-latency-last-week-overall', async (req, res) => {
+router.get('/get-latency-last-week-overall', authMiddleware, async (req, res) => {
   try {
     let userID = req.cookies?.userID;
 
@@ -76,7 +77,7 @@ router.get('/get-latency-last-week-overall', async (req, res) => {
   }
 });
 
-router.get('/get-incidents-last-week-overall', async (req, res) => {
+router.get('/get-incidents-last-week-overall', authMiddleware, async (req, res) => {
     try {
     let userID = req.cookies?.userID;
 

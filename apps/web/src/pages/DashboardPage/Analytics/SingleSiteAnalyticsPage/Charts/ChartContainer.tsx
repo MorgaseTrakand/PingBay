@@ -32,25 +32,32 @@ export function ChartContainer<T extends Record<string, number>>({
   ChartComponent,
 }: Props<T>) {
   const [timeRange, setTimeRange] = useState("30 days");
+  type DataPoint = BasePoint & T;
 
   const [hourlyData, setHourlyData] = useState<Record<string, any>>([]);
   const [dailyData, setDailyData] = useState<Record<string, any>>([]);
   const [currentData, setCurrentData] = useState<Record<string, any>>([]);
+  const [filteredData, setFilteredData] = useState<DataPoint[]>([]);
 
-  const filteredData = currentData.filter((item: { date: string | number | Date; }) => {
-    const referenceDate = new Date();
-    let daysToSubtract = timeRange === "7 days" ? 7 : timeRange === "30 days" ? 30 : 90;
-    const startDate = new Date(referenceDate);
-    startDate.setDate(startDate.getDate() - daysToSubtract);
-    return new Date(item.date) >= startDate;
-  });
+  useEffect(() => {
+    if (currentData) {
+      setFilteredData(currentData.filter((item: { date: string | Date; }) => {
+        const referenceDate = new Date();
+        let daysToSubtract = timeRange === "7 days" ? 7 : timeRange === "30 days" ? 30 : 90;
+        const startDate = new Date(referenceDate);
+        startDate.setDate(startDate.getDate() - daysToSubtract);
+        return new Date(item.date) >= startDate;
+      }));
+    }
+  }, [currentData])
+
 
   let siteID: number;
   let params = useParams();
   siteID = parseInt(params.id!);
 
   useEffect(() => {
-    const loadDailyData = async () => {
+    const loadHourlyData = async () => {
       try {
         const newData = await fetchHourlyData(siteID);
         setHourlyData(newData);
@@ -59,7 +66,7 @@ export function ChartContainer<T extends Record<string, number>>({
       }
     };
 
-    const loadHourlyData = async () => {
+    const loadDailyData = async () => {
       try {
         const newData = await fetchDailyData(siteID);
         setDailyData(newData);
