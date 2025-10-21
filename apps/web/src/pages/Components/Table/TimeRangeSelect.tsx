@@ -11,7 +11,7 @@ export const TimeRangeSelect: React.FC<Props> = ({ timeRange, setTimeRange }) =>
     <>
       <Select value={timeRange} onValueChange={setTimeRange}>
         <SelectTrigger
-          className="hidden w-[160px] rounded-lg sm:ml-auto sm:flex"
+          className="cursor-pointer hidden w-[160px] rounded-lg sm:ml-auto sm:flex"
           aria-label="Select a value"
         >
           <SelectValue placeholder="Last 3 months" />

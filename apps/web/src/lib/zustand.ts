@@ -52,3 +52,16 @@ export const useSetCurrentSite = create<CurrentSite>()(
     }
   )
 );
+
+interface SiteTrigger { 
+  id: number;
+  set: (value: number) => void; // must provide a value
+}
+
+export const useAdditionalSiteTrigger = create<SiteTrigger>((set) => ({
+  id: 0,
+  set: (value: number) =>
+    {
+      set(() => ({ id: value }))
+    }
+}));

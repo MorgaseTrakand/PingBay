@@ -1,6 +1,4 @@
-import { useState } from "react"
 import { CartesianGrid, Line, LineChart, XAxis } from "recharts"
-import type { ChartConfig } from "@/components/ui/chart"
 import {
   ChartContainer,
   ChartTooltip,
@@ -9,12 +7,22 @@ import {
 
 export const description = "An interactive line chart"
 
-const chartConfig = {
-  latency: {
-    label: "Latency",
-    color: "var(--chart-1)",
-  },
-} satisfies ChartConfig
+function generateChartConfig(data: Array<dataStructure>) {
+  if (data.length === 0) return {};
+  const keys = Object.keys(data[0]).filter((k) => k !== "date");
+  const colors = ["var(--chart-1)", "var(--chart-2)", "var(--chart-3)", "var(--chart-4)"];
+
+  const config: Record<string, { label: string; color: string }> = {};
+  keys.forEach((key, i) => {
+    config[key] = {
+      label: "Latency",
+      color: colors[i % colors.length],
+    };
+  });
+
+  return config;
+}
+
 
 type dataStructure = {
   date: string,
@@ -26,7 +34,7 @@ type Props = {
 };
 
 export function LatencyLineChart({ data } : Props) {
-  const [activeChart] = useState<keyof typeof chartConfig>("latency")
+  const chartConfig = generateChartConfig(data)
 
   return (
     <ChartContainer
@@ -71,13 +79,16 @@ export function LatencyLineChart({ data } : Props) {
             />
           }
         />
-        <Line
-          dataKey={activeChart}
-          type="monotone"
-          stroke={`var(--color-${activeChart})`}
-          strokeWidth={2}
-          dot={false}
-        />
+        {Object.entries(chartConfig).map(([key, config]) => (
+          <Line
+            key={key}
+            dataKey={key}
+            type="monotone"
+            stroke={config.color}
+            strokeWidth={2}
+            dot={false}
+          />
+        ))}
       </LineChart>
     </ChartContainer>
   )

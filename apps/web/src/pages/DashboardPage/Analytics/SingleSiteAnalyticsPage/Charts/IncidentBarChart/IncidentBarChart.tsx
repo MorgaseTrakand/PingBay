@@ -1,6 +1,4 @@
-import { useState } from "react";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
-import type { ChartConfig } from "@/components/ui/chart";
 import {
   ChartContainer,
   ChartTooltip,
@@ -9,12 +7,21 @@ import {
 
 export const description = "An interactive bar chart"
 
-const chartConfig = {
-  incidents: {
-    label: "Incidents",
-    color: "var(--chart-1)",
-  },
-} satisfies ChartConfig
+function generateChartConfig(data: Array<dataStructure>) {
+  if (data.length === 0) return {};
+  const keys = Object.keys(data[0]).filter((k) => k !== "date");
+  const colors = ["var(--chart-1)", "var(--chart-2)", "var(--chart-3)", "var(--chart-4)"];
+
+  const config: Record<string, { label: string; color: string }> = {};
+  keys.forEach((key, i) => {
+    config[key] = {
+      label: "Incidents",
+      color: colors[i % colors.length],
+    };
+  });
+
+  return config;
+}
 
 type dataStructure = {
   date: string,
@@ -26,7 +33,7 @@ type Props = {
 };
 
 export function IncidentBarChart({ data } : Props) {
-  const [activeChart] = useState<keyof typeof chartConfig>("incidents")
+  const chartConfig = generateChartConfig(data)
 
   return (
     <ChartContainer
@@ -71,7 +78,13 @@ export function IncidentBarChart({ data } : Props) {
             />
           }
         />
-        <Bar dataKey={activeChart} fill={`var(--color-${activeChart})`} />
+        {Object.entries(chartConfig).map(([key, config]) => (
+          <Bar 
+            dataKey={key}
+            key={key}
+            fill={config.color}
+          />
+        ))}
       </BarChart>
     </ChartContainer>
   )

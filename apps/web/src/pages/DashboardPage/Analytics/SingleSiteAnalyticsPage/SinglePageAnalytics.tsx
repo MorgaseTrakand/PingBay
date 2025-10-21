@@ -1,7 +1,7 @@
 import React from "react";
 import SSABannerContainer from "./SSABanner/SSABannerContainer";
 import { PageH1 } from "@/pages/Components/PageH1";
-import { ChartContainer } from "./Charts/ChartContainer";
+import { ChartContainer } from "./Charts/ChartContainer/ChartContainer";
 import { fetchHourlyLatencyData, fetchDailyLatencyData } from "./Charts/LatencyLineChart/LatencyLineChartFunctions";
 import { LatencyLineChart } from "./Charts/LatencyLineChart/LatencyLineChart";
 import { IncidentBarChart } from "./Charts/IncidentBarChart/IncidentBarChart";
@@ -23,6 +23,7 @@ const SinglePageAnalytics: React.FC<Props> = () => {
         fetchDailyData={fetchDailyLatencyData}
         fetchHourlyData={fetchHourlyLatencyData}
         ChartComponent={LatencyLineChart}
+        mergedDataKey="latency"
       />
       <ChartContainer
         title="Uptime Area Chart - Interactive"
@@ -30,6 +31,7 @@ const SinglePageAnalytics: React.FC<Props> = () => {
         fetchDailyData={fetchDailyUptimeData}
         fetchHourlyData={fetchHourlyUptimeData}
         ChartComponent={UptimeAreaChart}
+        mergedDataKey="uptime"
       />
       <ChartContainer 
         title="Downtime Incidents - Interactive" 
@@ -37,6 +39,7 @@ const SinglePageAnalytics: React.FC<Props> = () => {
         fetchDailyData={fetchDailyIncidentData}
         fetchHourlyData={fetchHourlyIncidentData}
         ChartComponent={IncidentBarChart}
+        mergedDataKey="incidents"
       />
     </>
   );

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { TimeRangeSelect } from "./TimeRangeSelect";
+import { TimeRangeSelect } from "../../../../Components/Table/TimeRangeSelect";
 import { OverviewChart } from "./OverviewChart";
 import { fetchHourlyData, fetchDailyData } from "./OverviewChartFunctions";
 import { toast } from "sonner";

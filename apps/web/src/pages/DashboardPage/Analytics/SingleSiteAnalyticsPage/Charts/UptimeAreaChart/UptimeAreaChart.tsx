@@ -1,6 +1,5 @@
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
 import { ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import type { ChartConfig } from "@/components/ui/chart";
 
 type dataStructure = {
   date: string,
@@ -11,21 +10,31 @@ type Props = {
   data: Array<dataStructure>
 };
 
-const chartConfig = {
-  latency: {
-    label: "Uptime",
-    color: "var(--chart-1)",
-  },
-} satisfies ChartConfig
+function generateChartConfig(data: Array<dataStructure>) {
+  if (data.length === 0) return {};
+  const keys = Object.keys(data[0]).filter((k) => k !== "date");
+  const colors = ["var(--chart-1)", "var(--chart-2)", "var(--chart-3)", "var(--chart-4)"];
+
+  const config: Record<string, { label: string; color: string }> = {};
+  keys.forEach((key, i) => {
+    config[key] = {
+      label: "Incidents",
+      color: colors[i % colors.length],
+    };
+  });
+
+  return config;
+}
 
 export function UptimeAreaChart({ data } : Props) {
-  
+  const chartConfig = generateChartConfig(data)
+
   return (
     <>
       <ChartContainer
         config={chartConfig}
         className="aspect-auto h-[250px] w-full"
-      >
+      > 
         <AreaChart data={data}>
           <defs>
             <linearGradient key={`uptime`} id={`fill-uptime`} x1="0" y1="0" x2="0" y2="1">
@@ -70,13 +79,16 @@ export function UptimeAreaChart({ data } : Props) {
               />
             }
           />
-          <Area
-              dataKey={'uptime'}
-              type="natural"
-              fill={`var(--chart-1)`}
-              stroke={`var(--chart-1)`}
-              stackId="a"
-          />
+          {Object.entries(chartConfig).map(([key, config]) => (
+            <Area
+                dataKey={key}
+                key={key}
+                type="natural"
+                fill={config.color}
+                stroke={config.color}
+                stackId="a"
+            />
+          ))}
           <ChartLegend content={<ChartLegendContent />} />
         </AreaChart>
       </ChartContainer>

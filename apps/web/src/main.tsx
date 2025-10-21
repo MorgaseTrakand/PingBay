@@ -38,7 +38,7 @@ const router = createBrowserRouter([
 createRoot(document.getElementById('root')!).render(
   //<StrictMode>
   <CookiesProvider>
-      <RouterProvider router={router} />
+      <RouterProvider router={router}/>
       <Toaster richColors position='top-center'/>
   </CookiesProvider>
   //</StrictMode>,
