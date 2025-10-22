@@ -26,7 +26,7 @@ export function ChartContainer<T extends Record<string, number>>({ title, descri
   let params = useParams();
   siteID = parseInt(params.id!);
 
-  const { filteredData, loading } = useChartData<T>({
+  let { filteredData, loading } = useChartData<T>({
     siteID,
     timeRange,
     fetchHourlyData,

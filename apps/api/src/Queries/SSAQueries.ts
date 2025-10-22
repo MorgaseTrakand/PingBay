@@ -72,6 +72,14 @@ export async function getState(siteID: number) {
   return result.rows[0]
 }
 
+export async function getSiteURLAndTitle(siteID: number) {
+  const result = await pool.query(`
+    SELECT * FROM user_sites WHERE id = ($1)
+  `, [siteID])
+
+  return result.rows[0]
+}
+
 export async function getHourlyLatencyData(siteID: number) {
   const result = await pool.query(`
     SELECT json_agg(

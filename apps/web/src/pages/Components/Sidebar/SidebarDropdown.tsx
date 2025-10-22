@@ -100,8 +100,11 @@ const SiteSidebarDropdown: React.FC<Props> = ( { selectedItem, setSelectedItem }
           className="border shadow-md  rounded-md p-1 mt-1"
         >
           {titles.map((el : titleRow) => 
-            <DropdownMenuItem asChild>
-              <NavLink to={`/dashboard/site-analytics/${el.id}`} className="text-xs font-normal block px-3 py-2 rounded hover:bg-slate-100">
+            <DropdownMenuItem asChild key={el.id}>
+              <NavLink 
+                to={`/dashboard/site-analytics/${el.id}`} 
+                className="text-xs font-normal block px-3 py-2 rounded hover:bg-slate-100"
+              >
                 {el.title}
               </NavLink>
             </DropdownMenuItem>

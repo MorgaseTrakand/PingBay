@@ -19,7 +19,6 @@ import {
 import { TableHeaderButtons } from "./TableHeaderButtons.tsx";
 import { TableFooterButtons } from "./TableFooterButtons.tsx";
 import { useNavigate } from "react-router-dom";
-import { useSetCurrentSite } from "@/lib/zustand.ts";
 import { SpinnerComponent } from "../SpinnerComponent.tsx";
 
 interface DataTableProps<TData, TValue> {
@@ -66,11 +65,9 @@ export function DataTable<TData extends { id: string | number, title: string, ur
 
   const navigate = useNavigate();
   
-  const set = useSetCurrentSite((s) => s.set);
 
-  function handleRowClick(cellID: string, siteID: string | number, title: string, url: string, last_checked: string, status: boolean) {
+  function handleRowClick(cellID: string, siteID: string | number) {
     if (!cellID.includes('actions')) {
-      set({ last_checked: last_checked, status: status, title: title, url: url });
       navigate(`/dashboard/site-analytics/${siteID}`)
     }
   }
@@ -114,7 +111,7 @@ export function DataTable<TData extends { id: string | number, title: string, ur
                       className={`${!status} cursor-pointer`}
                     >
                       {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id} onClick={() => handleRowClick(cell.id, row.original.id, row.original.title, row.original.url, row.original.last_checked, row.original.status)}>
+                        <TableCell key={cell.id} onClick={() => handleRowClick(cell.id, row.original.id)}>
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </TableCell>
                       ))}

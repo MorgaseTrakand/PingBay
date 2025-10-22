@@ -88,6 +88,10 @@ export function useChartData<T extends Record<string, number>>(params: {
         currentData = dailyData
       }
     }
+    if (!currentData) {
+      setFilteredData([])
+      return;
+    }
     setFilteredData(currentData.filter((item: { date: string | Date; }) => {
       const referenceDate = new Date();
       let daysToSubtract = timeRange === "7 days" ? 7 : timeRange === "30 days" ? 30 : 90;
