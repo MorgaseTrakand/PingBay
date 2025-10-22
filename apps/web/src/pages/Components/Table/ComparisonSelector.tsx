@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { useAdditionalSiteTrigger } from "@/lib/zustand";
+import { useSelectedSite } from "@/lib/zustand";
 
 type Props = {
   currentSiteID: number
@@ -11,11 +12,16 @@ export const ComparisonSelector: React.FC<Props> = ({ currentSiteID }) => {
   const [siteID, setSiteID] = useState('');
   const [titles, setTitles] = useState([]);
   const { set } = useAdditionalSiteTrigger();
+  const { siteId, setSiteId } = useSelectedSite();
 
   type titleRow = {
     title: string,
     id: number
   }
+
+  useEffect(() => {
+    setSiteID(siteId)
+  }, [siteId])
 
   useEffect(() => {
     async function loadSiteTitles() {
@@ -42,9 +48,11 @@ export const ComparisonSelector: React.FC<Props> = ({ currentSiteID }) => {
           if (val === "-1") {
             setSiteID("");
             set(Number(val))
+            setSiteId('')
           } else {
             setSiteID(val);
             set(Number(val));
+            setSiteId(val)
           }
         }}
       >

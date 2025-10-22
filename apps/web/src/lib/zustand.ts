@@ -40,3 +40,13 @@ export const useAdditionalSiteTrigger = create<SiteTrigger>((set) => ({
       set(() => ({ id: value }))
     }
 }));
+
+type SelectedSiteStore = {
+  siteId: string;
+  setSiteId: (id: string) => void;
+};
+
+export const useSelectedSite = create<SelectedSiteStore>((set) => ({
+  siteId: '',
+  setSiteId: (id) => set({ siteId: id }),
+}));
