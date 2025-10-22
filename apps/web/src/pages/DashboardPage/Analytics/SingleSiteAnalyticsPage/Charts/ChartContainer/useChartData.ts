@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { useAdditionalSiteTrigger } from "@/lib/zustand";
 import { mergeData } from "./mergeData";
+import { useSelectedSite } from "@/lib/zustand";
 
 type BasePoint = { date: string };
 type Fetcher<T> = (siteId: number) => Promise<(BasePoint & T)[]>;
@@ -11,10 +12,9 @@ export function useChartData<T extends Record<string, number>>(params: {
     timeRange: string;
     fetchHourlyData: Fetcher<T>;
     fetchDailyData: Fetcher<T>;
-    mergedDataKey: string;
   }) {
 
-  const { siteID, timeRange, fetchHourlyData, fetchDailyData, mergedDataKey } = params;
+  const { siteID, timeRange, fetchHourlyData, fetchDailyData } = params;
   type DataPoint = BasePoint & T;
   const [hourlyData, setHourlyData] = useState<Record<string, any>[]>([]);
   const [dailyData, setDailyData] = useState<Record<string, any>[]>([]);
@@ -25,7 +25,8 @@ export function useChartData<T extends Record<string, number>>(params: {
   const { id } = useAdditionalSiteTrigger();
   const [comparisonHourlyData, setComparisonHourlyData] = useState<Record<string, any>[]>([]);
   const [comparisonDailyData, setComparisonDailyData] = useState<Record<string, any>[]>([]);
-  
+  const { setSiteId } = useSelectedSite();
+
   //load primary data
   useEffect(() => {
     const loadData = async () => {
@@ -57,12 +58,16 @@ export function useChartData<T extends Record<string, number>>(params: {
           setComparisonHourlyData(newHourlyData);
           const newDailyData = await fetchDailyData(siteID);
           setComparisonDailyData(newDailyData);
+
+          if (siteID != -1 && ((!newDailyData || !newHourlyData) || (newDailyData.length == 0 && newHourlyData.length == 0))) {
+            toast.error("No data available for site!")
+            setSiteId('');
+          }
         } catch (err: unknown) {
           toast.error(String(err))
       }
     }
 
-    console.log(id)
     if (id !== 0) {
       getComparisonData(id)
     }
@@ -77,13 +82,13 @@ export function useChartData<T extends Record<string, number>>(params: {
     let currentData: Record<string, any>;
     if (isHourly) {
       if ((comparisonHourlyData ?? []).length > 0) {
-        currentData = mergeData(hourlyData, comparisonHourlyData, mergedDataKey)
+        currentData = mergeData(hourlyData, comparisonHourlyData)
       } else {
         currentData = hourlyData
       }
     } else {
       if ((comparisonDailyData ?? []).length > 0) {
-        currentData = mergeData(dailyData, comparisonDailyData, mergedDataKey)
+        currentData = mergeData(dailyData, comparisonDailyData)
       } else {
         currentData = dailyData
       }
@@ -92,6 +97,7 @@ export function useChartData<T extends Record<string, number>>(params: {
       setFilteredData([])
       return;
     }
+
     setFilteredData(currentData.filter((item: { date: string | Date; }) => {
       const referenceDate = new Date();
       let daysToSubtract = timeRange === "7 days" ? 7 : timeRange === "30 days" ? 30 : 90;

@@ -1,4 +1,4 @@
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts"
 import { ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import type { ChartConfig } from "@/components/ui/chart";
 import { useMemo, useState } from "react";
@@ -72,6 +72,13 @@ export const OverviewChart: React.FC<Props> = ({ data, hourly }) => {
                 day: "numeric",
               })
             }}
+          />
+          <YAxis 
+            tickLine={false}
+            axisLine={false}
+            tickMargin={8}
+            width={40}
+            tickFormatter={(value) => value.toFixed(0)}
           />
           <ChartTooltip
             cursor={false}

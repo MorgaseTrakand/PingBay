@@ -1,23 +1,41 @@
 export const mergeData = (
   primary: Record<string, any>[],
-  comparison: Record<string, any>[],
-  valueKey: string
+  comparison: Record<string, any>[]
 ): Record<string, any>[] => {
+  const map = new Map<string, Record<string, any>>();
 
-  const map = new Map<string, any>();
+  const ensureRow = (date: string) => {
+    if (!map.has(date)) map.set(date, { date });
+    return map.get(date)!;
+  };
 
-  primary.forEach(item => {
-    map.set(item.date, { date: item.date, [`${valueKey}1`]: item[valueKey] });
-  });
+  const getTitleKey = (item: Record<string, any>) =>
+    Object.keys(item).find((k) => k !== "date");
 
-  comparison.forEach(item => {
-    if (map.has(item.date)) {
-      map.get(item.date)[`${valueKey}2`] = item[valueKey];
+  for (const item of primary || []) {
+    const date = String(item.date);
+    const titleKey = getTitleKey(item);
+    if (!titleKey) continue;
+
+    const row = ensureRow(date);
+    row[titleKey] = item[titleKey];
+  }
+
+  for (const item of comparison || []) {
+    const date = String(item.date);
+    const titleKey = getTitleKey(item);
+    if (!titleKey) continue;
+
+    const row = ensureRow(date);
+
+    if (row.hasOwnProperty(titleKey)) {
+      row[`${titleKey}_2`] = item[titleKey];
     } else {
-      map.set(item.date, { date: item.date, [`${valueKey}2`]: item[valueKey] });
+      row[titleKey] = item[titleKey];
     }
-  });
+  }
 
-  const merged = Array.from(map.values());
-  return merged;
+  return Array.from(map.values()).sort(
+    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+  );
 };

@@ -23,7 +23,6 @@ const SinglePageAnalytics: React.FC<Props> = () => {
         fetchDailyData={fetchDailyLatencyData}
         fetchHourlyData={fetchHourlyLatencyData}
         ChartComponent={LatencyLineChart}
-        mergedDataKey="latency"
       />
       <ChartContainer
         title="Uptime Area Chart - Interactive"
@@ -31,7 +30,6 @@ const SinglePageAnalytics: React.FC<Props> = () => {
         fetchDailyData={fetchDailyUptimeData}
         fetchHourlyData={fetchHourlyUptimeData}
         ChartComponent={UptimeAreaChart}
-        mergedDataKey="uptime"
       />
       <ChartContainer 
         title="Downtime Incidents - Interactive" 
@@ -39,7 +37,6 @@ const SinglePageAnalytics: React.FC<Props> = () => {
         fetchDailyData={fetchDailyIncidentData}
         fetchHourlyData={fetchHourlyIncidentData}
         ChartComponent={IncidentBarChart}
-        mergedDataKey="incidents"
       />
     </>
   );

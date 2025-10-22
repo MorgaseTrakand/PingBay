@@ -1,4 +1,4 @@
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts"
 import { ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 
 type dataStructure = {
@@ -18,7 +18,7 @@ function generateChartConfig(data: Array<dataStructure>) {
   const config: Record<string, { label: string; color: string }> = {};
   keys.forEach((key, i) => {
     config[key] = {
-      label: "Incidents",
+      label: key,
       color: colors[i % colors.length],
     };
   });
@@ -65,6 +65,12 @@ export function UptimeAreaChart({ data } : Props) {
               })
             }}
           />
+          <YAxis
+            tickLine={false}
+            axisLine={false}
+            tickMargin={8}
+            width={40}
+          />
           <ChartTooltip
             cursor={false}
             content={
@@ -74,7 +80,7 @@ export function UptimeAreaChart({ data } : Props) {
                     month: "short",
                     day: "numeric",
                   })
-                }}
+                }}              
                 indicator="dot"
               />
             }

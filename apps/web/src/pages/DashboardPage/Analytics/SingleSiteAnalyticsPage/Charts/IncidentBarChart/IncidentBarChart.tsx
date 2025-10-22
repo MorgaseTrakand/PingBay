@@ -1,9 +1,5 @@
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
+import { ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 
 export const description = "An interactive bar chart"
 
@@ -15,7 +11,7 @@ function generateChartConfig(data: Array<dataStructure>) {
   const config: Record<string, { label: string; color: string }> = {};
   keys.forEach((key, i) => {
     config[key] = {
-      label: "Incidents",
+      label: key,
       color: colors[i % colors.length],
     };
   });
@@ -63,6 +59,13 @@ export function IncidentBarChart({ data } : Props) {
             })
           }}
         />
+        <YAxis 
+          tickLine={false}
+          axisLine={false}
+          tickMargin={8}
+          width={40}
+          tickFormatter={(value) => value.toFixed(0)}
+        />
         <ChartTooltip
           content={
             <ChartTooltipContent
@@ -85,6 +88,7 @@ export function IncidentBarChart({ data } : Props) {
             fill={config.color}
           />
         ))}
+        <ChartLegend content={<ChartLegendContent />} />
       </BarChart>
     </ChartContainer>
   )

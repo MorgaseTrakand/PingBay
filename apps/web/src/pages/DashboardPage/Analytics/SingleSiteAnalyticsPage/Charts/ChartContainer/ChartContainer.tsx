@@ -12,7 +12,6 @@ type Fetcher<T> = (siteId: number) => Promise<(BasePoint & T)[]>;
 type Props<T extends Record<string, number>> = {
   title: string;
   description?: string;
-  mergedDataKey: string;
   fetchHourlyData: Fetcher<T>;
   fetchDailyData: Fetcher<T>;
   ChartComponent: React.ComponentType<{
@@ -20,7 +19,7 @@ type Props<T extends Record<string, number>> = {
   }>;
 };
 
-export function ChartContainer<T extends Record<string, number>>({ title, description, mergedDataKey, fetchDailyData, fetchHourlyData, ChartComponent }: Props<T>) {
+export function ChartContainer<T extends Record<string, number>>({ title, description, fetchDailyData, fetchHourlyData, ChartComponent }: Props<T>) {
   const [timeRange, setTimeRange] = useState("30 days");
   let siteID: number;
   let params = useParams();
@@ -31,7 +30,6 @@ export function ChartContainer<T extends Record<string, number>>({ title, descri
     timeRange,
     fetchHourlyData,
     fetchDailyData,
-    mergedDataKey
   });
 
   return (

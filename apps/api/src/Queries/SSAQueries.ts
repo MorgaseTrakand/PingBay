@@ -84,11 +84,12 @@ export async function getHourlyLatencyData(siteID: number) {
   const result = await pool.query(`
     SELECT json_agg(
       json_build_object(
-        'date', hp.hour_checked,
-        'latency', hp.average_latency
+      'date', hp.hour_checked,
+      us.title, hp.average_latency
       ) ORDER BY hp.hour_checked
     ) AS result
     FROM hourly_pings hp
+    JOIN user_sites us ON us.id = hp.user_site_id
     WHERE hp.user_site_id = ($1);
     `, [siteID])
 
@@ -100,19 +101,21 @@ export async function getDailyLatencyData(siteID: number) {
   const result = await pool.query(`
     SELECT json_agg(
       json_build_object(
-        'date', date,
-        'latency', latency
+        'date', sub.date,
+        us.title, latency
       ) ORDER BY date
     ) AS result
     FROM (
       SELECT
         DATE(hp.hour_checked) AS date,
+        hp.user_site_id,
         AVG(hp.average_latency) AS latency
       FROM hourly_pings hp
-      WHERE hp.user_site_id = $1
-      GROUP BY DATE(hp.hour_checked)
+      WHERE hp.user_site_id = ($1)
+      GROUP BY DATE(hp.hour_checked), hp.user_site_id
       ORDER BY DATE(hp.hour_checked)
-    ) sub;
+    ) sub
+    JOIN user_sites us ON us.id = sub.user_site_id;
   `, [siteID])
 
   const data = result.rows.map(row => row.result)[0];
@@ -123,19 +126,21 @@ export async function getHourlyIncidentData(siteID: number) {
   const result = await pool.query(`
     SELECT json_agg(
       json_build_object(
-        'date', date,
-        'incidents', incidents
+      'date', date,
+      us.title, incidents
       ) ORDER BY date
     ) AS result
     FROM (
       SELECT
+        hp.user_site_id,
         hp.hour_checked::timestamptz AS date,
         SUM(hp.total_failures) AS incidents
-      FROM hourly_pings hp
-      WHERE hp.user_site_id = ($1)
-      GROUP BY hp.hour_checked
-      ORDER BY hp.hour_checked
-    ) sub;
+        FROM hourly_pings hp
+        WHERE hp.user_site_id = ($1)
+        GROUP BY hp.hour_checked, hp.user_site_id
+        ORDER BY hp.hour_checked
+    ) sub
+    JOIN user_sites us ON us.id = sub.user_site_id;
   `, [siteID])
 
   const data = result.rows.map(row => row.result)[0];
@@ -147,18 +152,20 @@ export async function getDailyIncidentData(siteID: number) {
     SELECT json_agg(
       json_build_object(
         'date', date,
-        'incidents', incidents
+        us.title, incidents
       ) ORDER BY date
     ) AS result
     FROM (
       SELECT
+        hp.user_site_id,
         DATE(hp.hour_checked::timestamptz) AS date,
         SUM(hp.total_failures) AS incidents
       FROM hourly_pings hp
       WHERE hp.user_site_id = ($1)
-      GROUP BY DATE(hp.hour_checked)
+      GROUP BY DATE(hp.hour_checked), hp.user_site_id
       ORDER BY DATE(hp.hour_checked)
-    ) sub;
+    ) sub
+    JOIN user_sites us ON us.id = sub.user_site_id;
   `, [siteID])
 
   const data = result.rows.map(row => row.result)[0];
@@ -170,19 +177,21 @@ export async function getHourlyUptimeData(siteID: number) {
     SELECT json_agg(
       json_build_object(
       'date', date,
-      'uptime', CAST(successes AS NUMERIC) / (successes + failures)
+      us.title, CAST(successes AS NUMERIC) / (successes + failures)
       ) ORDER BY date
     ) AS result
     FROM (
       SELECT
-      hp.hour_checked::timestamptz AS date,
-      SUM(hp.total_failures) AS failures,
-      SUM(hp.total_successes) AS successes
+        hp.user_site_id,
+        hp.hour_checked::timestamptz AS date,
+        SUM(hp.total_failures) AS failures,
+        SUM(hp.total_successes) AS successes
       FROM hourly_pings hp
       WHERE hp.user_site_id = ($1)
-      GROUP BY hp.hour_checked
+      GROUP BY hp.hour_checked, hp.user_site_id
       ORDER BY hp.hour_checked
-    ) sub;
+    ) sub
+    JOIN user_sites us ON us.id = sub.user_site_id;
   `, [siteID])
 
   const data = result.rows.map(row => row.result)[0];
@@ -194,19 +203,21 @@ export async function getDailyUptimeData(siteID: number) {
     SELECT json_agg(
       json_build_object(
       'date', DATE(date),
-      'uptime', CAST(successes AS NUMERIC) / (successes + failures)
+      us.title, CAST(successes AS NUMERIC) / (successes + failures)
       ) ORDER BY DATE(date)
     ) AS result
     FROM (
       SELECT
-      DATE(hp.hour_checked::timestamptz) AS date,
-      SUM(hp.total_failures) AS failures,
-      SUM(hp.total_successes) AS successes
+        hp.user_site_id,
+        DATE(hp.hour_checked::timestamptz) AS date,
+        SUM(hp.total_failures) AS failures,
+        SUM(hp.total_successes) AS successes
       FROM hourly_pings hp
       WHERE hp.user_site_id = ($1)
-      GROUP BY DATE(hp.hour_checked)
+      GROUP BY DATE(hp.hour_checked), hp.user_site_id
       ORDER BY DATE(hp.hour_checked)
-    ) sub;
+    ) sub
+    JOIN user_sites us ON us.id = sub.user_site_id;
   `, [siteID])
   const data = result.rows.map(row => row.result)[0];
   return data
