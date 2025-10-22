@@ -1,5 +1,5 @@
 import { Router } from "express"; 
-import { getDailyData, getHourlyData, getNumberOfSites, getUptimeAllSites7D, getLatencyAllSites7D, getIncidentsAllSites7D } 
+import { getDailyData, getHourlyData, getNumberOfSites, getUptimeAllSites7D, getLatencyAllSites7D, getIncidentsAllSites7D, getUptimeAllSitesDelta, getLatencyAllSitesDelta, getIncidentsAllSitesDelta } 
 from "../Queries/analyticsQueries.js";
 import { authMiddleware } from "../utils/authMiddleware.js";
 
@@ -63,6 +63,20 @@ router.get('/get-uptime-last-week-overall', authMiddleware, async (req, res) => 
   }
 });
 
+router.get('/get-uptime-delta-overall', authMiddleware, async (req, res) => {
+  try {
+    let userID = req.cookies?.userID;
+
+    if (!userID) {
+      return res.status(401).send();
+    }
+
+    return res.json(await getUptimeAllSitesDelta(userID))
+  } catch (e) { 
+    return res.status(500).json(e)
+  }
+})
+
 router.get('/get-latency-last-week-overall', authMiddleware, async (req, res) => {
   try {
     let userID = req.cookies?.userID;
@@ -77,6 +91,20 @@ router.get('/get-latency-last-week-overall', authMiddleware, async (req, res) =>
   }
 });
 
+router.get('/get-latency-delta-overall', authMiddleware, async (req, res) => {
+  try {
+    let userID = req.cookies?.userID;
+
+    if (!userID) {
+      return res.status(401).send();
+    }
+
+    return res.json(await getLatencyAllSitesDelta(userID))
+  } catch (e) { 
+    return res.status(500).json(e)
+  }
+});
+
 router.get('/get-incidents-last-week-overall', authMiddleware, async (req, res) => {
     try {
     let userID = req.cookies?.userID;
@@ -86,6 +114,20 @@ router.get('/get-incidents-last-week-overall', authMiddleware, async (req, res) 
     }
 
     return res.json(await getIncidentsAllSites7D(userID))
+  } catch (e) { 
+    return res.status(500).json(e)
+  }
+})
+
+router.get('/get-incidents-delta-overall', authMiddleware, async (req, res) => {
+    try {
+    let userID = req.cookies?.userID;
+
+    if (!userID) {
+      return res.status(401).send();
+    }
+
+    return res.json(await getIncidentsAllSitesDelta(userID))
   } catch (e) { 
     return res.status(500).json(e)
   }

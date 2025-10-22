@@ -32,6 +32,21 @@ export async function getUptime() {
   throw new Error(`Failed to fetch uptime: ${response.status} ${response.statusText}`);
 }
 
+export async function getDeltaUptime() {
+  let response = await fetch(import.meta.env.VITE_GET_OVERALL_UPTIME_DELTA_URL, {
+    method: "GET",
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: "include"
+  })
+  if (response.ok) {
+    let data = await response.json();
+    return data
+  }
+  throw new Error(`Failed to fetch uptime: ${response.status} ${response.statusText}`);
+}
+
 export async function getLatency() {
   let response = await fetch(import.meta.env.VITE_GET_OVERALL_LATENCY_7D_URL, {
     method: "GET",
@@ -47,8 +62,38 @@ export async function getLatency() {
   throw new Error(`Failed to fetch latency: ${response.status} ${response.statusText}`);
 }
 
+export async function getLatencyDelta() {
+  let response = await fetch(import.meta.env.VITE_GET_OVERALL_LATENCY_DELTA_URL, {
+    method: "GET",
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: "include"
+  })
+  if (response.ok) {
+    let data = await response.json();
+    return data
+  }
+  throw new Error(`Failed to fetch latency: ${response.status} ${response.statusText}`);
+}
+
 export async function getIncidents() {
   let response = await fetch(import.meta.env.VITE_GET_OVERALL_INCIDENTS_7D_URL, {
+    method: "GET",
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: "include"
+  })
+  if (response.ok) {
+    let data = await response.json();
+    return data
+  }
+  throw new Error(`Failed to fetch incidents: ${response.status} ${response.statusText}`);
+}
+
+export async function getIncidentsDelta() {
+  let response = await fetch(import.meta.env.VITE_GET_OVERALL_INCIDENTS_DELTA_URL, {
     method: "GET",
     headers: {
       'Content-Type': 'application/json',

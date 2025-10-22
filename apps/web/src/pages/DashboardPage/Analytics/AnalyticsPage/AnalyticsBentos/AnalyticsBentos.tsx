@@ -2,7 +2,7 @@ import { Activity, Server, Clock, Globe } from "lucide-react";
 import type { BentoStat } from "./AnalyticsBento";
 import { SingleAnalyticsBento } from "./AnalyticsBento";
 import { useEffect, useState } from "react";
-import { getSites, getUptime, getLatency, getIncidents } from "./bentoFunctions";
+import { getSites, getUptime, getLatency, getIncidents, getDeltaUptime, getLatencyDelta, getIncidentsDelta } from "./bentoFunctions";
 import { toast } from "sonner";
 
 export default function AnalyticsBentos() {
@@ -11,13 +11,32 @@ export default function AnalyticsBentos() {
   const [latency, setLatency] = useState(-1);
   const [incidents, setIncidents] = useState(-1);
 
+  const [deltaUptime, setDeltaUptime] = useState(-1);
+  const [deltaLatency, setDeltaLatency] = useState(-1);
+  const [deltaIncidents, setDeltaIncidents] = useState(-1);
+
   useEffect(() => {
     async function fetchData() {
       try {
-        setUptime(`${String(await getUptime()*100)}%`)
         setNSites(await getSites())
-        setLatency(await getLatency())
-        setIncidents(await getIncidents())
+
+        let uptime = await getUptime()
+        let deltaUptime = await getDeltaUptime()
+
+        setUptime(`${String(uptime*100)}%`)
+        setDeltaUptime(((uptime-deltaUptime)/deltaUptime)*100)
+        
+        let latency = await getLatency()
+        let deltaLatency = await getLatencyDelta()
+
+        setLatency(latency)
+        setDeltaLatency(((latency-deltaLatency)/deltaLatency)*100)
+        
+        let incidents = await getIncidents()
+        let deltaIncidents = await getIncidentsDelta()
+
+        setIncidents(incidents)
+        setDeltaIncidents(((incidents-deltaIncidents)/deltaIncidents)*100)
         
        } catch (err: unknown) {
         const message = err instanceof Error ? err.message : String(err);
@@ -33,7 +52,7 @@ export default function AnalyticsBentos() {
       title: "Average Uptime",
       description: "Across all monitored sites",
       value: `${String(parseFloat(uptime).toFixed(1))}%`,
-      delta: 0.2,
+      delta: deltaUptime,
       deltaLabel: "vs last week",
       icon: <Server className="w-6 h-6" />,
     },
@@ -42,7 +61,7 @@ export default function AnalyticsBentos() {
       title: "Downtime Events",
       description: "Last 7 days",
       value: incidents,
-      delta: -25,
+      delta: deltaIncidents,
       deltaLabel: "vs last week",
       icon: <Clock className="w-6 h-6" />,
     },
@@ -51,7 +70,7 @@ export default function AnalyticsBentos() {
       title: "Avg Latency",
       description: "Last 7 days",
       value: `${latency}ms`,
-      delta: -5,
+      delta: deltaLatency,
       deltaLabel: "vs last week",
       icon: <Activity className="w-6 h-6" />,
     },
