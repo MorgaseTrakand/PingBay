@@ -17,7 +17,6 @@ export type SiteRow = {
 
 export async function initialPing(site: SiteRow) {
   try {
-    console.log('huh', site)
     const t0 = performance.now();
     const response = await fetch(site.url, {
       method: "HEAD",
@@ -36,7 +35,7 @@ export async function initialPing(site: SiteRow) {
       monitorStateUpdate(site.id, new Date(), success, statusCode, ms),
     ]);
   } catch (e) {
-    console.error("Ping failed for", site.url, e);
+    //console.error("Ping failed for", site.url, e);
 
     await Promise.all([
       insertPing(site.id, false, null),

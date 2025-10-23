@@ -20,7 +20,6 @@ function AnalyticsTableComponent() {
         setData(mergedSites);
         setLoading(false);
       } catch (e) {
-        console.log(e)
         setLoading(false)
         toast.error("Something went wrong getting data!");
       }

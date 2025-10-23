@@ -1,5 +1,5 @@
 import { Router } from "express"; 
-import { getDailyData, getHourlyData, getNumberOfSites, getUptimeAllSites7D, getLatencyAllSites7D, getIncidentsAllSites7D, getUptimeAllSitesDelta, getLatencyAllSitesDelta, getIncidentsAllSitesDelta } 
+import { getDailyData, getHourlyData, getNumberOfSites, getUptimeAllSites7D, getLatencyAllSites7D, getIncidentsAllSites7D, getUptimeAllSitesDelta, getLatencyAllSitesDelta, getIncidentsAllSitesDelta, getLiveLogs } 
 from "../Queries/analyticsQueries.js";
 import { authMiddleware } from "../utils/authMiddleware.js";
 
@@ -120,7 +120,7 @@ router.get('/get-incidents-last-week-overall', authMiddleware, async (req, res) 
 })
 
 router.get('/get-incidents-delta-overall', authMiddleware, async (req, res) => {
-    try {
+  try {
     let userID = req.cookies?.userID;
 
     if (!userID) {
@@ -128,6 +128,20 @@ router.get('/get-incidents-delta-overall', authMiddleware, async (req, res) => {
     }
 
     return res.json(await getIncidentsAllSitesDelta(userID))
+  } catch (e) { 
+    return res.status(500).json(e)
+  }
+})
+
+router.get('/get-live-logs', authMiddleware, async (req, res) => {
+  try {
+    let userID = req.cookies?.userID;
+
+    if (!userID) {
+      return res.status(401).send();
+    }
+
+    return res.json(await getLiveLogs(userID))
   } catch (e) { 
     return res.status(500).json(e)
   }

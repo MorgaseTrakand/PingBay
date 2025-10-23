@@ -62,20 +62,20 @@ export const columns: ColumnDef<Sites>[] = [
       return <Badge className={`px-2 py-1 text-sm font-medium ring-1 ring-inset ${badge.className}`}>{badge.text}</Badge>
     }
   },
-  {
-    accessorKey: "notifications_enabled",
-    header: "Notifications",
-    cell: ({ getValue }) => {
-      const val = getValue();
-      let badge : { variant: string, text: string, className: string};
-      if (val) {
-          badge = { variant: "default", text: "Enabled", className: "bg-green-50 text-green-800 ring-green-200" };
-      } else {
-          badge = { variant: "outline", text: "Disabled", className: "bg-yellow-50 text-yellow-800 ring-yellow-200" };
-      }
-      return <Badge className={`px-2 py-1 text-sm font-medium ring-1 ring-inset ${badge.className}`}>{badge.text}</Badge>
-    },
-  },
+  // {
+  //   accessorKey: "notifications_enabled",
+  //   header: "Notifications",
+  //   cell: ({ getValue }) => {
+  //     const val = getValue();
+  //     let badge : { variant: string, text: string, className: string};
+  //     if (val) {
+  //         badge = { variant: "default", text: "Enabled", className: "bg-green-50 text-green-800 ring-green-200" };
+  //     } else {
+  //         badge = { variant: "outline", text: "Disabled", className: "bg-yellow-50 text-yellow-800 ring-yellow-200" };
+  //     }
+  //     return <Badge className={`px-2 py-1 text-sm font-medium ring-1 ring-inset ${badge.className}`}>{badge.text}</Badge>
+  //   },
+  // },
   {
     accessorKey: "check_interval",
     header: "Frequency",

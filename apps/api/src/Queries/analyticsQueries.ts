@@ -151,3 +151,15 @@ export async function getIncidentsAllSitesDelta(userID: number) {
   const incidents = Number(result.rows[0]?.incidents ?? 0);
   return incidents;
 }
+
+export async function getLiveLogs(userID: number) {
+  const result = await pool.query(`
+    SELECT p.*, us.title
+    FROM pings p
+    JOIN user_sites us ON p.user_site_id = us.id 
+    WHERE us.user_id = ($1) AND p.checked_at >= NOW() - INTERVAL '1 minute'
+  `, [userID])
+
+  const logs = result.rows
+  return logs;
+}

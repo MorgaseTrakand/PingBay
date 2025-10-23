@@ -8,9 +8,9 @@ export type Sites = {
   title: string
   url: string
   uptime: string
-  totalPings: number
+  status: boolean
   incidents: number
-  lastCheck: Date
+  last_checked: string
   actions: React.ReactNode
 }
 
@@ -59,18 +59,15 @@ export const columns: ColumnDef<Sites>[] = [
       return <Badge className={`px-2 py-1 text-sm font-medium ring-1 ring-inset ${badge.className}`}>{badge.text}</Badge>
     }
   },
-  {
-    accessorKey: "uptime",
-    header: "Uptime",
-  },
-  {
-    accessorKey: "totalPings",
-    header: "Total Pings"
-  },
-  {
-    accessorKey: "incidents",
-    header: "Incidents"
-  },
+  //might add later
+  // {
+  //   accessorKey: "uptime",
+  //   header: "Uptime",
+  // },
+  // {
+  //   accessorKey: "incidents",
+  //   header: "Incidents"
+  // },
   {
     accessorKey: "last_checked",
     header: "Last Check",
