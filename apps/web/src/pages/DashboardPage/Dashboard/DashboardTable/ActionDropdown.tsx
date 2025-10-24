@@ -83,15 +83,17 @@ export const ActionDropdown: React.FC<Props> = ({ siteID, notificationString, da
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="cursor-pointer border-1" onClick={() => setOpen(true)}>
-              Edit Site
+            <DropdownMenuItem className="cursor-pointer ml-1 mt-2" onClick={() => setOpen(true)} asChild>
+              <Button size="sm" variant={"outline"} className="cursor-pointer">
+                Edit Site
+              </Button>
             </DropdownMenuItem>
             {/* <DropdownMenuItem>
               <span>Notifications</span>
               <Switch id="notifications" className="cursor-pointer" onCheckedChange={changeNotifications} checked={notificationBoolean}/>
             </DropdownMenuItem> */}
             <AlertDialogTrigger asChild>
-              <Button size="sm" variant={"destructive"} className="ml-2 mb-2 cursor-pointer mt-1">
+              <Button size="sm" variant={"destructive"} className="ml-1 mb-2 cursor-pointer mt-2">
                 Delete Site
               </Button>
             </AlertDialogTrigger>

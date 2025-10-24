@@ -66,7 +66,13 @@ export default function AddSiteSheetForm({ setOpen }: Props) {
         toast.success("Site has been successfully added");
         increment();
       } else {
-        toast.error("Something went wrong!")
+        try {
+          const data = await response.json();
+          toast.error(data.error || JSON.stringify(data));
+        } catch {
+          const text = await response.text();
+          toast.error(text || "An unknown error occurred");
+        }
       }
       setOpen(false);
       resetForm();

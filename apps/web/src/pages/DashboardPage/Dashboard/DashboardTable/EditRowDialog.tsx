@@ -59,7 +59,6 @@ export const EditRowDialogButton: React.FC<Props> = ({ open, setOpen, siteID, de
           credentials: 'include',
           body: JSON.stringify({ siteID: siteID, title: title, url: url, interval: parseInt(interval) })
         })
-        console.log(response)
         if (!response.ok) { 
           toast.error("Something went wrong!")
         } else {

@@ -9,6 +9,7 @@ export default function useAuth() {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({ email: email, password: password })
       })
       if (!response.ok) {

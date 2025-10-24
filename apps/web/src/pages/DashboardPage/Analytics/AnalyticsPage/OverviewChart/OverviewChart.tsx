@@ -18,8 +18,11 @@ export const OverviewChart: React.FC<Props> = ({ data, hourly }) => {
   const chartConfig = useMemo<ChartConfig>(() => {
     if (!data || data.length === 0) return {} as ChartConfig;
 
-    const lastElement = data[data.length - 1];
-    const seriesKeys = Object.keys(lastElement).filter((k) => k !== "date");
+    const seriesKeys = [
+      ...new Set(
+        data.flatMap(obj => Object.keys(obj))
+      )
+    ].filter(k => k !== "date");
     setTitles(seriesKeys);
 
     const cfg: Record<string, { label: string; color?: string; fillId?: string }> = {};
@@ -31,7 +34,6 @@ export const OverviewChart: React.FC<Props> = ({ data, hourly }) => {
         fillId: `fill-${String(key).replace(/\s+/g, "-")}`,
       };
     });
-
     return cfg as ChartConfig;
   }, [data]);
   
@@ -98,10 +100,12 @@ export const OverviewChart: React.FC<Props> = ({ data, hourly }) => {
           {titles.map((title, index) => (
             <Area
               dataKey={title}
-              type="natural"
+              type="monotone"
               fill={`var(--chart-${(index)+1})`}
               stroke={`var(--chart-${(index)+1})`}
               stackId="a"
+              fillOpacity={0.75}
+              strokeWidth={1}
             />
           ))}
           <ChartLegend content={<ChartLegendContent />} />

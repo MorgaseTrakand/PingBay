@@ -53,7 +53,22 @@ export async function fetchSiteState(siteID: number) {
     body: JSON.stringify({ siteID: siteID })
   })
   if (response.ok) {
-    return await response.json();
+    return await response.json()
+  }
+  throw new Error(`Failed to fetch latency: ${response.status} ${response.statusText}`);
+}
+
+export async function fetchHourlyLastChecked(siteID: number) {
+  let response = await fetch(import.meta.env.VITE_GET_HOURLY_LAST_CHECKED_URL, {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+    body: JSON.stringify({ siteID: siteID })
+  })
+  if (response.ok) {
+    return await response.json()
   }
   throw new Error(`Failed to fetch latency: ${response.status} ${response.statusText}`);
 }

@@ -32,23 +32,25 @@ router.post('/signup', async (req, res) => {
     }
     
     let result: any = await createUser(email, password);
+    let userID = result.rows[0].id
 
     if (result.rowCount > 0) {
       const token = generateToken({
-        userId: result.rows[0],
+        userId: userID,
       });
-
+      console.log('token', token)
       res.cookie('accessToken', token, {
         maxAge: 1000 * 60 * 60,
         httpOnly: true,
         //secure: false,
         sameSite: 'strict'
-      }).cookie('userID', result.rows[0], {
+      }).cookie('userID', userID, {
         maxAge: 1000 * 60 * 60,
         httpOnly: true,
         sameSite: 'strict'
       })
-
+      console.log('sending cookies over????')
+      console.log('userID', userID)
       return res.status(200).json({ message: "success" })
     } else {
       return res.status(500).json({ error: "Failed to create user" });

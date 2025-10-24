@@ -4,7 +4,7 @@
   import { Badge } from "@/components/ui/badge";
   import { RefreshCw, Clock } from "lucide-react";
   import SSABannerStats from "./SSABannerStats";
-  import { fetchSiteState, fetchSiteURLAndTitle, handleRefresh } from "./SSABannerFunctions";
+  import { fetchHourlyLastChecked, fetchSiteState, fetchSiteURLAndTitle, handleRefresh } from "./SSABannerFunctions";
   import { useParams } from "react-router-dom";
   import { SpinnerComponent } from "@/pages/Components/SpinnerComponent";
   import { statusToBadgeProps } from "./SSABannerFunctions";
@@ -24,7 +24,16 @@
 
     async function getStateWrapper() {
       let response = await fetchSiteState(siteID) 
-      setLastChecked(response.last_check)
+      if (response.last_check) {
+        setLastChecked(response.last_check)
+      } else {
+        response = await fetchHourlyLastChecked(siteID)
+        if (response.last_check) {
+          setLastChecked(response.last_check)
+        } else {
+          setLastChecked('NAN')
+        }
+      }
     }
 
     async function getTitleAndURLWrapper() {

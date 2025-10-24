@@ -1,5 +1,5 @@
 import { Router } from "express"; 
-import { getIncidents7D, getLatency7D, getUptime7D, getState, getHourlyLatencyData, getDailyLatencyData, getHourlyIncidentData, getDailyIncidentData, getHourlyUptimeData, getDailyUptimeData, getSiteURLAndTitle } 
+import { getIncidents7D, getLatency7D, getUptime7D, getState, getHourlyLatencyData, getDailyLatencyData, getHourlyIncidentData, getDailyIncidentData, getHourlyUptimeData, getDailyUptimeData, getSiteURLAndTitle, getHourlyLastChecked } 
 from "../Queries/SSAQueries.js";
 import { authMiddleware } from "../utils/authMiddleware.js";
 
@@ -43,6 +43,20 @@ router.post('/get-uptime-last-week-single-site', authMiddleware, async (req, res
 
     return res.json(await getUptime7D(siteID));
   } catch (e) { 
+    return res.status(500).json(e)
+  }
+});
+
+router.post('/get-hourly-last-checked', authMiddleware, async (req, res) => {
+  try {
+    let siteID = req.body.siteID;
+
+    if (!siteID) {
+      return res.status(401).send();
+    }
+
+    return res.json(await getHourlyLastChecked(siteID))
+  } catch (e) {
     return res.status(500).json(e)
   }
 });

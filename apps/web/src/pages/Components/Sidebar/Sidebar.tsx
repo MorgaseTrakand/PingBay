@@ -10,7 +10,7 @@ import SiteSidebarDropdown from "./SidebarDropdown";
 type Props = {};
 
 const footerItems = [
-  // { title: "Settings", url: "/dashboard/settings", icon: Settings, type: "link" },
+  { title: "Settings", url: "/dashboard/settings", icon: Settings, type: "link" },
   { title: "Logout", url: "#", icon: LogOut, type: "action" },
 ];
 

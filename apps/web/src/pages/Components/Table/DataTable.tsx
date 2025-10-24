@@ -67,7 +67,7 @@ export function DataTable<TData extends { id: string | number, title: string, ur
   
 
   function handleRowClick(cellID: string, siteID: string | number) {
-    if (!cellID.includes('actions')) {
+    if (!cellID.includes('actions') && !cellID.includes('select')) {
       navigate(`/dashboard/site-analytics/${siteID}`)
     }
   }

@@ -4,6 +4,7 @@ import { SidebarMenuButton } from "@/components/ui/sidebar";
 import { NavLink } from "react-router-dom";
 import { DropdownMenu, DropdownMenuItem, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuPortal } from "@radix-ui/react-dropdown-menu";
 import { toast } from "sonner";
+import { useDataTableTrigger } from "@/lib/zustand";
 
 type Props = {
   setSelectedItem: React.Dispatch<React.SetStateAction<string | undefined>>
@@ -15,6 +16,7 @@ const SiteSidebarDropdown: React.FC<Props> = ( { selectedItem, setSelectedItem }
   const [open, setOpen] = useState(false);
   const [portalStyle, setPortalStyle] = useState<React.CSSProperties | undefined>(undefined);
   const [previousItem, setPreviousItem] = useState<string | undefined>();
+  const count = useDataTableTrigger((state) => state.count);
 
   useEffect(() => {
     if (!open) {
@@ -70,7 +72,7 @@ const SiteSidebarDropdown: React.FC<Props> = ( { selectedItem, setSelectedItem }
       setTitles(await response.json());
     }
     loadSiteTitles()
-  }, [])
+  }, [count])
 
   const [titles, setTitles] = useState([]);
   type titleRow = {

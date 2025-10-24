@@ -20,10 +20,10 @@ import { authLoader, updateUserState } from './utils/authLoader';
 
 const router = createBrowserRouter([
   { path: "/", element: <HomePage />, loader: updateUserState },
-  { path: "/login", element: <LoginPage />, loader: updateUserState },
-  { path: "/signup", element: <SignupPage />, loader: updateUserState },
+  { path: "/login", element: <LoginPage /> },
+  { path: "/signup", element: <SignupPage /> },
   { 
-    path: "/dashboard", 
+    path: "/dashboard",
     element: <DashboardSwitchBoard />,
     loader: authLoader,
     children: [
@@ -36,10 +36,8 @@ const router = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById('root')!).render(
-  //<StrictMode>
   <CookiesProvider>
       <RouterProvider router={router}/>
       <Toaster richColors position='top-center'/>
   </CookiesProvider>
-  //</StrictMode>,
 )

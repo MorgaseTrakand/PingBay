@@ -13,6 +13,10 @@ router.post('/add-site', authMiddleware, async (req, res) => {
     
     let sites = (await getSites(userID)).rows;
     const isDuplicate = sites.some(site => site.url === url || site.title === title);
+    
+    if (sites.length >= 6) {
+      return res.status(500).json("Account is limited to 6 total sites.")
+    }
 
     if (isDuplicate) {
       return res.status(500).json("You already have a site with this title or URL.");
@@ -21,7 +25,6 @@ router.post('/add-site', authMiddleware, async (req, res) => {
     await initialPing(site)
     return res.status(200).send();
   } catch (e) {
-    console.log(e)
     return res.status(500).json("Something went wrong!");
   }
 })
@@ -35,7 +38,6 @@ router.get('/get-sites', authMiddleware, async (req, res) => {
       return res.json(sites.rows);
     }
   } catch (e) {
-    console.log(e)
     return res.status(500).send();
   }
 })
@@ -50,7 +52,6 @@ router.post('/get-states', authMiddleware, async (req, res) => {
     }
     return res.json([]);
   } catch (e) {
-    console.log(e)
     return res.status(500).json(e)
   }
 })

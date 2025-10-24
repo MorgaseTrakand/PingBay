@@ -69,6 +69,19 @@ export async function getState(siteID: number) {
     [siteID]
   );
 
+  return result.rows[0] ?? []
+}
+
+export async function getHourlyLastChecked(siteID: number) {
+  const result = await pool.query(`
+    SELECT hour_checked AS last_check
+    FROM hourly_pings
+    WHERE user_site_id = ($1)
+    ORDER BY hour_checked DESC
+    LIMIT 1;`, 
+    [siteID]
+  );
+
   return result.rows[0]
 }
 
