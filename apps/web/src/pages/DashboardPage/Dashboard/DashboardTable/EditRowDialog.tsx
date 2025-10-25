@@ -36,8 +36,7 @@ type Props = {
 export const EditRowDialogButton: React.FC<Props> = ({ open, setOpen, siteID, defaultTitle, defaultURL, defaultInterval }) => {
   const [title, setTitle] = useState(defaultTitle);
   const [url, setURL] = useState(defaultURL);
-  const [interval, setInterval] = useState('');
-
+  const [interval, setInterval] = useState(defaultInterval);
   const [titleError, setTitleError] = useState('');
   const [urlError, setURLError] = useState('');
 

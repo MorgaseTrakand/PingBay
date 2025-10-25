@@ -27,6 +27,8 @@ router.get("/handle-pings", async (req, res) => {
     const result: QueryResult<SiteRow> = await getSitesBasedOnInterval(interval);
     const sites: SiteRow[] = result.rows;
 
+    console.log(`pinging ${result.rows.length} sites`)
+    
     for (let i = 0; i < sites.length; i++) {
       pingSite(sites[i])
     }

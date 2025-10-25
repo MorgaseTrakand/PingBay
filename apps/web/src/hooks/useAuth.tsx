@@ -13,7 +13,8 @@ export default function useAuth() {
         body: JSON.stringify({ email: email, password: password })
       })
       if (!response.ok) {
-        return { error: response.statusText }
+        let errorMessage = await response.json()
+        return { error: errorMessage.error }
       }
       let data = await response.json();
       set(true)
@@ -30,7 +31,8 @@ export default function useAuth() {
       body: JSON.stringify({ email: email, password: password })
     })
     if (!response.ok) {
-      return {error: response.statusText };
+      let errorMessage = await response.json()
+      return {error: errorMessage.error };
     }
     let data = await response.json();
     set(true)

@@ -8,7 +8,8 @@
     "dev:web": "pnpm --filter web dev",
     "dev:api": "pnpm --filter api dev",
     "dev": "concurrently \"pnpm dev:web\" \"pnpm dev:api\"",
-    "start": "node setup.mjs"
+    "start": "node setup.mjs",
+    "delete": "docker compose down --volumes --rmi local --remove-orphans"
   },
   "keywords": [],
   "author": "",

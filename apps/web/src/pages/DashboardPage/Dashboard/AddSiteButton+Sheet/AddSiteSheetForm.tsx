@@ -25,7 +25,7 @@ export default function AddSiteSheetForm({ setOpen }: Props) {
   const [url, setUrl] = useState("");
   const [title, setTitle] = useState("");
   const [interval, setInterval] = useState("300");
-  const [notifications, setNotifications] = useState(false);
+  // const [notifications, setNotifications] = useState(false);
 
   const [errors, setErrors] = useState({ url: "", title: "" })
 
@@ -60,7 +60,7 @@ export default function AddSiteSheetForm({ setOpen }: Props) {
         'Content-Type': 'application/json',
         },
         credentials: 'include',
-        body: JSON.stringify({ url: url, title: title, interval: interval, notifications: notifications })
+        body: JSON.stringify({ url: url, title: title, interval: interval, notifications: false })
       })
       if (response.status == 200) {
         toast.success("Site has been successfully added");
@@ -137,7 +137,7 @@ export default function AddSiteSheetForm({ setOpen }: Props) {
               </Select>
             </div>
             <div className="w-full">
-              <h3 className="text-sm font-medium mb-1">Notifications</h3>
+              {/* <h3 className="text-sm font-medium mb-1">Notifications</h3>
               <Select defaultValue="false" onValueChange={(e) => {setNotifications(JSON.parse(e))}}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Notifications" />
@@ -149,7 +149,7 @@ export default function AddSiteSheetForm({ setOpen }: Props) {
                     <SelectItem value="false">Disabled</SelectItem>
                   </SelectGroup>
                 </SelectContent>
-              </Select>
+              </Select> */}
             </div>
           </div>
         </label>

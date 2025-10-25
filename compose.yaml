@@ -1,3 +1,5 @@
+version: "3.9"
+
 services:
   web:
     build:
@@ -27,6 +29,17 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=pingbay
     volumes:
+      - pingbay-data:/var/lib/postgresql/data
       - ./db/init:/docker-entrypoint-initdb.d
     ports:
       - "5432:5432"
+
+  poller:
+    image: curlimages/curl
+    container_name: api-poller
+    depends_on:
+      - api
+    command: ["sh", "-c", "while true; do curl http://api:3000/cron/handle-pings; sleep 60; done"]
+
+volumes:
+  pingbay-data:

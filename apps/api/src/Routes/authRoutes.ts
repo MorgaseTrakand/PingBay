@@ -75,7 +75,7 @@ router.post("/login", async (req, res) => {
   const user = result.rows[0];
   const valid = await bcrypt.compare(password, user.password_hash);
   if (!valid) {
-    return res.json({ error: "Invalid email or password" });
+    return res.status(401).json({ error: "Invalid email or password" });
   }
 
   const token = generateToken({
@@ -97,7 +97,7 @@ router.post("/login", async (req, res) => {
 
 router.get('/logout', (req, res) => {
   try {
-    return res.clearCookie('isLoggedIn').clearCookie('userID').clearCookie('accessToken').status(200).send();
+    return res.clearCookie('userID').clearCookie('accessToken').status(200).send();
   } catch (e) {
     return res.status(500).json(e);
   }

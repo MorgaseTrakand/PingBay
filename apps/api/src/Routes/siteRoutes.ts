@@ -15,11 +15,11 @@ router.post('/add-site', authMiddleware, async (req, res) => {
     const isDuplicate = sites.some(site => site.url === url || site.title === title);
     
     if (sites.length >= 6) {
-      return res.status(500).json("Account is limited to 6 total sites.")
+      return res.status(400).json("Account is limited to 6 total sites.")
     }
 
     if (isDuplicate) {
-      return res.status(500).json("You already have a site with this title or URL.");
+      return res.status(400).json("You already have a site with this title or URL.");
     }
     let site = await (await addSite(userID, url, title, interval, notifications)).rows[0]
     await initialPing(site)

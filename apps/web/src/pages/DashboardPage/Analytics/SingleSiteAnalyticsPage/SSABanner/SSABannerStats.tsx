@@ -21,7 +21,7 @@ export default function SSABannerStats({ siteID } : Props) {
         setIncidents(incidents);
 
         const uptime = await fetchUptimeData(siteID);
-        setUptime(uptime * 100);
+        setUptime(parseFloat((uptime * 100).toFixed(2)));
 
         const avgLatency = await fetchAvgLatencyData(siteID);
         setAvgLatency(avgLatency);

@@ -4,10 +4,12 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 // import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 // import { CustomizationSettings } from "./CustomizationSettings";
+import { useDataTableTrigger } from '../../../lib/zustand.ts';
 
 type Props = {};
 
 const Settings: React.FC<Props> = () => {
+  const { increment } = useDataTableTrigger();
 
   async function handlePopulate() {
     let response = await fetch(import.meta.env.VITE_POPULATE_SAMPLE_DATA_URL, {
@@ -19,6 +21,7 @@ const Settings: React.FC<Props> = () => {
     })
     if (response.ok) {
       toast.success(await response.json())
+      increment();
     } else {
       toast.error(await response.json())
     }

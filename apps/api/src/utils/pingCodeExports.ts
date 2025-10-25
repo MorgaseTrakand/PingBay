@@ -7,7 +7,7 @@ export type Row = {
 
 export type SiteRow = {
   id: number;        
-  user_id: number;      
+  user_id?: number;      
   url: string;    
   title?: string;      
   check_interval?: number;  
@@ -35,7 +35,7 @@ export async function initialPing(site: SiteRow) {
       monitorStateUpdate(site.id, new Date(), success, statusCode, ms),
     ]);
   } catch (e) {
-    //console.error("Ping failed for", site.url, e);
+    console.error("Ping failed for", site.url, e);
 
     await Promise.all([
       insertPing(site.id, false, null),
